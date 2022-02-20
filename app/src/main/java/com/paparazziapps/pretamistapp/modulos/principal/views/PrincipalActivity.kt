@@ -30,10 +30,13 @@ class PrincipalActivity : AppCompatActivity() {
 
 
         setUpBottomNav()
+        setUpInicialToolbar()
+    }
+
+    private fun setUpInicialToolbar() {
+
+        toolbar.title = "Dashboard"
         setSupportActionBar(toolbar)
-
-
-
     }
 
     private fun setUpBottomNav() {

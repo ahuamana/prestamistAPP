@@ -1,22 +1,18 @@
 package com.paparazziapps.pretamistapp.modulos.registro.views
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.PorterDuff
-import android.opengl.Visibility
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -25,12 +21,16 @@ import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityCalcularBinding
+import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
+import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
 import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimals
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
-import java.text.DecimalFormat
 
-class CalcularActivity : AppCompatActivity() {
+class RegistrarFragment : Fragment() {
+
+    var _binding: FragmentRegistrarBinding ?= null
+    private val binding get() = _binding!!
 
     var _viewModel = ViewModelRegister.getInstance()
 
@@ -65,16 +65,24 @@ class CalcularActivity : AppCompatActivity() {
     var prestamo = Prestamo()
 
     //Layout
-    lateinit var binding:ActivityCalcularBinding
     val listaIntereses = arrayListOf<String>("8%","10%","20%","30%","40%","50%")
     val listaPlazos = arrayListOf<String>("30 dias","60 dias","90 dias","120 dias","180 dias")
-    val listmode = arrayListOf( M_STANDAR, M_PERSONALIZADO)
+    val listmode = arrayListOf(CalcularActivity.M_STANDAR, CalcularActivity.M_PERSONALIZADO)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCalcularBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        arguments?.let {
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        _binding = FragmentRegistrarBinding.inflate(inflater, container, false)
+        var view = binding.root
 
         //Modo Standar
         intereses = binding.interesSP
@@ -93,15 +101,17 @@ class CalcularActivity : AppCompatActivity() {
         mesesP=binding.plazosP
 
         btnContinuar = binding.continuarButton
-        modos       = binding.mode
-        modoLayout  = binding.modeLayout
-
+        modos = binding.mode
+        modoLayout = binding.modeLayout
 
 
         setupSpinners()
         observers()
         validateAll()
         continuar()
+
+
+        return view
     }
 
     private fun continuar() {
@@ -114,7 +124,7 @@ class CalcularActivity : AppCompatActivity() {
             var gson = Gson()
             var prestamoJson = gson.toJson(prestamo)
 
-            startActivity(Intent(this.applicationContext, RegistrarActivity::class.java).putExtra("prestamoJson",prestamoJson))
+            startActivity(Intent(context, RegistrarActivity::class.java).putExtra("prestamoJson",prestamoJson))
         }
     }
 
@@ -197,8 +207,8 @@ class CalcularActivity : AppCompatActivity() {
 
             when (modos.text.toString()){
                 M_STANDAR -> {
-                  binding.layoutdefecto.isVisible = true
-                  binding.layoutPersonalizado.isVisible = false
+                    binding.layoutdefecto.isVisible = true
+                    binding.layoutPersonalizado.isVisible = false
                     validateFields()
                 }
 
@@ -219,9 +229,9 @@ class CalcularActivity : AppCompatActivity() {
 
     private fun setupSpinners() {
 
-        val adapterIntereses= ArrayAdapter<String>(applicationContext,R.layout.select_items, listaIntereses)
-        val adapterPlazos= ArrayAdapter<String>(applicationContext,R.layout.select_items, listaPlazos)
-        val adapterModos= ArrayAdapter<String>(applicationContext,R.layout.select_items, listmode)
+        val adapterIntereses= ArrayAdapter<String>(context!!,R.layout.select_items, listaIntereses)
+        val adapterPlazos= ArrayAdapter<String>(context!!,R.layout.select_items, listaPlazos)
+        val adapterModos= ArrayAdapter<String>(context!!,R.layout.select_items, listmode)
 
         intereses.setAdapter(adapterIntereses)
         meses.setAdapter(adapterPlazos)
@@ -238,55 +248,55 @@ class CalcularActivity : AppCompatActivity() {
 
     }
 
-   private fun validateFields ()
-   {
-       when (modos.text.toString())
-       {
+    private fun validateFields ()
+    {
+        when (modos.text.toString())
+        {
 
 
-           M_STANDAR -> {
-               if(isValidInteres && isValidMeses && isValidCapitalPrestado)
-               {
-                   calcularTodo(M_STANDAR)
-                   activateContinuar(true)
-               }else
-               {
-                   activateContinuar(false)
-               }
-           }
+            M_STANDAR -> {
+                if(isValidInteres && isValidMeses && isValidCapitalPrestado)
+                {
+                    calcularTodo(M_STANDAR)
+                    activateContinuar(true)
+                }else
+                {
+                    activateContinuar(false)
+                }
+            }
 
-           M_PERSONALIZADO -> {
-               if(isValidInteresP && isValidMesesP && isValidCapitalPrestado)
-               {
-                   calcularTodo(M_PERSONALIZADO)
-                   activateContinuar(true)
-               }else
-               {
-                   activateContinuar(false)
-               }
-           }
+            M_PERSONALIZADO -> {
+                if(isValidInteresP && isValidMesesP && isValidCapitalPrestado)
+                {
+                    calcularTodo(M_PERSONALIZADO)
+                    activateContinuar(true)
+                }else
+                {
+                    activateContinuar(false)
+                }
+            }
 
-           else -> showMessage("Error validando datos")
+            else -> showMessage("Error validando datos")
 
-       }
+        }
 
-   }
+    }
 
     private fun activateContinuar(isValidEverything: Boolean)
     {
         if(isValidEverything)
         {
             btnContinuar.backgroundTintMode = PorterDuff.Mode.SCREEN
-            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(this,R.color.primarycolordark_two)
-            btnContinuar.setTextColor(ContextCompat.getColor(this, R.color.white))
+            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(context!!,R.color.primarycolordark_two)
+            btnContinuar.setTextColor(ContextCompat.getColor(context!!, R.color.white))
             btnContinuar.isEnabled = true
 
         } else
         {
             btnContinuar.isEnabled = false
             btnContinuar.backgroundTintMode = PorterDuff.Mode.MULTIPLY
-            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(this,R.color.color_input_text)
-            btnContinuar.setTextColor(ContextCompat.getColor(this, R.color.color_input_text))
+            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(context!!,R.color.color_input_text)
+            btnContinuar.setTextColor(ContextCompat.getColor(context!!, R.color.color_input_text))
 
         }
     }
@@ -352,10 +362,17 @@ class CalcularActivity : AppCompatActivity() {
     }
 
 
-    companion object{
+    companion object {
 
         const val M_PERSONALIZADO = "Personalizado"
         const val M_STANDAR = "Estándar"
-    }
 
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            RegistrarFragment().apply {
+                arguments = Bundle().apply {
+
+                }
+            }
+    }
 }

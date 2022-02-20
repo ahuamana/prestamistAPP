@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
@@ -31,6 +32,7 @@ class RegistrarActivity : AppCompatActivity() {
     lateinit var celular:TextInputEditText
 
     lateinit var registerButton:MaterialButton
+    lateinit var toolbar: Toolbar
 
     var isValidFecha:Boolean = false
     var isValidNombres:Boolean = false
@@ -50,13 +52,23 @@ class RegistrarActivity : AppCompatActivity() {
         dni = binding.dni
         celular = binding.celular
         registerButton = binding.registrarButton
-
+        toolbar         = binding.tool.toolbar
 
         //get intent
         getExtras()
         showCalendar()
         validateFields()
         registerPrestamo()
+
+        setUpToolbarInitialize()
+    }
+
+    private fun setUpToolbarInitialize() {
+
+        toolbar.title = "Registrar"
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     private fun registerPrestamo() {

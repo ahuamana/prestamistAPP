@@ -4,7 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".RegistrarFragment">
+tools:context=".modulos.registro.views.RegistrarFragment">
 
 <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
@@ -41,6 +41,7 @@ tools:context=".RegistrarFragment">
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="@string/title_calcular"

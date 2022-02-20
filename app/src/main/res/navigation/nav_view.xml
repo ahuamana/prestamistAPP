@@ -6,7 +6,7 @@
     app:startDestination="@id/navigation_home">
     <fragment
         android:id="@+id/navigation_registrar"
-        android:name="com.paparazziapps.pretamistapp.RegistrarFragment"
+        android:name="com.paparazziapps.pretamistapp.modulos.registro.views.RegistrarFragment"
         android:label="fragment_registrar"
         tools:layout="@layout/fragment_registrar" />
     <fragment
@@ -18,5 +18,5 @@
         android:id="@+id/navigation_home"
         android:name="com.paparazziapps.pretamistapp.HomeFragment"
         android:label="fragment_home2"
-        tools:layout="@layout/fragment_home2" />
+        tools:layout="@layout/fragment_home" />
 </navigation>
