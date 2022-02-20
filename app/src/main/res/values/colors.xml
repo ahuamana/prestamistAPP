@@ -13,8 +13,8 @@
     <color name="primarycolor">#cceefe</color>
     <color name="primarycolordark">#86cdc5</color>
     <color name="primarycolordark_two">#89c8c3</color>
-    <color name="secondarycolorlight">#ddf9d3</color>
-    <color name="thirdcolorlight">#d3edf9</color>
+    <color name="secondarycolorlight">#4CAFF6</color>
+    <color name="thirdcolorlight">#FED1EF</color>
 
 
     <color name="icons">#A8A8A8</color>
@@ -27,4 +27,9 @@
     <color name="color_line">#E7E7E7</color>
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="color_text_web">#A0A0A0</color>
+
+
+    <color name="com_facebook_blue">#3B5998</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="color_text_web_disable">#898989</color>
 </resources>

@@ -10,14 +10,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pretamistapp">
         <activity
-            android:name=".modulos.registro.views.RegisterActivity"
+            android:name=".modulos.principal.views.PrincipalActivity"
             android:theme="@style/Theme.noActionBar"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".modulos.registro.views.RegistrarActivity"
+            android:exported="true"
+            android:theme="@style/Theme.noActionBar" />
+        <activity
+            android:name=".modulos.registro.views.CalcularActivity"
+            android:exported="true"
+            android:theme="@style/Theme.noActionBar">
+
         </activity>
     </application>
 

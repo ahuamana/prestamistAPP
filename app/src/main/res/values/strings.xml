@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">pretamistapp</string>
-    <string name="title_register">Calcular</string>
+    <string name="title_calcular">Calcular</string>
+    <string name="title_register">Registrar</string>
     <string name="otra_conexion">ó</string>
-    <string name="terms_conditions_acepto">Al hacer click en el botón "Registrar" , Aceptas nuestras <b>políticas de privacidad</b> y <b>términos de condición</b>.</string>
-
+    <string name="terms_conditions_acepto">Al hacer click en el botón "Continuar" , Aceptas nuestras <b>políticas de privacidad</b> y <b>términos de condición</b>.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

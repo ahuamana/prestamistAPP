@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".modulos.registro.views.RegisterActivity">
+    tools:context=".modulos.registro.views.CalcularActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/shapeableImageView"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="25dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ganancia_financiera"
@@ -42,18 +42,18 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
                     android:gravity="center"
-                    android:text="@string/title_register"
+                    android:text="@string/title_calcular"
                     android:textSize="20dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/capitalprestadolLayout"
-                    style="@style/CustomTextField"
                     android:layout_width="match_parent"
                     app:counterMaxLength="9"
                     app:counterEnabled="true"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    style="@style/CustomTextField">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/capitalprestadoEdt"
@@ -62,10 +62,38 @@
                         android:hint="Capital a prestar"
                         android:inputType="number"
                         android:lines="1"
+                        android:maxLength="9" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/modeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
+                    android:layout_marginBottom="8dp"
+                    app:errorEnabled="true"
+                    style="@style/CustomDropDown">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Modo"
+                        android:text="Estándar"
+                        android:textStyle="bold"
+                        android:inputType="textNoSuggestions"
+                        android:lines="1"
+                        android:cursorVisible="false"
+                        android:focusable="false"
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+
+
                 <LinearLayout
+                    android:id="@+id/layoutdefecto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -122,6 +150,57 @@
                 </LinearLayout>
 
 
+                <LinearLayout
+                    android:id="@+id/layoutPersonalizado"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/interesLayoutP"
+                        android:layout_width="0dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:errorEnabled="true"
+                        style="@style/CustomTextField">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/interesSPP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Interés %"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:cursorVisible="true"
+                            android:focusable="true"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/plazosLayoutP"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:errorEnabled="true"
+                        style="@style/CustomTextField">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/plazosP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Plazo de vto en dias"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
 
 
 

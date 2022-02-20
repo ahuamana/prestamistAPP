@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_view"
+    app:startDestination="@id/navigation_home">
+    <fragment
+        android:id="@+id/navigation_registrar"
+        android:name="com.paparazziapps.pretamistapp.RegistrarFragment"
+        android:label="fragment_registrar"
+        tools:layout="@layout/fragment_registrar" />
+    <fragment
+        android:id="@+id/navigation_finanzas"
+        android:name="com.paparazziapps.pretamistapp.FinanzasFragment"
+        android:label="fragment_finanzas"
+        tools:layout="@layout/fragment_finanzas" />
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.paparazziapps.pretamistapp.HomeFragment"
+        android:label="fragment_home2"
+        tools:layout="@layout/fragment_home2" />
+</navigation>
