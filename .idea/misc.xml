@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2765625" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/background_bottom_navigation.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/background_input_disable.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/corner_boton_outline.xml" value="0.3828125" />
@@ -11,8 +12,10 @@
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/ic_calendar.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/ic_home.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/ic_keyboard_arrow_down.xml" value="0.3828125" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2765625" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/ic_menu.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/ic_registrar.xml" value="0.3828125" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/ic_tesoreria.xml" value="0.2765625" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/layout/activity_calcular.xml" value="0.22" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/layout/activity_principal.xml" value="0.22" />

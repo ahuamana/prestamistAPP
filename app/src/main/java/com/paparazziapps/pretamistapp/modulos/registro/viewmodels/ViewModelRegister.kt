@@ -30,9 +30,9 @@ open class ViewModelRegister private constructor(){
         {
             println("ERROR: ${e.message}")
         }
-
-
     }
+
+
 
 
 

@@ -1,45 +1,46 @@
 package com.paparazziapps.pretamistapp.modulos.registro.views
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.graphics.PorterDuff
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
 
 class RegistrarActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityRegistrarBinding
-    var prestamo = Prestamo()
+    var prestamoReceived = Prestamo()
 
     lateinit var fecha:TextInputEditText
+    lateinit var layoutFecha:TextInputLayout
     lateinit var nombres:TextInputEditText
+    lateinit var layoutNombres:TextInputLayout
     lateinit var apellidos:TextInputEditText
+    lateinit var layoutApellidos:TextInputLayout
     lateinit var dni:TextInputEditText
+    lateinit var layoutDNI:TextInputLayout
     lateinit var celular:TextInputEditText
+    lateinit var layoutCelular:TextInputLayout
 
     lateinit var registerButton:MaterialButton
     lateinit var toolbar: Toolbar
+    var fechaSelectedUnixtime:Long? = null
 
-    var isValidFecha:Boolean = false
-    var isValidNombres:Boolean = false
-    var isValidApellidos:Boolean = false
-    var isValidDni:Boolean = false
-    var isValidCelular:Boolean = false
-
+    val viewModel = ViewModelRegister.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,13 +55,29 @@ class RegistrarActivity : AppCompatActivity() {
         registerButton = binding.registrarButton
         toolbar         = binding.tool.toolbar
 
+        layoutFecha         = binding.fechaLayout
+        layoutNombres       = binding.nombresLayout
+        layoutApellidos     = binding.apellidosLayout
+        layoutDNI           = binding.dniLayout
+        layoutCelular       = binding.celularLayout
+
         //get intent
         getExtras()
         showCalendar()
         validateFields()
         registerPrestamo()
-
         setUpToolbarInitialize()
+
+        //Observers
+        startObservers()
+    }
+
+    private fun startObservers() {
+        viewModel.getMessage().observe(this){message ->  showMessage(message)}
+    }
+
+    private fun showMessage(message: String?) {
+        Snackbar.make(binding.root,"${message}",Snackbar.LENGTH_SHORT).show()
     }
 
     private fun setUpToolbarInitialize() {
@@ -73,74 +90,82 @@ class RegistrarActivity : AppCompatActivity() {
 
     private fun registerPrestamo() {
 
-        binding.registrarButton.setOnClickListener {
+        registerButton.setOnClickListener {
+
+            var prestamo = Prestamo(
+                nombres     = nombres.text.toString().trim(),
+                apellidos   = apellidos.text.toString().trim(),
+                dni         = dni.text.toString().trim(),
+                celular     = celular.text.toString().trim(),
+                fecha       = fecha.text.toString().trim(),
+                unixtime    = fechaSelectedUnixtime,
+                capital     = prestamoReceived.capital,
+                interes     = prestamoReceived.interes,
+                plazo_vto   = prestamoReceived.plazo_vto
+            )
+
             //Register ViewModel
+
         }
     }
 
     private fun validateFields() {
 
-        fecha.doAfterTextChanged {
-            isValidFecha = !fecha.text.isNullOrEmpty()
-            isValidFecha.apply {
-                if(this) showbutton()
-            }
-        }
-
         nombres.doAfterTextChanged {
-            isValidNombres = !nombres.text.isNullOrEmpty()
-            isValidNombres.apply {
-                if(this) showbutton()
+
+            var nombresChanged = it.toString()
+
+            layoutNombres.error = when
+            {
+                nombresChanged.isNullOrEmpty() -> "El nombre esta vacío"
+                nombresChanged.count() < 4 -> "El nombre esta incompleto"
+                else -> null
             }
+            showbutton()
 
         }
 
         apellidos.doAfterTextChanged {
-            isValidApellidos = !apellidos.text.isNullOrEmpty()
-            isValidApellidos.apply {
-                if(this) showbutton()
+
+            var apellidosChanged = it.toString()
+
+            layoutApellidos.error = when
+            {
+                apellidosChanged.isNullOrEmpty() -> "Los apellidos estan vacíos"
+                apellidosChanged.count() < 4 -> "Los apellidos estan incompletos"
+                else -> null
             }
+            showbutton()
+
         }
 
         dni.doAfterTextChanged {
 
-            if(!dni.text.isNullOrEmpty())
+            var dniChanged = it.toString()
+
+            layoutDNI.error = when
             {
-                println("is valid dni: ${dni.text!!.count()}")
-
-                if(dni.text!!.count() == 8)
-                {
-                    isValidDni = true
-                    showbutton()
-
-                }else {
-                    isValidDni = false
-                    showbutton()
-                }
-            }else {
-                isValidDni = false
-                showbutton()
+                dniChanged.isNullOrEmpty() -> "DNI vacío"
+                dniChanged.count() in 1..7 -> "DNI incompleto"
+                else -> null
             }
+
+            showbutton()
 
         }
 
         celular.doAfterTextChanged {
-            if(!celular.text.isNullOrEmpty())
-            {
-                if(celular.text!!.count() == 9)
-                {
-                    isValidCelular = true
-                    showbutton()
 
-                }else {
-                    isValidCelular = false
-                    showbutton()
-                }
-            }else
+            var celularChanged = it.toString()
+
+            layoutCelular.error = when
             {
-                isValidCelular = false
-                showbutton()
+                celularChanged.isNullOrEmpty() -> "Celular vacío"
+                celularChanged.count() in 1..8 -> "Celular incompleto"
+                else -> null
             }
+
+            showbutton()
 
         }
 
@@ -149,11 +174,15 @@ class RegistrarActivity : AppCompatActivity() {
 
     private fun showbutton() {
 
-        if(isValidFecha
-            && isValidApellidos
-            && isValidCelular
-            && isValidNombres
-            && isValidDni)
+        if(!nombres.text.toString().trim().isNullOrEmpty()          &&
+            nombres.text.toString().trim().count() >= 4             &&
+            !apellidos.text.toString().trim().isNullOrEmpty()          &&
+            apellidos.text.toString().trim().count() >= 4             &&
+            !celular.text.toString().trim().isNullOrEmpty()          &&
+            celular.text.toString().trim().count() == 9             &&
+            !dni.text.toString().trim().isNullOrEmpty()          &&
+            dni.text.toString().trim().count() == 8             &&
+            !fecha.text.toString().trim().isNullOrEmpty())
         {
             //Registrar prestamo
             registerButton.apply {
@@ -182,6 +211,7 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
 
+
     @SuppressLint("SimpleDateFormat")
     private fun getCalendar() {
         val datePicker =
@@ -192,7 +222,14 @@ class RegistrarActivity : AppCompatActivity() {
         datePicker.show(supportFragmentManager, "Datepickerdialog");
 
         datePicker.addOnPositiveButtonClickListener {
-            SimpleDateFormat("dd/MM/yyyy").format(it).toString().also { binding.fecha.setText(it) }
+            println("UnixTime: ${it}")
+            fechaSelectedUnixtime = it
+            SimpleDateFormat("dd/MM/yyyy").apply {
+                timeZone = TimeZone.getTimeZone("GTM")
+                format(it).toString().also {
+                    binding.fecha.setText(it)
+                }
+            }
 
         }
 
@@ -209,10 +246,10 @@ class RegistrarActivity : AppCompatActivity() {
 
             if(!extras.isNullOrEmpty())
             {
-                prestamo = gson.fromJson(extras, Prestamo::class.java)
-                binding.interes.setText("${prestamo.interes!!.toInt()}%")
-                binding.capital.setText("S./ ${prestamo.capital!!.toInt()}")
-                binding.plazosEnDias.setText("${prestamo.plazo_vto.toString()} dias")
+                prestamoReceived = gson.fromJson(extras, Prestamo::class.java)
+                binding.interes.setText("${prestamoReceived.interes!!.toInt()}%")
+                binding.capital.setText("S./ ${prestamoReceived.capital!!.toInt()}")
+                binding.plazosEnDias.setText("${prestamoReceived.plazo_vto.toString()} dias")
             }
         }
 

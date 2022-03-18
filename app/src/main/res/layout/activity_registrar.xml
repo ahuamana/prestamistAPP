@@ -70,6 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
+                android:layout_marginTop="6dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
@@ -93,6 +94,7 @@
                 android:layout_weight="1"
                 app:counterEnabled="true"
                 app:counterMaxLength="8"
+                android:layout_marginTop="6dp"
                 android:layout_marginRight="10dp"
                 app:errorEnabled="true"
                 app:layout_constraintEnd_toStartOf="@+id/celularLayout"
@@ -106,7 +108,7 @@
                     android:hint="DNI"
                     android:inputType="number"
                     android:lines="1"
-                    android:maxLength="50" />
+                    android:maxLength="8" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -115,6 +117,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="6dp"
                 android:layout_weight="1"
                 app:counterEnabled="true"
                 app:counterMaxLength="9"
@@ -131,7 +134,7 @@
                     android:hint="Celular"
                     android:inputType="number"
                     android:lines="1"
-                    android:maxLength="50" />
+                    android:maxLength="9" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -139,15 +142,16 @@
                 style="@style/CustomTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
                 android:clickable="false"
                 android:cursorVisible="false"
                 android:focusable="false"
                 app:endIconDrawable="@drawable/ic_calendar"
                 app:endIconMode="custom"
                 app:errorEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/celularLayout">
+                app:layout_constraintEnd_toEndOf="@+id/celularLayout"
+                app:layout_constraintStart_toStartOf="@+id/dniLayout"
+                app:layout_constraintTop_toBottomOf="@+id/dniLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/fecha"
@@ -170,6 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:clickable="false"
+                android:layout_marginTop="6dp"
                 android:cursorVisible="false"
                 android:focusable="false"
                 android:layout_marginRight="10dp"
@@ -213,6 +218,7 @@
                 android:clickable="false"
                 android:cursorVisible="false"
                 android:focusable="false"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
                 app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"

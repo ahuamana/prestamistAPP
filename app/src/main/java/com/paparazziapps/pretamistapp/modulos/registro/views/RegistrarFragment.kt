@@ -20,7 +20,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.databinding.ActivityCalcularBinding
 import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
 import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimals
@@ -67,7 +66,7 @@ class RegistrarFragment : Fragment() {
     //Layout
     val listaIntereses = arrayListOf<String>("8%","10%","20%","30%","40%","50%")
     val listaPlazos = arrayListOf<String>("30 dias","60 dias","90 dias","120 dias","180 dias")
-    val listmode = arrayListOf(CalcularActivity.M_STANDAR, CalcularActivity.M_PERSONALIZADO)
+    val listmode = arrayListOf(M_STANDAR, M_PERSONALIZADO)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

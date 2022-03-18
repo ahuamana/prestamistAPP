@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "889250722486",
+    "project_id": "prueba-prestamist",
+    "storage_bucket": "prueba-prestamist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889250722486:android:945ac3b0cd4c68c6e86c17",
+        "android_client_info": {
+          "package_name": "com.paparazziapps.pretamistapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889250722486-mcsvga3u1f85j8krps9mj7h2nn0ocbc1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyColA-F0t4ixSIn2JjuBP57G5mdBAnMdTg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "889250722486-mcsvga3u1f85j8krps9mj7h2nn0ocbc1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

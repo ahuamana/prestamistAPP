@@ -11,12 +11,12 @@
         tools:layout="@layout/fragment_registrar" />
     <fragment
         android:id="@+id/navigation_finanzas"
-        android:name="com.paparazziapps.pretamistapp.FinanzasFragment"
+        android:name="com.paparazziapps.pretamistapp.modulos.tesoreria.views.FinanzasFragment"
         android:label="fragment_finanzas"
         tools:layout="@layout/fragment_finanzas" />
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.paparazziapps.pretamistapp.HomeFragment"
+        android:name="com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment"
         android:label="fragment_home2"
         tools:layout="@layout/fragment_home" />
 </navigation>
