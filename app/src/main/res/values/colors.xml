@@ -27,6 +27,10 @@
     <color name="color_line">#E7E7E7</color>
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="color_text_web">#A0A0A0</color>
+    <color name="color_fondo_pantalla">#F4F8F9</color>
+
+    <color name="colorCortina">#E6FFFFFF</color>
+    <color name="colorSkeleton">#efefef</color>
 
 
     <color name="com_facebook_blue">#3B5998</color>

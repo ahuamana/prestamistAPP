@@ -1,7 +1,9 @@
 package com.paparazziapps.pretamistapp.modulos.registro.views
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,18 +11,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
 import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimals
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
@@ -50,17 +53,15 @@ class RegistrarFragment : Fragment() {
     lateinit var montoDiario: MaterialTextView
     lateinit var montoTotal: MaterialTextView
 
-
     var isValidInteres = false
     var isValidInteresP = false
     var isValidMeses = false
     var isValidMesesP = false
     var isValidCapitalPrestado = false
 
-
     var mesesEntero:Int = 0
-    var capitalDouble:Double = 0.00
-    var interesDouble:Double = 0.00
+    var capitalEntero:Int = 0
+    var interesEntero:Int = 0
     var prestamo = Prestamo()
 
     //Layout
@@ -68,6 +69,15 @@ class RegistrarFragment : Fragment() {
     val listaPlazos = arrayListOf<String>("30 dias","60 dias","90 dias","120 dias","180 dias")
     val listmode = arrayListOf(M_STANDAR, M_PERSONALIZADO)
 
+    //Result for activity
+    val startForResult  = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if (it.resultCode == Activity.RESULT_OK) {
+            val msj = it.data?.getStringExtra("mensaje")
+            // Handle the Intent
+            showMessage(msj?:"")
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,14 +126,15 @@ class RegistrarFragment : Fragment() {
     private fun continuar() {
         btnContinuar.setOnClickListener {
 
-            prestamo.capital = capitalDouble
-            prestamo.interes = interesDouble
+            prestamo.capital = capitalEntero
+            prestamo.interes = interesEntero
             prestamo.plazo_vto = mesesEntero
 
             var gson = Gson()
             var prestamoJson = gson.toJson(prestamo)
 
-            startActivity(Intent(context, RegistrarActivity::class.java).putExtra("prestamoJson",prestamoJson))
+            //Show next activity - Register pagos
+            startForResult.launch(Intent(context, RegistrarActivity::class.java).putExtra("prestamoJson",prestamoJson))
         }
     }
 
@@ -306,26 +317,23 @@ class RegistrarFragment : Fragment() {
         {
             M_STANDAR -> {
 
-                capitalDouble = capitalPrestado.text.toString().trim().toDouble()
-                interesDouble = intereses.text.substring(0,intereses.text.length-1).toDouble()
+                capitalEntero = capitalPrestado.text.toString().trim().toInt()
+                interesEntero = intereses.text.substring(0,intereses.text.length-1).toInt()
                 mesesEntero = meses.text.substring(0,meses.text.length-5).toInt()
-                _viewModel.calcularMontoDiario(capitalDouble,interesDouble,mesesEntero)
+                _viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
             }
 
             M_PERSONALIZADO -> {
 
-                capitalDouble = capitalPrestado.text.toString().trim().toDouble()
-                interesDouble = interesesP.text.toString().toDouble()
+                capitalEntero = capitalPrestado.text.toString().trim().toInt()
+                interesEntero = interesesP.text.toString().toInt()
                 mesesEntero = mesesP.text.toString().toInt()
 
-                _viewModel.calcularMontoDiario(capitalDouble,interesDouble,mesesEntero)
+                _viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
             }
 
             else -> showMessage("No se pudo procesar tu solicitud")
         }
-
-
-
 
     }
 
@@ -357,7 +365,7 @@ class RegistrarFragment : Fragment() {
 
     private fun showMessage(message:String)
     {
-        println("Mensaje nuevo: $message")
+        Snackbar.make(binding.root,"$message",Snackbar.LENGTH_LONG).show()
     }
 
 

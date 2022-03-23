@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.paparazziapps.pretamistapp">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,12 +29,7 @@
             android:name=".modulos.registro.views.RegistrarActivity"
             android:exported="true"
             android:theme="@style/Theme.noActionBar" />
-        <activity
-            android:name=".modulos.registro.views.CalcularActivity"
-            android:exported="true"
-            android:theme="@style/Theme.noActionBar">
 
-        </activity>
     </application>
 
 </manifest>

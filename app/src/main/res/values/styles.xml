@@ -56,6 +56,15 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="CustomTextViewProgress">
+        <item name="android:layout_width">wrap_content</item> <!--debe ser una dimension-->
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:fontFamily">@font/product_sans_regular</item>
+        <item name="android:textColor">@color/color_text_web</item>
+        <item name="android:textSize">15sp</item>  <!--debe ser una dimension-->
+    </style>
+
     <style name="Theme.MaterialComponents.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

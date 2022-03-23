@@ -1,11 +1,13 @@
 package com.paparazziapps.pretamistapp.modulos.registro.views
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -19,6 +21,10 @@ import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.Intent
+
+
+
 
 class RegistrarActivity : AppCompatActivity() {
 
@@ -40,7 +46,7 @@ class RegistrarActivity : AppCompatActivity() {
     lateinit var toolbar: Toolbar
     var fechaSelectedUnixtime:Long? = null
 
-    val viewModel = ViewModelRegister.getInstance()
+    val _viewModel = ViewModelRegister.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +79,7 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun startObservers() {
-        viewModel.getMessage().observe(this){message ->  showMessage(message)}
+        _viewModel.getMessage().observe(this){message ->  showMessage(message)}
     }
 
     private fun showMessage(message: String?) {
@@ -90,26 +96,56 @@ class RegistrarActivity : AppCompatActivity() {
 
     private fun registerPrestamo() {
 
-        registerButton.setOnClickListener {
+        registerButton.apply {
 
-            var prestamo = Prestamo(
-                nombres     = nombres.text.toString().trim(),
-                apellidos   = apellidos.text.toString().trim(),
-                dni         = dni.text.toString().trim(),
-                celular     = celular.text.toString().trim(),
-                fecha       = fecha.text.toString().trim(),
-                unixtime    = fechaSelectedUnixtime,
-                capital     = prestamoReceived.capital,
-                interes     = prestamoReceived.interes,
-                plazo_vto   = prestamoReceived.plazo_vto
-            )
+            setOnClickListener {
 
-            //Register ViewModel
+                isEnabled = false
+                binding.cortina.isVisible = true
+
+                var prestamo = Prestamo(
+                    nombres     = nombres.text.toString().trim(),
+                    apellidos   = apellidos.text.toString().trim(),
+                    dni         = dni.text.toString().trim(),
+                    celular     = celular.text.toString().trim(),
+                    fecha       = fecha.text.toString().trim(),
+                    unixtime    = fechaSelectedUnixtime,
+                    unixtimeRegistered = System.currentTimeMillis(),
+                    capital     = prestamoReceived.capital,
+                    interes     = prestamoReceived.interes,
+                    plazo_vto   = prestamoReceived.plazo_vto
+                )
+
+
+                //Register ViewModel
+                _viewModel.createPrestamo(prestamo){
+                        isCorrect, msj, result, isRefresh ->
+
+                    if(isCorrect)
+                    {
+                        //showMessage(msj)
+                        intent.putExtra("mensaje", msj)
+                        setResult(RESULT_OK, intent)
+                        finish()
+
+                    }else{
+                        binding.cortina.isVisible = false
+                        isEnabled = true
+                    }
+                }
+               //Fin click listener
+            }
+
+
 
         }
     }
 
     private fun validateFields() {
+
+        fecha.doAfterTextChanged {
+            showbutton()
+        }
 
         nombres.doAfterTextChanged {
 

@@ -8,8 +8,9 @@ data class Prestamo (
     var celular:String? = null,
     var fecha:String? = null,
     var unixtime:Long?= null,
+    var unixtimeRegistered: Long? = null,
 
-    var capital:Double? = null,
-    var interes:Double? = null,
+    var capital:Int? = null,
+    var interes:Int? = null,
     var plazo_vto:Int?=null
 )
