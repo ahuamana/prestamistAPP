@@ -365,7 +365,7 @@ class RegistrarFragment : Fragment() {
 
     private fun showMessage(message:String)
     {
-        Snackbar.make(binding.root,"$message",Snackbar.LENGTH_LONG).show()
+        Snackbar.make(activity!!.findViewById(android.R.id.content),"$message",Snackbar.LENGTH_LONG).show()
     }
 
 
