@@ -27,8 +27,8 @@ open class ViewModelRegister private constructor(){
             var newCapital = capital.toDouble()
             var newInteres = interes.toDouble()
 
-            var interesFinal =newCapital * (newInteres/100)
-            var montodiario =(interesFinal + newCapital)/dias
+            var interesFinal = newCapital * (newInteres/100)
+            var montodiario = (interesFinal + newCapital)/dias
             _montoDiario.value = String.format("%.1f", montodiario).toDouble()
 
         }catch (e:Exception)

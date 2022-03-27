@@ -5,13 +5,30 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
+import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
+import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
+import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
+import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
+import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 
 
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    var _viewModel = ViewModelDashboard.getInstance()
+
+    var _binding: FragmentHomeBinding?= null
+    private val binding get() = _binding!!
+
+    //constructores
+    val prestamoAdapter = PrestamoAdapter()
+
+    private lateinit var recyclerPrestamos: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,20 +42,65 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        var view = binding.root
+
+        //Link items with layout
+        recyclerPrestamos = binding.recyclerPrestamos
+
+
+        //Configuration
+        setupRecyclerPrestamos()
+
+        //Observers
+        observers()
+
+        //First time process
+        obtenerPrestamosFirstTime()
+
+
+        return view
     }
 
+    private fun setupRecyclerPrestamos() {
+
+
+
+        recyclerPrestamos.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = prestamoAdapter
+        }
+    }
+
+    private fun obtenerPrestamosFirstTime() {
+        _viewModel.getPrestamos()
+    }
+
+    private fun observers() {
+        _viewModel.receivePrestamos().observe(this) {
+            if(it.count() == 0)
+            {
+                binding.emptyPrestamo.isVisible = true
+                recyclerPrestamos.isVisible = false
+                //showMessage("No hay prestamos")
+            }else
+            {
+                binding.emptyPrestamo.isVisible = false
+                prestamoAdapter.setData(it)
+                recyclerPrestamos.isVisible = true
+                //showMessage(" Lista de prestamos ${it.count()}")
+            }
+        }
+    }
+
+    private fun showMessage(message:String)
+    {
+        Snackbar.make(activity!!.findViewById(android.R.id.content),"$message", Snackbar.LENGTH_LONG).show()
+    }
+
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {

@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 
 class PrestamoProvider {
@@ -29,5 +30,9 @@ class PrestamoProvider {
         return mCollectionPrestamo.document().set(prestamo)
     }
 
+    fun getPrestamos(): Task<QuerySnapshot>
+    {
+      return  mCollectionPrestamo.get()
+    }
 
 }

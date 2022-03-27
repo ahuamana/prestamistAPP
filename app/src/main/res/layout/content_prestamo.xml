@@ -3,19 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="6dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="16dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="6dp"
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:paddingTop="16dp"
+        android:padding="6dp"
         android:layout_height="match_parent">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/shapeableImageView2"
             android:layout_width="45dp"
+            android:layout_marginTop="5dp"
             android:layout_height="45dp"
             android:layout_marginLeft="6dp"
             android:src="@drawable/ic_person"
@@ -27,10 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
-            app:cardCornerRadius="6dp"
             android:backgroundTint="#F44336"
+            app:cardCornerRadius="6dp"
             app:layout_constraintStart_toEndOf="@+id/shapeableImageView2"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/shapeableImageView2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,19 +44,20 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/dias_retrasados"
                     android:layout_width="wrap_content"
-                    android:textSize="16dp"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
                     android:layout_height="wrap_content"
-                    android:text="29" />
+                    android:text="29"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/lbl_dias_retrasados"
                     android:layout_width="wrap_content"
-                    android:padding="3dp"
-                    android:textSize="9dp"
-                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
-                    android:text="días retrasados" />
+                    android:padding="3dp"
+                    android:text="días retrasados"
+                    android:textColor="@color/white"
+                    android:textSize="9dp" />
 
             </LinearLayout>
 
@@ -90,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="6dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="6dp"
+            app:cardElevation="3dp"
             android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

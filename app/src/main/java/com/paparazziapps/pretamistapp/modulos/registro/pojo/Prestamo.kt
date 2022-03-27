@@ -9,6 +9,7 @@ data class Prestamo (
     var fecha:String? = null,
     var unixtime:Long?= null,
     var unixtimeRegistered: Long? = null,
+    var fechaUltimoPago: Long? = null,
 
     var capital:Int? = null,
     var interes:Int? = null,

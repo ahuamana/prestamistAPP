@@ -261,7 +261,7 @@ class RegistrarActivity : AppCompatActivity() {
             println("UnixTime: ${it}")
             fechaSelectedUnixtime = it
             SimpleDateFormat("dd/MM/yyyy").apply {
-                timeZone = TimeZone.getTimeZone("GTM")
+                timeZone = TimeZone.getTimeZone("GMT")
                 format(it).toString().also {
                     binding.fecha.setText(it)
                 }
