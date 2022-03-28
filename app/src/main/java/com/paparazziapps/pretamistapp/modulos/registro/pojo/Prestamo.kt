@@ -1,7 +1,7 @@
 package com.paparazziapps.pretamistapp.modulos.registro.pojo
 
 data class Prestamo (
-
+    var id:String?=null,
     var nombres:String? = null,
     var apellidos: String? = null,
     var dni:String? = null,
@@ -9,8 +9,7 @@ data class Prestamo (
     var fecha:String? = null,
     var unixtime:Long?= null,
     var unixtimeRegistered: Long? = null,
-    var fechaUltimoPago: Long? = null,
-
+    var fechaUltimoPago: String? = null,
     var capital:Int? = null,
     var interes:Int? = null,
     var plazo_vto:Int?=null

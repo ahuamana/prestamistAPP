@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
+import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
-import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimals
-import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
+import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PrestamoAdapter() : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
+class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
 
-    var prestamosList: List<Prestamo> = mutableListOf()
+    var prestamosList: MutableList<Prestamo> = mutableListOf()
     var fechaActual:String
     //Time peru [Tiempo Actual]
     var fecha = SimpleDateFormat("dd/MM/yyyy").apply {
@@ -30,9 +30,15 @@ class PrestamoAdapter() : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
         }
     }
 
-    fun setData(listPrestamos: List<Prestamo>) {
+    fun setData(listPrestamos: MutableList<Prestamo>) {
         prestamosList = listPrestamos
         notifyDataSetChanged()
+    }
+
+    fun updateItem(position: Int, prestamo: Prestamo)
+    {
+        prestamosList.set(position,prestamo)
+        notifyItemChanged(position)
     }
 
 
@@ -47,7 +53,7 @@ class PrestamoAdapter() : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: PrestamoAdapter.ViewHolder, position: Int) {
 
         val currentItem = prestamosList[position]
-        holder.bind(currentItem, fechaActual)
+        holder.bind(currentItem, fechaActual, setOnClickedPrestamo)
     }
 
     override fun getItemCount(): Int {
@@ -59,33 +65,34 @@ class PrestamoAdapter() : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
 
         val binding = ContentPrestamoBinding.bind(itemView)
 
-        fun bind(item: Prestamo, fechaActual: String) {
+        fun bind(item: Prestamo, fechaActual: String, setOnClickedPrestamo: setOnClickedPrestamo) {
             var telefono = binding.telefono
             var nombreCompleto = binding.nombreCompleto
-            var diasRetrasados = binding.diasRetrasados
+            var numero_dias_retrasados = binding.numeroDiasRetrasados
             var diasRetrasadosCardview = binding.cardviewDiasRetrasados
             var cardViewEnviarMsj = binding.cardviewEnviarMsj
             var lblDiasRetrasados = binding.lblDiasRetrasados
+            var montoTotalAPagar:String? = null
+            var diasRetraso:Int = 10
+
 
             itemView.apply {
 
-
-                //Nombres de las personas
-
-
                 //Metodo para el calculo de dias retrasados
-                calcularDiasRetrasados(itemView, diasRetrasados, item, diasRetrasadosCardview, fechaActual)
+                calcularDiasRetrasados(itemView, numero_dias_retrasados, item, diasRetrasadosCardview, fechaActual)
+
+
 
                 //Enviar mensaje a whatsapp
                 cardViewEnviarMsj.apply {
                     setOnClickListener {
 
-                        var diasretraso = diasRetrasados.text.toString().trim()
-
-                        var calcularMontoTotalAPagar = getDoubleWithTwoDecimals((diasretraso.toInt() * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
+                        //calcular el monto total a pagar
+                        diasRetraso = numero_dias_retrasados.text.toString().toInt()
+                        montoTotalAPagar = getDoubleWithTwoDecimals((diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
                         //Mensaje
-                        var msj = "Hola *${item.nombres}, ${item.apellidos}*, te escribimos para recordarte que tienes *${diasretraso} ${lblDiasRetrasados.text}* " +
-                                "con los pagos de tu préstamo con un monto total a pagar de: *S./$calcularMontoTotalAPagar*"
+                        var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
+                                "con los pagos de tu préstamo con un monto total a pagar de: *S./$montoTotalAPagar*"
                         openWhatsapp(item.celular, msj)
                     }
                 }
@@ -98,6 +105,24 @@ class PrestamoAdapter() : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
 
 
                 nombreCompleto.setText("${replaceFirstCharInSequenceToUppercase(item.nombres.toString().trim())}, ${replaceFirstCharInSequenceToUppercase(item.apellidos.toString().trim())}")
+
+                //Actualizar Pago al hacer click al itemview
+                setOnClickListener {
+                    //calcular el monto total a pagar
+                    diasRetraso = numero_dias_retrasados.text.toString().toInt()
+                    montoTotalAPagar = getDoubleWithTwoDecimals((diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
+
+                    if(numero_dias_retrasados.text.toString().toInt() == 0)
+                    {
+                        println("numero de dias retrasados es cero: ${numero_dias_retrasados.text}")
+                        setOnClickedPrestamo.ActualizarPagoPrestamo(item, false, "", adapterPosition)
+                    }else
+                    {
+                        println("monto total a pagar: ${montoTotalAPagar}")
+                        setOnClickedPrestamo.ActualizarPagoPrestamo(item, true, montoTotalAPagar?:"", adapterPosition)
+                    }
+
+                }
 
             }
 
@@ -126,42 +151,54 @@ class PrestamoAdapter() : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
             fechaActual: String
         ) {
 
-                //Calcular fecha actual
-                println("Adapter ----> Nombres:${item.nombres} --- Apellidos: ${item.apellidos} --- Fecha actual:${fechaActual} ----> Fecha registrada: ${item.fecha}")
+            println("Adapter ----> Nombres:${item.nombres} --- Apellidos: ${item.apellidos} --- Fecha actual:${fechaActual} ----> Fecha registrada: ${item.fecha}")
 
-                //Calcular fecha registrada-- GTM Peru [ Unixtime to Formato fecha ]
-                /*item.unixtime.also {
-                    SimpleDateFormat("dd/MM/yyyy").apply {
-                        timeZone = TimeZone.getTimeZone("GMT")
-                        format(it).toString().also {
-
-                    }
-                 */
-
-                val milisecondsByDay = 86400000
-
-
-               //Restar unixtime y obtener los dias restantes
-               var fechaActualUnixtime  = SimpleDateFormat("dd/MM/yyyy").parse(fechaActual).time
-               var dias = (fechaActualUnixtime).minus(item.unixtime?:0)?.div(milisecondsByDay)
-
-                diasRetrasados.setText(dias.toString())
-
-                println("dias restante $dias")
-                if(dias.toInt() == 0 )
-                {
-                    binding.cardviewEnviarMsj.isVisible = false
-                    diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.primarycolordark_two)
-                }else
-                {
-                    if(dias.toInt() == 1)
+            if(item.fechaUltimoPago != null)
+            {
+                //Obtener dias restantes si ya esta pagando diariamente ---> de los pagos actualizados
+                getDiasRestantesFromDateToNow(item.fechaUltimoPago?:"").apply {
+                    diasRetrasados.setText(this)
+                    if(this.toInt() == 0)
                     {
-                        binding.lblDiasRetrasados.setText("día retrasado")
-                    }
+                        binding.cardviewEnviarMsj.isVisible = false
+                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.primarycolordark_two)
+                    }else
+                    {
+                        if(this.toInt() == 1)
+                        {
+                            binding.lblDiasRetrasados.setText("día retrasado")
+                        }
 
-                    binding.cardviewEnviarMsj.isVisible = true
-                    diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.red)
+                        binding.cardviewEnviarMsj.isVisible = true
+                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.red)
+                    }
                 }
+
+            }else
+            {
+                //Calcular la fecha con el ultimo dia
+                //Restar unixtime y obtener los dias restantes
+                getDiasRestantesFromDateToNow(item.fecha?:"").apply {
+                    diasRetrasados.setText(this)
+                    if(this.toInt() == 0)
+                    {
+                        binding.cardviewEnviarMsj.isVisible = false
+                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.primarycolordark_two)
+                    }else
+                    {
+                        if(this.toInt() == 1)
+                        {
+                            binding.lblDiasRetrasados.setText("día retrasado")
+                        }
+
+                        binding.cardviewEnviarMsj.isVisible = true
+                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.red)
+                    }
+                }
+
+            }
+
+
 
 
 

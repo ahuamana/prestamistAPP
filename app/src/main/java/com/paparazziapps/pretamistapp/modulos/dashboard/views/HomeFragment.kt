@@ -1,32 +1,38 @@
 package com.paparazziapps.pretamistapp.modulos.dashboard.views
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
+import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
-import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
+import com.paparazziapps.pretamistapp.helper.MainApplication
+import com.paparazziapps.pretamistapp.helper.fromHtml
+import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
+import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
+import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
+import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     var _viewModel = ViewModelDashboard.getInstance()
+    var _viewModelregister = ViewModelRegister.getInstance()
 
     var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
 
     //constructores
-    val prestamoAdapter = PrestamoAdapter()
+    val prestamoAdapter = PrestamoAdapter(this)
 
     private lateinit var recyclerPrestamos: RecyclerView
 
@@ -96,7 +102,86 @@ class HomeFragment : Fragment() {
 
     private fun showMessage(message:String)
     {
-        Snackbar.make(activity!!.findViewById(android.R.id.content),"$message", Snackbar.LENGTH_LONG).show()
+        Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun showShortMessage(message:String)
+    {
+        Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun openDialogActualizarPago(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition:Int) {
+
+        binding.cntCortina.isVisible = true
+
+        val dialogBuilder = AlertDialog.Builder(context, R.style.CustomDialogBackground)
+        val view : View   = layoutInflater.inflate(R.layout.dialog_salir_sin_guardar, null)
+        val bindingDialogSalir = DialogSalirSinGuardarBinding.bind(view)
+
+        val title       = bindingDialogSalir.textView
+        val desc        = bindingDialogSalir.lblDescSalirNoticias
+        val btnPositive   = bindingDialogSalir.btnAceptarSalir
+        val btnNegative = bindingDialogSalir.btnCancelarSalir
+
+        title.text = "¿Estas seguro de actualizar la deuda?"
+        desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(prestamo.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos.toString())} </b>" +
+                ",con un monto total a pagar de: <br><b>S./${montoTotalAPagar}<b>").fromHtml()
+
+        dialogBuilder.apply {
+            setView(view)
+        }
+
+        val dialog = dialogBuilder.create()
+        dialog.apply {
+            setCanceledOnTouchOutside(false)
+            window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window?.setGravity(Gravity.CENTER)
+            window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            setOnDismissListener {
+                binding.cntCortina.visibility = View.GONE
+            }
+            show()
+        }
+
+
+        btnPositive?.apply {
+            visibility = View.VISIBLE
+            setOnClickListener {
+
+
+                (context as PrincipalActivity).showCortinaPrincipal(true)
+
+                dialog.dismiss()
+
+                _viewModelregister.updateUltimoPago(prestamo.id, getFechaActualNormalCalendar()){
+                    isCorrect, msj, result, isRefresh ->
+
+                    if(isCorrect)
+                    {
+                        prestamo.fechaUltimoPago = getFechaActualNormalCalendar()
+                        (context as PrincipalActivity).showCortinaPrincipal(false)
+                        prestamoAdapter.updateItem(adapterPosition, prestamo)//Actualizar local recycler View
+                        showMessage(msj)
+
+                    }else
+                    {
+                        (context as PrincipalActivity).showCortinaPrincipal(false)
+                        showMessage(msj)
+                    }
+
+                }
+
+
+            }
+        }
+
+        btnNegative?.apply {
+            visibility = View.VISIBLE
+            isAllCaps = false
+            setOnClickListener {
+                dialog.dismiss()
+            }
+        }
     }
 
 
@@ -110,4 +195,26 @@ class HomeFragment : Fragment() {
                 }
             }
     }
+
+    override fun onDestroy() {
+
+        ViewModelRegister.destroyInstance()
+        ViewModelDashboard.destroyInstance()
+        super.onDestroy()
+    }
+
+    //->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Metodos override
+    override fun ActualizarPagoPrestamo(prestamo: Prestamo, needUpdate:Boolean, montoTotalAPagar:String, adapterPosition:Int) {
+        //println("Hizo click en Actualizar Pago Prestamos")
+        if(needUpdate)
+        {
+            openDialogActualizarPago(prestamo, montoTotalAPagar,adapterPosition)
+        }else
+        {
+            showShortMessage("El cliente no tiene deudas")
+        }
+    }
+
+
+
 }

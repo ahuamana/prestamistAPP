@@ -3,6 +3,7 @@ package com.paparazziapps.pretamistapp.modulos.principal.views
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.navigation.compose.NavHost
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityPrincipalBinding
+import com.paparazziapps.pretamistapp.modulos.principal.interfaces.principalUses
 
 class PrincipalActivity : AppCompatActivity() {
 
@@ -79,5 +81,10 @@ class PrincipalActivity : AppCompatActivity() {
         }
     }
 
+
+    public fun showCortinaPrincipal(needToSee:Boolean)
+    {
+       binding.cortina.isVisible = needToSee
+    }
 
 }

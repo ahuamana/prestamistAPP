@@ -1,5 +1,9 @@
 package com.paparazziapps.pretamistapp.helper
 
+import android.os.Build
+import android.text.Html
+import android.text.SpannableString
+import android.text.Spanned
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,5 +41,28 @@ import java.util.*
 
         return subString
 
+    }
+
+    fun getDiasRestantesFromDateToNow(fecha: String):String
+    {
+       return (convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar()).minus(convertFechaActualNormalToUnixtime(fecha))).div(86400000).toString()
+    }
+
+
+    fun String?.fromHtml() : Spanned? {
+        val html =  this
+            ?.replace("<strong>", "<b>")
+            ?.replace("</strong>", "</b>")
+            ?.replace("<ul>", "")
+            ?.replace("</ul>", "")
+            ?.replace("<li>", "<p>•&nbsp;&nbsp;&nbsp;")
+            ?.replace(" ", "&nbsp;")
+            ?.replace("</li>", "</p>")
+
+        return when {
+            html == null -> SpannableString("")
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
+            else         -> Html.fromHtml(html, null, MyTagHandler())
+        }
     }
 

@@ -110,7 +110,7 @@ class RegistrarActivity : AppCompatActivity() {
                     celular     = celular.text.toString().trim(),
                     fecha       = fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
-                    unixtimeRegistered = System.currentTimeMillis(),
+                    unixtimeRegistered = null,
                     capital     = prestamoReceived.capital,
                     interes     = prestamoReceived.interes,
                     plazo_vto   = prestamoReceived.plazo_vto
@@ -289,6 +289,12 @@ class RegistrarActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onDestroy() {
+
+        ViewModelRegister.destroyInstance()
+        super.onDestroy()
     }
 
 }

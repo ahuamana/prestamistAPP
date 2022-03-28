@@ -70,4 +70,34 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="CustomButtonCorner">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/color_text_web</item>
+        <item name="android:fontFamily">@font/product_sans_regular</item>
+        <item name="android:background">@drawable/button_corner_without_stroke</item>
+    </style>
+
+    <style name="CustomButtonCornerOutline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/color_text_web</item>
+        <item name="android:fontFamily">@font/product_sans_regular</item>
+        <item name="android:background">@drawable/button_corner</item>
+    </style>
+
+    <style name="CustomDialogBackground" parent="@style/Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="fontFamily">@font/product_sans_regular</item>
+        <item name="android:windowBackground">@color/colorTransparent</item>
+        <item name="textColorAlertDialogListItem">@color/color_text_web</item>
+    </style>
+
 </resources>

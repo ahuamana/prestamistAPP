@@ -14,20 +14,19 @@ class ViewModelDashboard private constructor(){
     var _message = MutableLiveData<String>()
     var mPrestamoProvider = PrestamoProvider()
 
-    var _prestamos = MutableLiveData<List<Prestamo>>()
+    var _prestamos = MutableLiveData<MutableList<Prestamo>>()
 
     fun getMessage() : LiveData<String> {
         return  _message
     }
 
-    fun receivePrestamos (): LiveData<List<Prestamo>>
+    fun receivePrestamos (): LiveData<MutableList<Prestamo>>
     {
         return _prestamos
     }
 
     fun getPrestamos()
     {
-
         try {
 
             var listPrestamos = mutableListOf<Prestamo>()
@@ -45,12 +44,11 @@ class ViewModelDashboard private constructor(){
 
         }catch (t:Throwable)
         {
-
-
-
+            println("Error: ${t.message}")
         }
 
     }
+
 
 
     //constructor

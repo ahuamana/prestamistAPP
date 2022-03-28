@@ -45,4 +45,41 @@
         app:layout_constraintTop_toBottomOf="@+id/tool"
         app:navGraph="@navigation/nav_view" />
 
+
+    <RelativeLayout
+        android:id="@+id/cortina"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorCortina"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="22dp">
+        <ProgressBar
+            android:id="@+id/progress_dashboard"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            android:indeterminateTint="@color/facebook_color_like"
+            android:elevation="20dp"
+            android:progressDrawable="@drawable/circular_progress_bar" />
+        <View
+            android:id="@+id/view_dashboard"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle"
+            android:elevation="8dp"
+            android:backgroundTint="@color/colorWhite"
+            />
+        <TextView
+            android:id="@+id/lbl_cortina_register_principal_activity"
+            android:text="Actualizando pago ..."
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/view_dashboard"
+            style="@style/CustomTextViewProgress"
+            />
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

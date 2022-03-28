@@ -42,10 +42,10 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/dias_retrasados"
+                    android:id="@+id/numero_dias_retrasados"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="29"
+                    android:text="-0"
                     android:textColor="@color/white"
                     android:textSize="16dp"
                     android:textStyle="bold" />

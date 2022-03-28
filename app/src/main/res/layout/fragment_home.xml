@@ -91,4 +91,13 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/cnt_cortina"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorCortina"
+        android:elevation="6dp"
+        android:visibility="gone"
+        />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

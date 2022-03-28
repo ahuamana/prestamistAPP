@@ -74,7 +74,11 @@ class RegistrarFragment : Fragment() {
         if (it.resultCode == Activity.RESULT_OK) {
             val msj = it.data?.getStringExtra("mensaje")
             // Handle the Intent
+            println("Resultado de actividad: $msj")
             showMessage(msj?:"")
+        }else
+        {
+            println("Resultado de actividad--> null")
         }
 
     }
@@ -365,7 +369,7 @@ class RegistrarFragment : Fragment() {
 
     private fun showMessage(message:String)
     {
-        Snackbar.make(activity!!.findViewById(android.R.id.content),"$message",Snackbar.LENGTH_LONG).show()
+        Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message",Snackbar.LENGTH_LONG).show()
     }
 
 

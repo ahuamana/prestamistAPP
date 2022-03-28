@@ -27,12 +27,21 @@ class PrestamoProvider {
 
     fun create(prestamo: Prestamo): Task<Void>
     {
-        return mCollectionPrestamo.document().set(prestamo)
+        prestamo.id = mCollectionPrestamo.document().id
+        return mCollectionPrestamo.document(prestamo.id!!).set(prestamo)
     }
 
     fun getPrestamos(): Task<QuerySnapshot>
     {
       return  mCollectionPrestamo.get()
+    }
+
+    fun setLastPayment(id:String, fecha:String): Task<Void>
+    {
+        val map = mutableMapOf<String,Any?>()
+        map.put("fechaUltimoPago",fecha)
+
+        return mCollectionPrestamo.document(id).update(map)
     }
 
 }

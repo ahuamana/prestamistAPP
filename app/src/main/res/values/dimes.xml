@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="corner_modal">8dp</dimen>
+    <dimen name="elevacion_modal">12dp</dimen>
+    <dimen name="margin_modal">26dp</dimen>
+
+</resources>
