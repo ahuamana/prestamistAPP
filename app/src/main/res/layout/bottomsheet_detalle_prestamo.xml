@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorTransparent"
+    android:paddingTop="4dp"
+    android:elevation="16dp"
+    android:clickable="false"
+    android:focusable="false"
+    app:behavior_peekHeight="0dp"
+    android:touchscreenBlocksFocus="false"
+    android:filterTouchesWhenObscured="false"
+    android:focusableInTouchMode="false"
+    android:orientation="vertical"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    app:behavior_hideable="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/CustomBottomSheet"
+        >
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical"
+            android:fitsSystemWindows="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:behavior_overlapTop="64dp">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:elevation="24dp"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:id="@+id/linea_desple_btsheet_pagos"
+                    android:layout_width="48dp"
+                    android:layout_height="4dp"
+                    app:tint="@color/linea_bottomsheet"
+                    android:layout_marginTop="16dp"
+                    app:srcCompat="@drawable/buttom_disabled"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/img_person"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="16dp"
+                    android:elevation="8dp"
+                    android:src="@drawable/ic_person"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linea_desple_btsheet_pagos" />
+
+                <TextView
+                    android:id="@+id/lbl_nombre_completo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/product_sans_regular"
+                    android:text="Nombre, Apellidos"
+                    app:layout_constraintBottom_toBottomOf="@id/img_person"
+                    app:layout_constraintLeft_toRightOf="@id/img_person"
+                    app:layout_constraintTop_toTopOf="@id/img_person" />
+
+                <View
+                    android:id="@+id/view_diveder"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/img_person"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <LinearLayout
+                    android:id="@+id/conten_capital_prestado"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/view_diveder"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Capital prestado"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_capital_prestado"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="S./. 1500"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/conten_interes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/conten_capital_prestado"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Interes"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_interes_prestado"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="20%"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/conten_plazo_vto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/conten_interes"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Plazo de vencimiento"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_plazo_vto"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="en 30 dias"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/conten_dias_retrasados"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/conten_plazo_vto"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Días retrasados"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_dias_retrasados"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="3 dias"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/content_dni"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/conten_dias_retrasados"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Dni"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_dni"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="73962071"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/content_fecha_prestamo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="visible"
+                    app:layout_constraintTop_toBottomOf="@+id/content_dni">
+
+                    <TextView
+                        android:id="@+id/lbl_desc_descuento"
+                        android:layout_width="match_parent"
+                        android:layout_height="26dp"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Fecha de préstamo" />
+
+                    <TextView
+                        android:id="@+id/tv_fecha_prestamo"
+                        android:layout_width="match_parent"
+                        android:layout_height="26dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:gravity="right|center_vertical"
+                        tools:text="28/03/2022" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/content_pago_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/content_fecha_prestamo">
+
+                    <TextView
+                        android:id="@+id/lbl_descripcion_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="26dp"
+                        android:textSize="@dimen/dimen_18"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Total" />
+
+                    <TextView
+                        android:id="@+id/tv_monto_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="26dp"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/dimen_18"
+                        android:layout_gravity="center"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:gravity="right|center_vertical"
+                        tools:text="S/. 1900" />
+                </LinearLayout>
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_pagar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="32dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:background="@drawable/corner_boton_outline"
+                    android:textColor="@color/color_text_web"
+                    android:text="Actualizar deuda"
+                    android:textAllCaps="false"
+                    android:textSize="18dp"
+                    android:elevation="9dp"
+                    android:fontFamily="@font/product_sans_regular"
+                    style="?android:textAppearanceSmall"
+                    app:layout_constraintTop_toBottomOf="@+id/content_pago_total"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

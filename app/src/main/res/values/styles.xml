@@ -100,4 +100,9 @@
         <item name="textColorAlertDialogListItem">@color/color_text_web</item>
     </style>
 
+    <style name="CustomBottomSheet">
+        <item name="android:background">@drawable/bottom_sheet_corner</item>
+        <item name="android:elevation">16dp</item>
+    </style>
+
 </resources>

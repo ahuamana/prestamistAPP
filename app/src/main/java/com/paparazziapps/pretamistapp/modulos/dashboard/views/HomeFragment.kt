@@ -11,7 +11,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
-import com.paparazziapps.pretamistapp.helper.MainApplication
 import com.paparazziapps.pretamistapp.helper.fromHtml
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
@@ -51,6 +50,8 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         var view = binding.root
+
+        setOnClickedPrestamoHome = this
 
         //Link items with layout
         recyclerPrestamos = binding.recyclerPrestamos
@@ -110,7 +111,54 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun openDialogActualizarPago(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition:Int) {
+    fun openDialogActualizarPago(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition:Int) {
+
+
+
+
+    }
+
+
+    companion object {
+
+        var setOnClickedPrestamoHome:setOnClickedPrestamo? = null
+
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            HomeFragment().apply {
+                arguments = Bundle().apply {
+                    //putString(ARG_PARAM1, param1)
+                    //putString(ARG_PARAM2, param2)
+                }
+            }
+    }
+
+    override fun onDestroy() {
+
+        ViewModelRegister.destroyInstance()
+        ViewModelDashboard.destroyInstance()
+        super.onDestroy()
+    }
+
+    //->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Metodos override
+    override fun actualizarPagoPrestamo(prestamo: Prestamo, needUpdate:Boolean, montoTotalAPagar:String, adapterPosition:Int, diasRestrasado:String) {
+        //println("Hizo click en Actualizar Pago Prestamos")
+
+        context.apply {
+            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(prestamo, montoTotalAPagar, diasRestrasado, adapterPosition, needUpdate)
+        }
+
+        /*
+        if(needUpdate)
+        {
+            openDialogActualizarPago(prestamo, montoTotalAPagar,adapterPosition)
+        }else
+        {
+            showShortMessage("El cliente no tiene deudas")
+        }*/
+    }
+
+    override fun openDialogoActualizarPrestamo(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition: Int) {
 
         binding.cntCortina.isVisible = true
 
@@ -149,23 +197,23 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
             setOnClickListener {
 
 
-                (context as PrincipalActivity).showCortinaPrincipal(true)
+                //(context as PrincipalActivity).showCortinaPrincipal(true)
 
                 dialog.dismiss()
 
                 _viewModelregister.updateUltimoPago(prestamo.id, getFechaActualNormalCalendar()){
-                    isCorrect, msj, result, isRefresh ->
+                        isCorrect, msj, result, isRefresh ->
 
                     if(isCorrect)
                     {
                         prestamo.fechaUltimoPago = getFechaActualNormalCalendar()
-                        (context as PrincipalActivity).showCortinaPrincipal(false)
+                        //(context as PrincipalActivity).showCortinaPrincipal(false)
                         prestamoAdapter.updateItem(adapterPosition, prestamo)//Actualizar local recycler View
                         showMessage(msj)
 
                     }else
                     {
-                        (context as PrincipalActivity).showCortinaPrincipal(false)
+                        //(context as PrincipalActivity).showCortinaPrincipal(false)
                         showMessage(msj)
                     }
 
@@ -183,38 +231,6 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
             }
         }
     }
-
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    //putString(ARG_PARAM1, param1)
-                    //putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
-    override fun onDestroy() {
-
-        ViewModelRegister.destroyInstance()
-        ViewModelDashboard.destroyInstance()
-        super.onDestroy()
-    }
-
-    //->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Metodos override
-    override fun ActualizarPagoPrestamo(prestamo: Prestamo, needUpdate:Boolean, montoTotalAPagar:String, adapterPosition:Int) {
-        //println("Hizo click en Actualizar Pago Prestamos")
-        if(needUpdate)
-        {
-            openDialogActualizarPago(prestamo, montoTotalAPagar,adapterPosition)
-        }else
-        {
-            showShortMessage("El cliente no tiene deudas")
-        }
-    }
-
 
 
 }

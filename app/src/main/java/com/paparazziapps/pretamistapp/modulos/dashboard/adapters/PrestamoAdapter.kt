@@ -115,11 +115,11 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     if(numero_dias_retrasados.text.toString().toInt() == 0)
                     {
                         println("numero de dias retrasados es cero: ${numero_dias_retrasados.text}")
-                        setOnClickedPrestamo.ActualizarPagoPrestamo(item, false, "", adapterPosition)
+                        setOnClickedPrestamo.actualizarPagoPrestamo(item, false, "", adapterPosition, numero_dias_retrasados.text.toString())
                     }else
                     {
                         println("monto total a pagar: ${montoTotalAPagar}")
-                        setOnClickedPrestamo.ActualizarPagoPrestamo(item, true, montoTotalAPagar?:"", adapterPosition)
+                        setOnClickedPrestamo.actualizarPagoPrestamo(item, true, montoTotalAPagar?:"", adapterPosition,numero_dias_retrasados.text.toString())
                     }
 
                 }

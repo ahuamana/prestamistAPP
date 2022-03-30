@@ -4,5 +4,6 @@
     <dimen name="corner_modal">8dp</dimen>
     <dimen name="elevacion_modal">12dp</dimen>
     <dimen name="margin_modal">26dp</dimen>
+    <dimen name="dimen_18">18dp</dimen>
 
 </resources>
