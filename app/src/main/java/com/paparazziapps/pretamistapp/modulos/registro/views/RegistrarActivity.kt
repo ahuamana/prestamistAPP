@@ -22,8 +22,7 @@ import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegis
 import java.text.SimpleDateFormat
 import java.util.*
 import android.content.Intent
-
-
+import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 
 
 class RegistrarActivity : AppCompatActivity() {
@@ -110,10 +109,15 @@ class RegistrarActivity : AppCompatActivity() {
                     celular     = celular.text.toString().trim(),
                     fecha       = fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
-                    unixtimeRegistered = null,
+                    unixtimeRegistered = getFechaActualNormalInUnixtime(),
                     capital     = prestamoReceived.capital,
                     interes     = prestamoReceived.interes,
-                    plazo_vto   = prestamoReceived.plazo_vto
+                    plazo_vto   = prestamoReceived.plazo_vto,
+                    dias_restantes_por_pagar   = prestamoReceived.plazo_vto,
+                    diasPagados = 0,
+                    montoDiarioAPagar = prestamoReceived.montoDiarioAPagar,
+                    montoTotalAPagar = prestamoReceived.montoTotalAPagar,
+                    state = "ABIERTO"
                 )
 
 

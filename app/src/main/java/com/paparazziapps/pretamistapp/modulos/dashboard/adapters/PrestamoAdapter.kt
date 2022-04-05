@@ -72,7 +72,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             var diasRetrasadosCardview = binding.cardviewDiasRetrasados
             var cardViewEnviarMsj = binding.cardviewEnviarMsj
             var lblDiasRetrasados = binding.lblDiasRetrasados
-            var montoTotalAPagar:String? = null
+            var montoTotalAPagar:Double? = null
             var diasRetraso:Int = 10
 
 
@@ -89,7 +89,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
                         //calcular el monto total a pagar
                         diasRetraso = numero_dias_retrasados.text.toString().toInt()
-                        montoTotalAPagar = getDoubleWithTwoDecimals((diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
+                        montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble((diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
                         //Mensaje
                         var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
                                 "con los pagos de tu préstamo con un monto total a pagar de: *S./$montoTotalAPagar*"
@@ -110,21 +110,45 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 setOnClickListener {
                     //calcular el monto total a pagar
                     diasRetraso = numero_dias_retrasados.text.toString().toInt()
-                    montoTotalAPagar = getDoubleWithTwoDecimals((diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
+                    montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!))
 
                     if(numero_dias_retrasados.text.toString().toInt() == 0)
                     {
                         println("numero de dias retrasados es cero: ${numero_dias_retrasados.text}")
-                        setOnClickedPrestamo.actualizarPagoPrestamo(item, false, "", adapterPosition, numero_dias_retrasados.text.toString())
+                        setOnClickedPrestamo.actualizarPagoPrestamo(item, false, 0.0, adapterPosition, numero_dias_retrasados.text.toString())
                     }else
                     {
                         println("monto total a pagar: ${montoTotalAPagar}")
-                        setOnClickedPrestamo.actualizarPagoPrestamo(item, true, montoTotalAPagar?:"", adapterPosition,numero_dias_retrasados.text.toString())
+                        setOnClickedPrestamo.actualizarPagoPrestamo(item, true, montoTotalAPagar?:0.0, adapterPosition,numero_dias_retrasados.text.toString())
                     }
 
                 }
 
             }
+
+
+            setDiasRestantesPorPagar(item)
+
+        }
+
+        private fun setDiasRestantesPorPagar(item: Prestamo) {
+
+            val lblDiasPorPagar = binding.lblDiasPorPagar
+            val numeroDiasPorPagar = binding.numeroDiasPorPagar
+
+            var diasEnQueTermina = getDiasRestantesFromStart(item.fecha?:"",item.plazo_vto?:0)
+
+            numeroDiasPorPagar.apply {
+                setText(diasEnQueTermina.toString())
+            }
+
+            lblDiasPorPagar.apply {
+                text = when {
+                    diasEnQueTermina == 1 -> "día por pagar"
+                    else -> "días por pagar "
+                }
+            }
+
 
         }
 
@@ -156,17 +180,19 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             if(item.fechaUltimoPago != null)
             {
                 //Obtener dias restantes si ya esta pagando diariamente ---> de los pagos actualizados
-                getDiasRestantesFromDateToNow(item.fechaUltimoPago?:"").apply {
-                    diasRetrasados.setText(this)
-                    if(this.toInt() == 0)
+                getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha?:"",item.diasPagados?:0).apply {
+
+                    if(this.toInt() <= 0 )
                     {
+                        diasRetrasados.text = "0"
                         binding.cardviewEnviarMsj.isVisible = false
                         diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.primarycolordark_two)
                     }else
                     {
+                        diasRetrasados.text = this
                         if(this.toInt() == 1)
                         {
-                            binding.lblDiasRetrasados.setText("día retrasado")
+                            binding.lblDiasRetrasados.text = "día retrasado"
                         }
 
                         binding.cardviewEnviarMsj.isVisible = true

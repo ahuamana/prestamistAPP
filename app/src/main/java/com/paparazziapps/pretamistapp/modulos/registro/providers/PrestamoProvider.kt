@@ -36,10 +36,12 @@ class PrestamoProvider {
       return  mCollectionPrestamo.get()
     }
 
-    fun setLastPayment(id:String, fecha:String): Task<Void>
+    fun setLastPayment(id:String, fecha:String,diasRestantesPorPagar:Int, diasPagados:Int): Task<Void>
     {
         val map = mutableMapOf<String,Any?>()
         map.put("fechaUltimoPago",fecha)
+        map.put("dias_restantes_por_pagar",diasRestantesPorPagar)
+        map.put("diasPagados",diasPagados)
 
         return mCollectionPrestamo.document(id).update(map)
     }

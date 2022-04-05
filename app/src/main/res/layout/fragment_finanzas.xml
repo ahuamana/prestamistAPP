@@ -23,28 +23,64 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+                android:paddingStart="@dimen/dimen_18"
+                android:paddingEnd="@dimen/dimen_18"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/img"
-                    android:layout_width="223dp"
-                    android:layout_height="189dp"
-                    android:layout_marginTop="60dp"
-                    android:src="@drawable/empty_chanchito_dorado"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/content_prestamo_size"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="60dp"
-                    android:text="Módulo en desarrollo"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/img"
-                    app:layout_constraintStart_toStartOf="@+id/img"
-                    app:layout_constraintTop_toBottomOf="@+id/img" />
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Prestamós"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:layout_marginTop="16dp"
+                        android:text="18 activos"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    app:layout_constraintTop_toBottomOf="@+id/content_prestamo_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Caja hoy"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="Módulo en desarrollo"/>
+
+
+
+                </LinearLayout>
+
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,37 +83,7 @@ open class ViewModelRegister private constructor(){
         }
     }
 
-    fun updateUltimoPago(id:String?, fecha:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit)
-    {
-        var isCorrect = false
 
-        try {
-
-                mPrestamoProvider.setLastPayment(id?:"",fecha?:"").addOnCompleteListener {
-                    if(it.isSuccessful)
-                    {
-                        //_message.value = "Se actualizo el pago"
-                        isCorrect = true
-                        onComplete(isCorrect, "Se actualizo el pago", null, false)
-
-                    }else
-                    {
-                        println("ViewModelRegister --> : Error ${it.exception?.message}")
-                        //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
-                        isCorrect = false
-                        onComplete(isCorrect, "No se pudo actualizar el pago, inténtelo otra vez", null, false)
-                    }
-                }
-
-
-        }catch (t:Throwable)
-        {
-            isCorrect = false
-            onComplete(isCorrect, "No se pudo actualizar el pago, porfavor comuníquese con soporte!", null, false)
-
-            println("Error throable model ----> ${t.message}")
-        }
-    }
 
 
 

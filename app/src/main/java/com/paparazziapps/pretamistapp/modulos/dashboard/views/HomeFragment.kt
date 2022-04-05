@@ -141,24 +141,17 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
     }
 
     //->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Metodos override
-    override fun actualizarPagoPrestamo(prestamo: Prestamo, needUpdate:Boolean, montoTotalAPagar:String, adapterPosition:Int, diasRestrasado:String) {
-        //println("Hizo click en Actualizar Pago Prestamos")
+    override fun actualizarPagoPrestamo(prestamo: Prestamo, needUpdate:Boolean, montoTotalAPagar:Double, adapterPosition:Int, diasRestrasado:String) {
 
+        //println("Hizo click en Actualizar Pago Prestamos")
         context.apply {
             (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(prestamo, montoTotalAPagar, diasRestrasado, adapterPosition, needUpdate)
         }
 
-        /*
-        if(needUpdate)
-        {
-            openDialogActualizarPago(prestamo, montoTotalAPagar,adapterPosition)
-        }else
-        {
-            showShortMessage("El cliente no tiene deudas")
-        }*/
+
     }
 
-    override fun openDialogoActualizarPrestamo(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition: Int) {
+    override fun openDialogoActualizarPrestamo(prestamo: Prestamo, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int) {
 
         binding.cntCortina.isVisible = true
 
@@ -201,12 +194,14 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
                 dialog.dismiss()
 
-                _viewModelregister.updateUltimoPago(prestamo.id, getFechaActualNormalCalendar()){
+                _viewModel.updateUltimoPago(prestamo.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
                         isCorrect, msj, result, isRefresh ->
 
                     if(isCorrect)
                     {
                         prestamo.fechaUltimoPago = getFechaActualNormalCalendar()
+                        prestamo.dias_restantes_por_pagar = diasRestantesPorPagar
+                        prestamo.diasPagados = diasPagados
                         //(context as PrincipalActivity).showCortinaPrincipal(false)
                         prestamoAdapter.updateItem(adapterPosition, prestamo)//Actualizar local recycler View
                         showMessage(msj)

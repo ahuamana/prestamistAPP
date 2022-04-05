@@ -27,6 +27,11 @@ import java.util.*
         return DecimalFormat("###,###,###.00").format(number)
     }
 
+    fun getDoubleWithTwoDecimalsReturnDouble (number:Double):Double?
+    {
+        return String.format("%.2f", number).toDouble()
+    }
+
     fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int
     {
         var diasInUnixtime =  DiaUnixtime * plazo_vto!!.toLong()
@@ -38,6 +43,9 @@ import java.util.*
 
         return diasEnCuantoTerminado.toInt()
     }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     fun getFechaActualNormalInUnixtime(): Long
     {
@@ -53,7 +61,6 @@ import java.util.*
             }
         }
     }
-
 
 
     fun convertFechaActualNormalToUnixtime(fecha: String)  : Long
@@ -78,6 +85,11 @@ import java.util.*
     fun getDiasRestantesFromDateToNow(fecha: String):String
     {
        return (convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar()).minus(convertFechaActualNormalToUnixtime(fecha))).div(86400000).toString()
+    }
+
+    fun getDiasRestantesFromDateToNowMinusDiasPagados(fecha: String, diasPagados:Int):String
+    {
+        return ((convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar()).minus(convertFechaActualNormalToUnixtime(fecha))).div(86400000).toInt().minus(diasPagados)).toString()
     }
 
 
@@ -109,6 +121,13 @@ fun AppCompatButton.standardSimpleButtonOutline(color: Int = resources.getColor(
     this.apply {
         background = getRippleDrawable(BUTTON_OUTLINE)
         setTextColor(getValidateColorHex(color))
+    }
+}
+
+fun AppCompatButton.standardSimpleButtonOutlineDisable(){
+    this.apply {
+        background =  ContextCompat.getDrawable(this.context, R.drawable.button_corner) as Drawable
+        setTextColor(ContextCompat.getColor(this.context, R.color.color_text_web))
     }
 }
 

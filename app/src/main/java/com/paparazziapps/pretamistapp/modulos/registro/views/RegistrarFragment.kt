@@ -26,6 +26,7 @@ import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
 import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimals
+import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimalsReturnDouble
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 
@@ -62,6 +63,8 @@ class RegistrarFragment : Fragment() {
     var mesesEntero:Int = 0
     var capitalEntero:Int = 0
     var interesEntero:Int = 0
+    var montoDiarioAPagar:Double = 0.0
+    var montoTotalAPagar:Double = 0.0
     var prestamo = Prestamo()
 
     //Layout
@@ -133,6 +136,8 @@ class RegistrarFragment : Fragment() {
             prestamo.capital = capitalEntero
             prestamo.interes = interesEntero
             prestamo.plazo_vto = mesesEntero
+            prestamo.montoDiarioAPagar = montoDiarioAPagar
+            prestamo.montoTotalAPagar = montoTotalAPagar
 
             var gson = Gson()
             var prestamoJson = gson.toJson(prestamo)
@@ -350,8 +355,16 @@ class RegistrarFragment : Fragment() {
         _viewModel.getMontoDiario().observe(this){ montodiario ->
             if(montodiario !=null)
             {
+                println("Monto Diario: $montodiario")
+                //Asginar datos a variables globales
+                montoDiarioAPagar = getDoubleWithTwoDecimalsReturnDouble(montodiario)?:0.0
+                montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(montodiario* mesesEntero)?:0.0
+
                 montoDiario.setText("S./ ${getDoubleWithTwoDecimals(montodiario)}")
                 montoTotal.setText("S./ ${getDoubleWithTwoDecimals(montodiario *mesesEntero)}")
+            }else
+            {
+                println("Monto diario es 0")
             }
         }
 

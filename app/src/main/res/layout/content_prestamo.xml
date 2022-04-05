@@ -64,6 +64,45 @@
 
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_dias_por_pagar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="#F4CB36"
+            app:cardCornerRadius="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardview_dias_retrasados">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/numero_dias_por_pagar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-0"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/lbl_dias_por_pagar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="días por pagar"
+                    android:textColor="@color/white"
+                    android:textSize="9dp" />
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/nombre_completo"

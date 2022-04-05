@@ -17,6 +17,7 @@
         <activity
             android:name=".modulos.principal.views.PrincipalActivity"
             android:theme="@style/Theme.noActionBar"
+            android:windowSoftInputMode="stateHidden"
             android:exported="true">
 
             <intent-filter>

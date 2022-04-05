@@ -224,6 +224,40 @@
                         android:text="3 dias"/>
                 </LinearLayout>
 
+
+                <LinearLayout
+                    android:id="@+id/conten_dias_pagados"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/conten_dias_retrasados"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Días pagados"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_dias_pagados"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="3 dias"/>
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/content_dni"
                     android:layout_width="0dp"
@@ -233,7 +267,7 @@
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@+id/conten_dias_retrasados"
+                    app:layout_constraintTop_toBottomOf="@+id/conten_dias_pagados"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent">
 
@@ -293,6 +327,86 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/content_linea_extra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="visible"
+                    app:layout_constraintTop_toBottomOf="@+id/content_fecha_prestamo">
+
+                    <View
+                        android:id="@+id/view_divede"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/img_person"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                </LinearLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/content_dias_a_pagar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_linea_extra">
+
+                    <!--
+                    <TextView
+                        android:id="@+id/lbl_dias_apagar"
+                        android:layout_width="0dp"
+                        android:layout_height="26dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:gravity="left|center"
+                        android:text="Dias a pagar"
+                        android:textColor="@color/color_text_web"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/content_layout_dias_a_pagar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="MissingConstraints" />
+                        -->
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/content_layout_dias_a_pagar"
+                        style="@style/CustomTextField"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        android:layout_marginTop="15dp"
+                        android:focusedByDefault="false"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edt_dias_a_pagar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusedByDefault="false"
+                            android:hint="Dia(s) a pagar"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="3" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
                     android:id="@+id/content_pago_total"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -301,7 +415,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/content_fecha_prestamo">
+                    app:layout_constraintTop_toBottomOf="@+id/content_dias_a_pagar">
 
                     <TextView
                         android:id="@+id/lbl_descripcion_total"
@@ -313,6 +427,7 @@
                         android:textColor="@color/color_text_web"
                         android:fontFamily="@font/product_sans_regular"
                         android:text="Total" />
+
 
                     <TextView
                         android:id="@+id/tv_monto_total"
