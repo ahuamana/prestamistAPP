@@ -50,7 +50,6 @@
             app:layout_constraintTop_toBottomOf="@+id/tool"
             app:navGraph="@navigation/nav_view" />
 
-
         <RelativeLayout
             android:id="@+id/cortina"
             android:layout_width="match_parent"
@@ -108,6 +107,35 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:orientation="vertical" />
+
+        <RelativeLayout
+            android:id="@+id/cortina_free_trial"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorCortina"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="22dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/view_img"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/pruebas"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circle"
+                android:backgroundTint="@color/colorWhite"
+                />
+
+            <TextView
+                android:text="Esta es la versión beta, porfavor actualiza a Premium"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/view_img"
+                style="@style/CustomTextViewProgress"
+                />
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
