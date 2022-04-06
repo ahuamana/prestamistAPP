@@ -5,9 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentFinanzasBinding
+import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
+import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.PrestamoDetalleAdapter
 import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelTesoreria
 
 
@@ -17,6 +21,8 @@ class FinanzasFragment : Fragment() {
 
     var _binding:FragmentFinanzasBinding?= null
     private val binding get() = _binding!!
+
+    val prestamoDetalleAdapter = PrestamoDetalleAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +40,38 @@ class FinanzasFragment : Fragment() {
 
         //all code here
         initialCode()
+        observers()
 
+        binding.recyclerDetalle.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = prestamoDetalleAdapter
+        }
 
 
         return view
+    }
+
+    private fun observers() {
+        _viewModel.receivePrestamos().observe(this) {
+            if(it.count() == 0)
+            {
+                binding.apply {
+                    imgEmptyDeuda.isVisible = true
+                    lblEmptyDeuda.isVisible = true
+                }
+                //showMessage("No hay prestamos")
+            }else
+            {
+                binding.apply {
+                    imgEmptyDeuda.isVisible = false
+                    lblEmptyDeuda.isVisible = false
+                    recyclerDetalle.isVisible = true
+                }
+
+                prestamoDetalleAdapter.setData(it)
+                //showMessage(" Lista de prestamos ${it.count()}")
+            }
+        }
     }
 
     private fun initialCode() {

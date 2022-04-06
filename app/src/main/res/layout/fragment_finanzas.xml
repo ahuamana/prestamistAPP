@@ -168,7 +168,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/title_clientes_con_deuda">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/recycler_detalle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clipToPadding="false"
                         android:paddingBottom="16dp"

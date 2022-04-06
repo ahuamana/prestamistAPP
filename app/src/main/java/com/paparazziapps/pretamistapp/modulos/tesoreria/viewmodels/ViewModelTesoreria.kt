@@ -16,25 +16,37 @@ class ViewModelTesoreria private constructor() {
     val mPrestamoProvider = PrestamoProvider()
     val mDetallePrestamo = DetallePrestamoProvider()
 
+    var _prestamos = MutableLiveData<MutableList<Prestamo>>()
+
     fun getMessage() : LiveData<String> {
         return  _message
+    }
+
+    fun receivePrestamos (): LiveData<MutableList<Prestamo>>
+    {
+        return _prestamos
     }
 
     fun getPrestamosSize(onComplete: (Boolean, String, Int?, Boolean) -> Unit)
     {
         var isCorrect = false
+        var listPrestamos = mutableListOf<Prestamo>()
 
         try {
 
             mPrestamoProvider.getPrestamos().addOnSuccessListener {
 
+
                 isCorrect = true
                 if(it.isEmpty)
                 {
-
                     onComplete(isCorrect,"",0,false)
                 }else
                 {
+                    it.forEach { document->
+                        listPrestamos.add(document.toObject<Prestamo>())
+                    }
+                    _prestamos.value = listPrestamos
                     onComplete(isCorrect,"",it.size(),false)
                 }
 

@@ -72,8 +72,6 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     private fun setupRecyclerPrestamos() {
 
-
-
         recyclerPrestamos.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = prestamoAdapter
