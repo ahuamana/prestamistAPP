@@ -101,6 +101,36 @@ class ViewModelDashboard private constructor(){
         }
     }
 
+    fun cerrarPrestamo(id:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit)
+    {
+        var isCorrect = false
+
+        try {
+
+            mPrestamoProvider.cerrarPrestamo(id?:"").addOnCompleteListener {
+                if(it.isSuccessful)
+                {
+                    isCorrect = true
+                    onComplete(isCorrect, "Se cerro el pago", null, false)
+
+                }else
+                {
+                    println("ViewModelRegister --> : Error ${it.exception?.message}")
+                    //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
+                    isCorrect = false
+                    onComplete(isCorrect, "No se pudo cerrar el pago, inténtelo otra vez", null, false)
+                }
+            }
+
+
+        }catch (t:Throwable)
+        {
+            isCorrect = false
+            onComplete(isCorrect, "No se pudo cerrar el pago, porfavor comuníquese con soporte!", null, false)
+
+            println("Error throable model ----> ${t.message}")
+        }
+    }
 
 
     //constructor

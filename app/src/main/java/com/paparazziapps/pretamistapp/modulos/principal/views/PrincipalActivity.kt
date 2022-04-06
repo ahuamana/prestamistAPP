@@ -131,7 +131,7 @@ class PrincipalActivity : AppCompatActivity() {
 
         var diasRestantesPorPagarNuevo:Int?= null
         var diasEnQueTermina = getDiasRestantesFromStart(prestamo.fecha?:"",prestamo.plazo_vto?:0)
-
+        var isClosed:Boolean = false
 
 
         //Set inicial bottomsheet
@@ -158,6 +158,7 @@ class PrincipalActivity : AppCompatActivity() {
                 btnPagar.apply {
                     text = "Cerrar préstamo"
                     isVisible = true
+                    isEnabled = true
                     standardSimpleButtonOutline()
                 }
                 contentDiasAPagar.isVisible = false
@@ -165,6 +166,10 @@ class PrincipalActivity : AppCompatActivity() {
             }
         }else
         {
+            layout_detalle_prestamo.btnPagar.apply {
+                this.standardSimpleButtonOutlineDisable()
+                isEnabled = false
+            }
 
             if(isNullOrEmpty(montoTotalAPagar.toString()))
             {
@@ -209,27 +214,42 @@ class PrincipalActivity : AppCompatActivity() {
         layout_detalle_prestamo.tvFechaPrestamo.text = "${prestamo.fecha}"
         layout_detalle_prestamo.tvMontoTotal.text = "S/. 0.00"
 
-        layout_detalle_prestamo.btnPagar.apply {
-            this.standardSimpleButtonOutlineDisable()
-            isEnabled = false
-            setOnClickListener {
-                //Actualizar en fragment
-                var montoTotalAPagarNuevo = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt() * prestamo.montoDiarioAPagar!!
-                diasRestantesPorPagarNuevo = prestamo.dias_restantes_por_pagar?.minus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
-                var diasPagadosNuevo = prestamo.diasPagados?.plus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
-                binding.cortinaBottomSheet.isVisible = false
-                bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(prestamo,montoTotalAPagarNuevo,adapterPosition, diasRestantesPorPagarNuevo?:-9999, diasPagados = diasPagadosNuevo!!)
 
+
+        layout_detalle_prestamo.btnPagar.apply {
+            setOnClickListener {
+                    //Actualizar en fragment
+
+
+                    isClosed = text.toString()=="Cerrar préstamo"
+                    if(isClosed)
+                    {
+                        binding.cortinaBottomSheet.isVisible = false
+                        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
+                        setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(prestamo,0.0,adapterPosition, 0, 0, isClosed = isClosed)
+
+                    }else{
+                        var montoTotalAPagarNuevo = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt() * prestamo.montoDiarioAPagar!!
+                        diasRestantesPorPagarNuevo = prestamo.dias_restantes_por_pagar?.minus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
+                        var diasPagadosNuevo = prestamo.diasPagados?.plus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
+                        binding.cortinaBottomSheet.isVisible = false
+                        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
+                        setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(prestamo,montoTotalAPagarNuevo,adapterPosition, diasRestantesPorPagarNuevo?:-9999, diasPagados = diasPagadosNuevo!!, isClosed = isClosed)
+
+                    }
+
+
+                }
             }
 
-        }
+
 
         //Validar
         layout_detalle_prestamo.edtDiasAPagar.doAfterTextChanged {
 
             layout_detalle_prestamo.contentLayoutDiasAPagar.error = when {
                 it.toString().isNullOrEmpty() -> "Los dias deben ser rellenados"
+                it.toString().toInt() == 0 -> "Los dias deben ser mayores a 0"
                 //it.toString().toInt() in 1..diasRestrasado.toInt() -> "Los dias no deben ser mayores a $diasRestrasado"
                 prestamo.dias_restantes_por_pagar!! < it.toString().toInt() -> "Los dias no pueden superar a ${prestamo.dias_restantes_por_pagar}"
                 else -> null

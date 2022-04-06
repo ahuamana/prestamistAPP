@@ -41,6 +41,11 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         notifyItemChanged(position)
     }
 
+    fun removeItem(position: Int)
+    {
+        prestamosList.removeAt(position)
+        notifyItemRemoved(position)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrestamoAdapter.ViewHolder {
         val itemView =

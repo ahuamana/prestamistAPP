@@ -33,7 +33,7 @@ class PrestamoProvider {
 
     fun getPrestamos(): Task<QuerySnapshot>
     {
-      return  mCollectionPrestamo.get()
+      return  mCollectionPrestamo.whereEqualTo("state", "ABIERTO").get()
     }
 
     fun setLastPayment(id:String, fecha:String,diasRestantesPorPagar:Int, diasPagados:Int): Task<Void>
@@ -42,6 +42,14 @@ class PrestamoProvider {
         map.put("fechaUltimoPago",fecha)
         map.put("dias_restantes_por_pagar",diasRestantesPorPagar)
         map.put("diasPagados",diasPagados)
+
+        return mCollectionPrestamo.document(id).update(map)
+    }
+
+    fun cerrarPrestamo(id: String):Task<Void>
+    {
+        val map = mutableMapOf<String,Any?>()
+        map.put("state","CERRADO")
 
         return mCollectionPrestamo.document(id).update(map)
     }

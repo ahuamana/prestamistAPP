@@ -151,7 +151,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     }
 
-    override fun openDialogoActualizarPrestamo(prestamo: Prestamo, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int) {
+    override fun openDialogoActualizarPrestamo(prestamo: Prestamo, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int, isClosed:Boolean) {
 
         binding.cntCortina.isVisible = true
 
@@ -164,9 +164,17 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         val btnPositive   = bindingDialogSalir.btnAceptarSalir
         val btnNegative = bindingDialogSalir.btnCancelarSalir
 
-        title.text = "¿Estas seguro de actualizar la deuda?"
-        desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(prestamo.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos.toString())} </b>" +
-                ",con un monto total a pagar de: <br><b>S./${montoTotalAPagar}<b>").fromHtml()
+        if(isClosed)
+        {
+            title.text = "¿Estas seguro de cerrar el préstamo?"
+            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(prestamo.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos.toString())}").fromHtml()
+
+        }else
+        {
+            title.text = "¿Estas seguro de actualizar la deuda?"
+            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(prestamo.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos.toString())} </b>" +
+                    ",con un monto total a pagar de: <br><b>S./${montoTotalAPagar}<b>").fromHtml()
+        }
 
         dialogBuilder.apply {
             setView(view)
@@ -194,25 +202,45 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
                 dialog.dismiss()
 
-                _viewModel.updateUltimoPago(prestamo.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
-                        isCorrect, msj, result, isRefresh ->
+                if (isClosed)
+                {
+                    _viewModel.cerrarPrestamo(prestamo.id){
+                            isCorrect, msj, result, isRefresh ->
+                        if(isCorrect)
+                        {
+                            prestamoAdapter.removeItem(adapterPosition)//remover item de  local recycler View
+                            showMessage(msj)
 
-                    if(isCorrect)
-                    {
-                        prestamo.fechaUltimoPago = getFechaActualNormalCalendar()
-                        prestamo.dias_restantes_por_pagar = diasRestantesPorPagar
-                        prestamo.diasPagados = diasPagados
-                        //(context as PrincipalActivity).showCortinaPrincipal(false)
-                        prestamoAdapter.updateItem(adapterPosition, prestamo)//Actualizar local recycler View
-                        showMessage(msj)
-
-                    }else
-                    {
-                        //(context as PrincipalActivity).showCortinaPrincipal(false)
-                        showMessage(msj)
+                        }else
+                        {
+                            //(context as PrincipalActivity).showCortinaPrincipal(false)
+                            showMessage(msj)
+                        }
                     }
+                }else
+                {
+                    _viewModel.updateUltimoPago(prestamo.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
+                            isCorrect, msj, result, isRefresh ->
 
+                        if(isCorrect)
+                        {
+                            prestamo.fechaUltimoPago = getFechaActualNormalCalendar()
+                            prestamo.dias_restantes_por_pagar = diasRestantesPorPagar
+                            prestamo.diasPagados = diasPagados
+                            //(context as PrincipalActivity).showCortinaPrincipal(false)
+                            prestamoAdapter.updateItem(adapterPosition, prestamo)//Actualizar local recycler View
+                            showMessage(msj)
+
+                        }else
+                        {
+                            //(context as PrincipalActivity).showCortinaPrincipal(false)
+                            showMessage(msj)
+                        }
+
+                    }
                 }
+
+
 
 
             }
@@ -226,6 +254,8 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
             }
         }
     }
+
+
 
 
 }
