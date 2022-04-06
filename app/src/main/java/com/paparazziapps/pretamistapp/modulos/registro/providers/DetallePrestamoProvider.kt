@@ -24,8 +24,8 @@ class DetallePrestamoProvider {
         return mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo)
     }
 
-    fun getDetallePrestamos():Task<QuerySnapshot>
+    fun getDetallePrestamosByFecha(fecha:String):Task<QuerySnapshot>
     {
-        return mCollectionDetallePrestamo.get()
+        return mCollectionDetallePrestamo.whereEqualTo("fechaPago",fecha).get()
     }
 }

@@ -33,6 +33,10 @@ class ViewModelDashboard private constructor(){
 
             mPrestamoProvider.getPrestamos().addOnSuccessListener { prestamosFirebase ->
 
+                if(prestamosFirebase.isEmpty)
+                {
+                    println(" lista prestamos esta vacia")
+                }
                 prestamosFirebase.forEach { document->
                     listPrestamos.add(document.toObject<Prestamo>())
                     println(" lista prestamos ${listPrestamos.size}")

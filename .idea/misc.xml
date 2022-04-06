@@ -7,6 +7,7 @@
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/drawable/bottom_sheet_corner.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/drawable/buttom_disabled.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/drawable/button_corner.xml" value="0.19114583333333332" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/drawable/circle_outline.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/activity_principal.xml" value="0.25" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/activity_registrar.xml" value="0.36666666666666664" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/bottom_sheet_corner.xml" value="0.36666666666666664" />
@@ -16,6 +17,7 @@
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/fragment_finanzas.xml" value="0.36666666666666664" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/fragment_registrar.xml" value="0.175" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/item_detalle_prestamo.xml" value="0.5" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2765625" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/background_bottom_navigation.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/background_input_disable.xml" value="0.3828125" />

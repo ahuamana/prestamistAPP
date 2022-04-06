@@ -54,4 +54,5 @@ class PrestamoProvider {
         return mCollectionPrestamo.document(id).update(map)
     }
 
+
 }

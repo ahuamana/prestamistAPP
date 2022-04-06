@@ -33,13 +33,46 @@ class FinanzasFragment : Fragment() {
         var view = binding.root
 
         //all code here
-        _viewModel.getPrestamosSize { isCorrect, msj, result, isRefresh ->
+        initialCode()
 
-            showMessage("Cantidad de prestamos activos: $result")
-        }
 
 
         return view
+    }
+
+    private fun initialCode() {
+
+        _viewModel.getPrestamosSize { isCorrect, msj, result, isRefresh ->
+
+            if(isCorrect)
+            {
+                binding.apply {
+                    lblPrestamosActivos.text = "$result activos"
+                }
+            }
+        }
+
+        _viewModel.getPagosHoy() { isCorrect, msj, result, isRefresh ->
+
+            if (isCorrect) {
+                binding.apply {
+                    lblCajaHoy.text = "S./. $result"
+                }
+            }
+
+        }
+
+        _viewModel.getPagosAyer() { isCorrect, msj, result, isRefresh ->
+
+            if (isCorrect) {
+                binding.apply {
+                    lblCajaAyer.text = "S./. $result"
+                }
+            }
+
+        }
+
+
     }
 
 

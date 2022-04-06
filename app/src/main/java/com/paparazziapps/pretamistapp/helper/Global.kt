@@ -47,6 +47,24 @@ import java.util.*
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    fun getYesterdayFechaNormal():String
+    {
+       return convertUnixtimeToFechaNormal(getFechaActualNormalInUnixtime().minus(DiaUnixtime))
+    }
+
+    fun convertUnixtimeToFechaNormal(unixtime_date:Long): String
+    {
+        unixtime_date.also {
+            SimpleDateFormat("dd/MM/yyyy").apply {
+                timeZone = TimeZone.getTimeZone("GMT")
+                format(it).toString().also {
+                    return it
+                }
+            }
+        }
+
+    }
+
     fun getFechaActualNormalInUnixtime(): Long
     {
       return  convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar())
