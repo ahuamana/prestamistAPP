@@ -143,9 +143,15 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
             var diasEnQueTermina = getDiasRestantesFromStart(item.fecha?:"",item.plazo_vto?:0)
 
-            numeroDiasPorPagar.apply {
-                setText(diasEnQueTermina.toString())
+            if(diasEnQueTermina < 0)
+            {
+                numeroDiasPorPagar.setText("0") // Dias por pagar es igual o menor a cero entonces Prestamó vencido - completado
+            }else{
+                numeroDiasPorPagar.apply {
+                    setText(diasEnQueTermina.toString())
+                }
             }
+
 
             lblDiasPorPagar.apply {
                 text = when {

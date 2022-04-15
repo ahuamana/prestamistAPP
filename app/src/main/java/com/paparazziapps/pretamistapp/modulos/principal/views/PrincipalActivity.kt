@@ -45,7 +45,7 @@ class PrincipalActivity : AppCompatActivity() {
         bottomNavigationView = binding.navView
         toolbar              = binding.tool.toolbar
 
-        var fecha7Dias:Long = 1649826000000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
+        var fecha7Dias:Long = 1652651285000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
 
         if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0)
         {

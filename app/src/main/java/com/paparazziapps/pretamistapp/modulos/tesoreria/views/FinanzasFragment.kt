@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.modulos.tesoreria.views
 
+import android.icu.lang.UCharacter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -43,7 +44,7 @@ class FinanzasFragment : Fragment() {
         observers()
 
         binding.recyclerDetalle.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false)
             adapter = prestamoDetalleAdapter
         }
 

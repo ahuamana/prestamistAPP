@@ -141,18 +141,20 @@
 
                 <LinearLayout
                     android:id="@+id/title_clientes_con_deuda"
-                    app:layout_constraintTop_toBottomOf="@+id/view_divider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_divider">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:textStyle="bold"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="Clientes con deuda"/>
+                        android:layout_weight="1"
+                        android:text="Clientes con deuda"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -160,11 +162,9 @@
                     android:id="@+id/content_prestamos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:layout_constrainedHeight="true"
                     android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/title_clientes_con_deuda">
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -173,7 +173,10 @@
                         android:layout_height="wrap_content"
                         android:clipToPadding="false"
                         android:paddingBottom="16dp"
-                        android:visibility="visible" />
+                        android:overScrollMode = "never"
+                        android:visibility="visible"
+                        app:layout_constrainedHeight="true"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </LinearLayout>
 
@@ -200,8 +203,6 @@
                     app:layout_constraintEnd_toEndOf="@+id/content_prestamos"
                     app:layout_constraintStart_toStartOf="@+id/content_prestamos"
                     app:layout_constraintTop_toTopOf="@+id/content_prestamos" />
-
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
