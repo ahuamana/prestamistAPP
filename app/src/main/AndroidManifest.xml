@@ -9,9 +9,9 @@
     <application
         android:name=".helper.MainApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_prestamos_diarios"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_prestamos_diarios_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pretamistapp">
         <activity

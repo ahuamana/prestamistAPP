@@ -1,62 +1,33 @@
 {
   "project_info": {
-    "project_number": "634615888028",
-    "project_id": "prestamistapp-5a744",
-    "storage_bucket": "prestamistapp-5a744.appspot.com"
+    "project_number": "668972476088",
+    "project_id": "prestamist-pstore",
+    "storage_bucket": "prestamist-pstore.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:634615888028:android:6a727ef6fdae1cab5a5559",
-        "android_client_info": {
-          "package_name": "com.paparazziapps.prestamistapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "634615888028-v8jc3o4qg819ua6rqnrvi7e21i8iajt7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBCjHfkLYvR0JEcGixOc7K7EbjkJqjaOBc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "634615888028-v8jc3o4qg819ua6rqnrvi7e21i8iajt7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:634615888028:android:7ffb3f5c0701ad145a5559",
+        "mobilesdk_app_id": "1:668972476088:android:74ea2c29ad1c585d2cb64d",
         "android_client_info": {
           "package_name": "com.paparazziapps.pretamistapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "634615888028-v8jc3o4qg819ua6rqnrvi7e21i8iajt7.apps.googleusercontent.com",
+          "client_id": "668972476088-8khvs49ooiqum0e3q9ppco55jc9crkep.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBCjHfkLYvR0JEcGixOc7K7EbjkJqjaOBc"
+          "current_key": "AIzaSyBIMJhI4kvM1sdZovBz8sWsZRBp89uE5Us"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "634615888028-v8jc3o4qg819ua6rqnrvi7e21i8iajt7.apps.googleusercontent.com",
+              "client_id": "668972476088-8khvs49ooiqum0e3q9ppco55jc9crkep.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

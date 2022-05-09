@@ -6,138 +6,143 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".modulos.principal.views.PrincipalActivity">
-
-        <include
-            android:id="@+id/tool"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:visibility="visible"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></include>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:background="?android:attr/windowBackground"
-            app:elevation="8dp"
-            app:labelVisibilityMode="selected"
-            style="@style/Widget.MaterialComponents.BottomNavigationView"
-            app:itemIconTint="@color/nav_color"
-            app:itemTextColor="@color/nav_color"
-            android:paddingBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/menu_principal"/>
-
-        <fragment
-            android:id="@+id/nav_host_fragment_activity_main"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:defaultNavHost="true"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tool"
-            app:navGraph="@navigation/nav_view" />
-
-        <RelativeLayout
-            android:id="@+id/cortina"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorCortina"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true"
-            android:elevation="22dp">
-            <ProgressBar
-                android:id="@+id/progress_dashboard"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerInParent="true"
+            tools:context=".modulos.principal.views.PrincipalActivity">
+
+            <include
+                android:id="@+id/tool"
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
                 android:visibility="visible"
-                android:indeterminateTint="@color/facebook_color_like"
-                android:elevation="20dp"
-                android:progressDrawable="@drawable/circular_progress_bar" />
-            <View
-                android:id="@+id/view_dashboard"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/circle"
-                android:elevation="8dp"
-                android:backgroundTint="@color/colorWhite"
-                />
-            <TextView
-                android:id="@+id/lbl_cortina_register_principal_activity"
-                android:text="Actualizando pago ..."
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/view_dashboard"
-                style="@style/CustomTextViewProgress"
-                />
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"></include>
 
-        <RelativeLayout
-            android:id="@+id/cortina_bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorCortina"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true"
-            android:elevation="22dp">
-        </RelativeLayout>
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:background="?android:attr/windowBackground"
+                app:elevation="8dp"
+                app:labelVisibilityMode="selected"
+                style="@style/Widget.MaterialComponents.BottomNavigationView"
+                app:itemIconTint="@color/nav_color"
+                app:itemTextColor="@color/nav_color"
+                android:paddingBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/menu_principal"/>
 
-        <LinearLayout
-            android:id="@+id/conten_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:visibility="visible"
-            android:background="@color/colorTransparent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:orientation="vertical" />
+            <fragment
+                android:id="@+id/nav_host_fragment_activity_main"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toTopOf="@+id/nav_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tool"
+                app:navGraph="@navigation/nav_view" />
 
-        <RelativeLayout
-            android:id="@+id/cortina_free_trial"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorCortina"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true"
-            android:elevation="22dp">
+            <RelativeLayout
+                android:id="@+id/cortina"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorCortina"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="22dp">
+                <ProgressBar
+                    android:id="@+id/progress_dashboard"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible"
+                    android:indeterminateTint="@color/facebook_color_like"
+                    android:elevation="20dp"
+                    android:progressDrawable="@drawable/circular_progress_bar" />
+                <View
+                    android:id="@+id/view_dashboard"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle"
+                    android:elevation="8dp"
+                    android:backgroundTint="@color/colorWhite"
+                    />
+                <TextView
+                    android:id="@+id/lbl_cortina_register_principal_activity"
+                    android:text="Actualizando pago ..."
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/view_dashboard"
+                    style="@style/CustomTextViewProgress"
+                    />
+            </RelativeLayout>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/view_img"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/pruebas"
-                android:layout_centerInParent="true"
-                android:background="@drawable/circle"
-                android:backgroundTint="@color/colorWhite"
-                />
+            <RelativeLayout
+                android:id="@+id/cortina_bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorCortina"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="22dp">
+            </RelativeLayout>
 
-            <TextView
-                android:text="Esta es la versión beta, porfavor actualiza a Premium"
-                android:layout_centerInParent="true"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/view_img"
-                style="@style/CustomTextViewProgress"
-                />
-        </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/conten_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:visibility="visible"
+                android:background="@color/colorTransparent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:orientation="vertical" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <RelativeLayout
+                android:id="@+id/cortina_free_trial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorCortina"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="22dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/view_img"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/pruebas"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="@color/colorWhite"
+                    />
+
+                <TextView
+                    android:text="Esta es la versión beta, porfavor actualiza a Premium"
+                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/view_img"
+                    style="@style/CustomTextViewProgress"
+                    />
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 
 
 
