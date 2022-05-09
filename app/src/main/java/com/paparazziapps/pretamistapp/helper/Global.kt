@@ -16,6 +16,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,7 +30,8 @@ import java.util.*
 
     fun getDoubleWithTwoDecimalsReturnDouble (number:Double):Double?
     {
-        return String.format("%.2f", number).toDouble()
+
+        return number.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
     }
 
     fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int

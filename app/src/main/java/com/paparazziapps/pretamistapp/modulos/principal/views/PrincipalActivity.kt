@@ -58,6 +58,14 @@ class PrincipalActivity : AppCompatActivity() {
         setUpBottomNav()
         setUpInicialToolbar()
         setupBottomSheetDetallePrestamo()
+
+        //testCrashlytics()
+        var flt = 0.0
+        println("Float : ${flt}")
+    }
+
+    private fun testCrashlytics() {
+        throw RuntimeException("Test Crash") // Force a crash
     }
 
     private fun setupBottomSheetDetallePrestamo() {
