@@ -194,7 +194,7 @@ class PrincipalActivity : AppCompatActivity() {
                 }else {
                     layout_detalle_prestamo.apply {
                         this.contentPagoTotal.isVisible = false
-                        this.tvCapitalPrestado.text = "S./. 0.0"
+                        this.tvCapitalPrestado.text = "${getString(R.string.tipo_moneda_defecto_cero)}"
                         this.btnPagar.isVisible = false
                         this.contentLineaExtra.isVisible = false
                         this.contentDiasAPagar.isVisible = false
@@ -215,7 +215,7 @@ class PrincipalActivity : AppCompatActivity() {
 
         layout_detalle_prestamo.tvDiasPagados.text = "${prestamo.diasPagados} días"
         layout_detalle_prestamo.lblNombreCompleto.text = "${replaceFirstCharInSequenceToUppercase(prestamo.nombres?:"")}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos?:"")}"
-        layout_detalle_prestamo.tvCapitalPrestado.text = "S./. ${prestamo.capital}"
+        layout_detalle_prestamo.tvCapitalPrestado.text = "${getString(R.string.tipo_moneda)} ${prestamo.capital}"
         layout_detalle_prestamo.tvInteresPrestado.text = "${prestamo.interes}%"
         layout_detalle_prestamo.tvPlazoVto.text = "en $diasEnQueTermina días"
         layout_detalle_prestamo.tvDiasRetrasados.text = "$diasRestrasado días"

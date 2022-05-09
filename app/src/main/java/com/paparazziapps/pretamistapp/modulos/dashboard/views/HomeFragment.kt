@@ -171,7 +171,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         {
             title.text = "¿Estas seguro de actualizar la deuda?"
             desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(prestamo.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos.toString())} </b>" +
-                    ",con un monto total a pagar de: <br><b>S./${montoTotalAPagar}<b>").fromHtml()
+                    ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${montoTotalAPagar}<b>").fromHtml()
         }
 
         dialogBuilder.apply {

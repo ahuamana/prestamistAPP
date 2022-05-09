@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:counterEnabled="true"
-                    app:counterMaxLength="8"
+                    app:counterMaxLength="10"
                     android:layout_marginTop="6dp"
                     android:layout_marginRight="10dp"
                     app:errorEnabled="true"

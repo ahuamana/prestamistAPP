@@ -91,7 +91,7 @@ class FinanzasFragment : Fragment() {
 
             if (isCorrect) {
                 binding.apply {
-                    lblCajaHoy.text = "S./. $result"
+                    lblCajaHoy.text = "${getString(R.string.tipo_moneda)} $result"
                 }
             }
 
@@ -101,7 +101,7 @@ class FinanzasFragment : Fragment() {
 
             if (isCorrect) {
                 binding.apply {
-                    lblCajaAyer.text = "S./. $result"
+                    lblCajaAyer.text = "${getString(R.string.tipo_moneda)} $result"
                 }
             }
 

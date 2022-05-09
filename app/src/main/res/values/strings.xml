@@ -9,6 +9,13 @@
     <string name="cantidad_documento_max">9</string>
     <string name="tipo_moneda">S./ </string>
     <string name="tipo_moneda_defecto">S./ 1000</string>
+    <string name="tipo_moneda_defecto_cero">S./ 0</string>
+
+    <string name="documento_vacío">DNI vacío</string>
+    <string name="documento_incompleto">DNI incompleto</string>
+    <string name="codigo_pais">51</string>
+
+
 
     <string name="terms_conditions_acepto">Al hacer click en el botón "Continuar" , Aceptas nuestras <b>políticas de privacidad</b> y <b>términos de condición</b>.</string>
     <!-- TODO: Remove or change this placeholder text -->

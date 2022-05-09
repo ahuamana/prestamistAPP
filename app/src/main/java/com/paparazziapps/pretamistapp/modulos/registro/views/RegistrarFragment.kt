@@ -360,8 +360,8 @@ class RegistrarFragment : Fragment() {
                 montoDiarioAPagar = getDoubleWithTwoDecimalsReturnDouble(montodiario)?:0.0
                 montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(montodiario* mesesEntero)?:0.0
 
-                montoDiario.setText("S./ ${getDoubleWithTwoDecimals(montodiario)}")
-                montoTotal.setText("S./ ${getDoubleWithTwoDecimals(montodiario *mesesEntero)}")
+                montoDiario.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(montodiario)}")
+                montoTotal.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(montodiario *mesesEntero)}")
             }else
             {
                 println("Monto diario es 0")
@@ -375,14 +375,14 @@ class RegistrarFragment : Fragment() {
     {
         mesesP.setText("")
         interesesP.setText("")
-        montoDiario.setText("S./ 0")
-        montoTotal.setText("S./ 0")
+        montoDiario.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
+        montoTotal.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
 
     }
 
     private fun showMessage(message:String)
     {
-        Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message",Snackbar.LENGTH_LONG).show()
+        Snackbar.make(requireActivity().findViewById(R.id.nav_view),"$message",Snackbar.LENGTH_LONG).show()
     }
 
 

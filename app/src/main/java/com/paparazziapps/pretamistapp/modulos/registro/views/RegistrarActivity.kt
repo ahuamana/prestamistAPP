@@ -185,8 +185,8 @@ class RegistrarActivity : AppCompatActivity() {
 
             layoutDNI.error = when
             {
-                dniChanged.isNullOrEmpty() -> "DNI vacío"
-                dniChanged.count() in 1..7 -> "DNI incompleto"
+                dniChanged.isNullOrEmpty() -> "${getString(R.string.documento_vacío)}"
+                dniChanged.count() in 1..9 -> "${getString(R.string.documento_incompleto)}"
                 else -> null
             }
 
@@ -221,7 +221,7 @@ class RegistrarActivity : AppCompatActivity() {
             !celular.text.toString().trim().isNullOrEmpty()          &&
             celular.text.toString().trim().count() == 9             &&
             !dni.text.toString().trim().isNullOrEmpty()          &&
-            dni.text.toString().trim().count() == 8             &&
+            dni.text.toString().trim().count() == 10             &&
             !fecha.text.toString().trim().isNullOrEmpty())
         {
             //Registrar prestamo
@@ -288,7 +288,7 @@ class RegistrarActivity : AppCompatActivity() {
             {
                 prestamoReceived = gson.fromJson(extras, Prestamo::class.java)
                 binding.interes.setText("${prestamoReceived.interes!!.toInt()}%")
-                binding.capital.setText("S./ ${prestamoReceived.capital!!.toInt()}")
+                binding.capital.setText("${getString(R.string.tipo_moneda)} ${prestamoReceived.capital!!.toInt()}")
                 binding.plazosEnDias.setText("${prestamoReceived.plazo_vto.toString()} dias")
             }
         }

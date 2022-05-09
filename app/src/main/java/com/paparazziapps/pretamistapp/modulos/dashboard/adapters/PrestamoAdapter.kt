@@ -97,7 +97,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                         montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble((diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
                         //Mensaje
                         var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
-                                "con los pagos de tu préstamo con un monto total a pagar de: *S./$montoTotalAPagar*"
+                                "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
                         openWhatsapp(item.celular, msj)
                     }
                 }
@@ -169,7 +169,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             try {
 
                 var msg = "Its Working"
-                ctx().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=51" + celular + "&text=" + msj)).apply {
+                ctx().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=${ctx().getString(R.string.codigo_pais)}" + celular + "&text=" + msj)).apply {
                     setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })
             }catch (t: Throwable){
