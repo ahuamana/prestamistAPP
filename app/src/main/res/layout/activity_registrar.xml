@@ -108,10 +108,10 @@
                         android:id="@+id/dni"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="DNI"
+                        android:hint="@string/tipo_documento"
                         android:inputType="number"
                         android:lines="1"
-                        android:maxLength="8" />
+                        android:maxLength="10" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -282,7 +282,7 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:maxLength="50"
-                        android:text="S./ 1000" />
+                        android:text="@string/tipo_moneda_defecto" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View
