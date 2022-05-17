@@ -9,6 +9,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
@@ -92,13 +94,22 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 cardViewEnviarMsj.apply {
                     setOnClickListener {
 
-                        //calcular el monto total a pagar
-                        diasRetraso = numero_dias_retrasados.text.toString().toInt()
-                        montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble((diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!)))
-                        //Mensaje
-                        var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
-                                "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
-                        openWhatsapp(item.celular, msj)
+                        try {
+
+                            //calcular el monto total a pagar
+                            diasRetraso = numero_dias_retrasados.text.toString().toInt()
+                            montoTotalAPagar = getDoubleWithOneDecimalsReturnDouble((diasRetraso * item.montoDiarioAPagar!!))
+
+                            //Mensaje
+                            var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
+                            "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
+                            openWhatsapp(item.celular, msj)
+
+                        }catch (t:Throwable)
+                        {
+                            Firebase.crashlytics.recordException(t)
+                        }
+
                     }
                 }
 

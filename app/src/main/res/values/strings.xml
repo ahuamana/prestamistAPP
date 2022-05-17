@@ -6,7 +6,7 @@
 
     <!--Cambiar dependiendo el pais-->
     <string name="tipo_documento">DNI</string>
-    <string name="cantidad_documento_max">9</string>
+    <integer name="cantidad_documento_max">8</integer>
     <string name="tipo_moneda">S./ </string>
     <string name="tipo_moneda_defecto">S./ 1000</string>
     <string name="tipo_moneda_defecto_cero">S./ 0</string>

@@ -23,6 +23,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.content.Intent
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
+import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
+import com.paparazziapps.pretamistapp.helper.hideKeyboardFrom
+import com.paparazziapps.pretamistapp.helper.setMaxLength
 
 
 class RegistrarActivity : AppCompatActivity() {
@@ -66,6 +69,10 @@ class RegistrarActivity : AppCompatActivity() {
         layoutDNI           = binding.dniLayout
         layoutCelular       = binding.celularLayout
 
+        //Set max lengh Document
+        dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
+        layoutDNI.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
+
         //get intent
         getExtras()
         showCalendar()
@@ -98,7 +105,7 @@ class RegistrarActivity : AppCompatActivity() {
         registerButton.apply {
 
             setOnClickListener {
-
+                hideKeyboardActivity(this@RegistrarActivity)
                 isEnabled = false
                 binding.cortina.isVisible = true
 
@@ -181,12 +188,13 @@ class RegistrarActivity : AppCompatActivity() {
 
         dni.doAfterTextChanged {
 
-            var dniChanged = it.toString()
+            var doucmentoChanged = it.toString()
+            var documentoMax = resources.getInteger(R.integer.cantidad_documento_max)
 
             layoutDNI.error = when
             {
-                dniChanged.isNullOrEmpty() -> "${getString(R.string.documento_vacío)}"
-                dniChanged.count() in 1..9 -> "${getString(R.string.documento_incompleto)}"
+                doucmentoChanged.isNullOrEmpty() -> "${getString(R.string.documento_vacío)}"
+                doucmentoChanged.count() in 1 until documentoMax -> "${getString(R.string.documento_incompleto)}"
                 else -> null
             }
 
@@ -216,12 +224,12 @@ class RegistrarActivity : AppCompatActivity() {
 
         if(!nombres.text.toString().trim().isNullOrEmpty()          &&
             nombres.text.toString().trim().count() >= 4             &&
-            !apellidos.text.toString().trim().isNullOrEmpty()          &&
-            apellidos.text.toString().trim().count() >= 4             &&
-            !celular.text.toString().trim().isNullOrEmpty()          &&
+            !apellidos.text.toString().trim().isNullOrEmpty()       &&
+            apellidos.text.toString().trim().count() >= 4           &&
+            !celular.text.toString().trim().isNullOrEmpty()         &&
             celular.text.toString().trim().count() == 9             &&
-            !dni.text.toString().trim().isNullOrEmpty()          &&
-            dni.text.toString().trim().count() == 10             &&
+            !dni.text.toString().trim().isNullOrEmpty()             &&
+            dni.text.toString().trim().count() == resources.getInteger(R.integer.cantidad_documento_max)             &&
             !fecha.text.toString().trim().isNullOrEmpty())
         {
             //Registrar prestamo

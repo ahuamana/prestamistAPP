@@ -7,13 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
 import com.paparazziapps.pretamistapp.helper.fromHtml
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
+import com.paparazziapps.pretamistapp.helper.showMessageAboveMenuInferiorGlobal
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
@@ -101,12 +101,14 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     private fun showMessage(message:String)
     {
-        Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_LONG).show()
+        showMessageAboveMenuInferiorGlobal(message,binding.root)
+        //Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_LONG).show()
     }
 
     private fun showShortMessage(message:String)
     {
-        Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_SHORT).show()
+        showMessageAboveMenuInferiorGlobal(message,binding.root)
+        //Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_SHORT).show()
     }
 
     fun openDialogActualizarPago(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition:Int) {

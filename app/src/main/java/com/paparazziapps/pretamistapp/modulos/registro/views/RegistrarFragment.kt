@@ -3,7 +3,6 @@ package com.paparazziapps.pretamistapp.modulos.registro.views
 import android.app.Activity
 import android.content.Intent
 import android.graphics.PorterDuff
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,22 +10,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
-import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimals
-import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimalsReturnDouble
+import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 
@@ -95,10 +91,10 @@ class RegistrarFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentRegistrarBinding.inflate(inflater, container, false)
-        var view = binding.root
+        val view = binding.root
 
         //Modo Standar
         intereses = binding.interesSP
@@ -139,8 +135,8 @@ class RegistrarFragment : Fragment() {
             prestamo.montoDiarioAPagar = montoDiarioAPagar
             prestamo.montoTotalAPagar = montoTotalAPagar
 
-            var gson = Gson()
-            var prestamoJson = gson.toJson(prestamo)
+            val gson = Gson()
+            val prestamoJson = gson.toJson(prestamo)
 
             //Show next activity - Register pagos
             startForResult.launch(Intent(context, RegistrarActivity::class.java).putExtra("prestamoJson",prestamoJson))
@@ -248,9 +244,9 @@ class RegistrarFragment : Fragment() {
 
     private fun setupSpinners() {
 
-        val adapterIntereses= ArrayAdapter<String>(context!!,R.layout.select_items, listaIntereses)
-        val adapterPlazos= ArrayAdapter<String>(context!!,R.layout.select_items, listaPlazos)
-        val adapterModos= ArrayAdapter<String>(context!!,R.layout.select_items, listmode)
+        val adapterIntereses= ArrayAdapter<String>(requireContext(),R.layout.select_items, listaIntereses)
+        val adapterPlazos= ArrayAdapter<String>(requireContext(),R.layout.select_items, listaPlazos)
+        val adapterModos= ArrayAdapter<String>(requireContext(),R.layout.select_items, listmode)
 
         intereses.setAdapter(adapterIntereses)
         meses.setAdapter(adapterPlazos)
@@ -306,16 +302,16 @@ class RegistrarFragment : Fragment() {
         if(isValidEverything)
         {
             btnContinuar.backgroundTintMode = PorterDuff.Mode.SCREEN
-            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(context!!,R.color.primarycolordark_two)
-            btnContinuar.setTextColor(ContextCompat.getColor(context!!, R.color.white))
+            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(requireContext(),R.color.primarycolordark_two)
+            btnContinuar.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             btnContinuar.isEnabled = true
 
         } else
         {
             btnContinuar.isEnabled = false
             btnContinuar.backgroundTintMode = PorterDuff.Mode.MULTIPLY
-            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(context!!,R.color.color_input_text)
-            btnContinuar.setTextColor(ContextCompat.getColor(context!!, R.color.color_input_text))
+            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(requireContext(),R.color.color_input_text)
+            btnContinuar.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_input_text))
 
         }
     }
@@ -348,11 +344,11 @@ class RegistrarFragment : Fragment() {
 
     private fun observers() {
 
-        _viewModel.getMessage().observe(this) { message ->
+        _viewModel.getMessage().observe(viewLifecycleOwner) { message ->
             if(message!= null)  showMessage(message)
         }
 
-        _viewModel.getMontoDiario().observe(this){ montodiario ->
+        _viewModel.getMontoDiario().observe(viewLifecycleOwner){ montodiario ->
             if(montodiario !=null)
             {
                 println("Monto Diario: $montodiario")
@@ -382,7 +378,8 @@ class RegistrarFragment : Fragment() {
 
     private fun showMessage(message:String)
     {
-        Snackbar.make(requireActivity().findViewById(R.id.nav_view),"$message",Snackbar.LENGTH_LONG).show()
+        showMessageAboveMenuInferiorGlobal(message,binding.root)
+        //Snackbar.make(requireActivity().findViewById(R.id.nav_view),"$message",Snackbar.LENGTH_LONG).show()
     }
 
 
@@ -398,5 +395,10 @@ class RegistrarFragment : Fragment() {
 
                 }
             }
+    }
+
+    override fun onResume() {
+        binding.root.hideKeyboardFrom()
+        super.onResume()
     }
 }

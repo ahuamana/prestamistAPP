@@ -110,12 +110,6 @@ class FinanzasFragment : Fragment() {
 
     }
 
-
-    private fun showMessage(message:String)
-    {
-        Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_LONG).show()
-    }
-
     companion object {
 
         @JvmStatic

@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.helper
 
+import android.app.Activity
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -7,13 +8,19 @@ import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.VectorDrawable
 import android.os.Build
 import android.text.Html
+import android.text.InputFilter
 import android.text.SpannableString
 import android.text.Spanned
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatButton
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
 import java.math.RoundingMode
@@ -30,8 +37,12 @@ import java.util.*
 
     fun getDoubleWithTwoDecimalsReturnDouble (number:Double):Double?
     {
-
         return number.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+    }
+
+    fun getDoubleWithOneDecimalsReturnDouble (number:Double):Double?
+    {
+        return number.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble()
     }
 
     fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int
@@ -216,6 +227,35 @@ fun getColorWithAlpha(color: Int, ratio: Float): Int {
             color
         )
     )
+}
+
+//Global Methods
+
+fun showMessageAboveMenuInferiorGlobal(message: String?, view:CoordinatorLayout) {
+    Snackbar.make(view,"$message", Snackbar.LENGTH_SHORT).apply {
+        view.elevation = 1000F
+    }.show()
+}
+
+fun EditText.setMaxLength(maxLength: Int){
+    filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxLength))
+}
+
+
+fun hideKeyboardActivity(activity: Activity) {
+    val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    //Find the currently focused view, so we can grab the correct window token from it.
+    var view = activity.currentFocus
+    //If no view currently has focus, create a new one, just so we can grab a window token from it
+    if (view == null) {
+        view = View(activity)
+    }
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun View.hideKeyboardFrom(){
+    val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
 

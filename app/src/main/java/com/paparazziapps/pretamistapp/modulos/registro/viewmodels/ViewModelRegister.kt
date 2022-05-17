@@ -2,6 +2,7 @@ package com.paparazziapps.pretamistapp.modulos.registro.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import java.lang.Exception
@@ -29,7 +30,7 @@ open class ViewModelRegister private constructor(){
 
             var interesFinal = newCapital * (newInteres/100)
             var montodiario = (interesFinal + newCapital)/dias
-            _montoDiario.value = String.format("%.1f", montodiario).toDouble()
+            _montoDiario.value = getDoubleWithOneDecimalsReturnDouble(montodiario)?:-9999.00
 
         }catch (e:Exception)
         {
