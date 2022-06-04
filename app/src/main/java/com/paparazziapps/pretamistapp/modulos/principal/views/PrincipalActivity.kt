@@ -47,21 +47,30 @@ class PrincipalActivity : AppCompatActivity() {
 
         /////////////////////////////////////////FREE TRIAL
 
-        /*var fecha7Dias:Long = 1652651285000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
 
-        if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0)
-        {
-            println("Fecha actual normal: ${getFechaActualNormalInUnixtime().minus(fecha7Dias)}")
-            binding.cortinaFreeTrial.isVisible = true
-        }*/
 
+
+
+        isFreeTrial()
         setUpBottomNav()
         setUpInicialToolbar()
         setupBottomSheetDetallePrestamo()
 
         //testCrashlytics()
-        var flt = 0.0
-        println("Float : ${flt}")
+    }
+
+    private fun isFreeTrial() {
+        if(resources.getBoolean(R.bool.isFreeTrail))
+        {
+            var fecha7Dias:Long = 1652651285000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
+
+            if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0)
+            {
+                println("Fecha actual normal: ${getFechaActualNormalInUnixtime().minus(fecha7Dias)}")
+                binding.cortinaFreeTrial.isVisible = true
+            }
+        }
+
     }
 
     private fun testCrashlytics() {
