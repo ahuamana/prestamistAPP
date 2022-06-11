@@ -15,23 +15,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pretamistapp">
         <activity
-            android:name=".modulos.principal.views.PrincipalActivity"
+            android:name=".modulos.login.views.RegisterActivity"
             android:theme="@style/Theme.noActionBar"
-            android:windowSoftInputMode="stateHidden"
+            android:exported="false" />
+        <activity
+            android:name=".modulos.login.views.LoginActivity"
+            android:theme="@style/Theme.noActionBar"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".modulos.principal.views.PrincipalActivity"
+            android:exported="true"
+            android:theme="@style/Theme.noActionBar"
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".modulos.registro.views.RegistrarActivity"
             android:exported="true"
             android:theme="@style/Theme.noActionBar" />
-
     </application>
 
 </manifest>

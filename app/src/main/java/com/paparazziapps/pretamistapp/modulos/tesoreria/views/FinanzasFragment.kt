@@ -53,7 +53,7 @@ class FinanzasFragment : Fragment() {
     }
 
     private fun observers() {
-        _viewModel.receivePrestamos().observe(this) {
+        _viewModel.receivePrestamos().observe(viewLifecycleOwner) {
             if(it.count() == 0)
             {
                 binding.apply {

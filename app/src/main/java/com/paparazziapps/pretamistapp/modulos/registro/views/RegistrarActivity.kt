@@ -236,7 +236,7 @@ class RegistrarActivity : AppCompatActivity() {
             registerButton.apply {
                 isEnabled = true
                 backgroundTintMode = PorterDuff.Mode.SCREEN
-                backgroundTintList= ContextCompat.getColorStateList(context,R.color.primarycolordark_two)
+                backgroundTintList= ContextCompat.getColorStateList(context,R.color.colorPrimary)
                 setTextColor(ContextCompat.getColor(context, R.color.white))
             }
         }else

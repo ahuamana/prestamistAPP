@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".modulos.login.views.RegisterActivity"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/tool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/toolbar_child"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutFullname"
+                    style="@style/CustomTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/fullname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/googlesans_regular"
+                        android:hint="Nombre(s)"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutLastname"
+                    style="@style/CustomTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="@+id/layoutFullname"
+                    app:layout_constraintStart_toStartOf="@+id/layoutFullname"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutFullname">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/lastname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/googlesans_regular"
+                        android:hint="Apellidos"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txt_input_layout_sucursal"
+                    style="@style/CustomDropDown"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
+                    android:layout_marginTop="16dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="@+id/layoutLastname"
+                    app:layout_constraintStart_toStartOf="@+id/layoutLastname"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutLastname">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/edtSucursal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:fontFamily="@font/googlesans_regular"
+                        android:hint="Cucursal"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutEmail"
+                    style="@style/CustomTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_input_layout_sucursal"
+                    app:layout_constraintStart_toStartOf="@+id/txt_input_layout_sucursal"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_input_layout_sucursal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/googlesans_regular"
+                        android:hint="Correo electrónico"
+                        android:inputType="textEmailAddress"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutPass"
+                    style="@style/CustomTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:endIconMode="password_toggle"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="@+id/layoutEmail"
+                    app:layout_constraintStart_toStartOf="@+id/layoutEmail"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/googlesans_regular"
+                        android:hint="Contraseña"
+                        android:inputType="textPassword"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sign_up"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/corner_boton_outline"
+                    android:enabled="false"
+                    android:fontFamily="@font/googlesans_regular"
+                    android:scrollHorizontally="true"
+                    android:text="Registrarse"
+                    android:textColor="@color/color_input_text"
+                    app:backgroundTint="@color/color_input_text"
+                    app:layout_constraintEnd_toEndOf="@+id/layoutPass"
+                    app:layout_constraintStart_toStartOf="@+id/layoutPass"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutPass" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/termsConditions"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/googlesans_regular"
+                    android:text="@string/app_terms_conditions"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="@+id/sign_up"
+                    app:layout_constraintStart_toStartOf="@+id/sign_up"
+                    app:layout_constraintTop_toBottomOf="@+id/sign_up" />
+
+                <!--Categoria  curtain -->
+                <View
+                    android:id="@+id/curtain_sucursal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="18dp"
+                    android:background="@drawable/background_input_disable"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_input_layout_sucursal"
+                    app:layout_constraintLeft_toLeftOf="@id/txt_input_layout_sucursal"
+                    app:layout_constraintRight_toRightOf="@id/txt_input_layout_sucursal"
+                    app:layout_constraintTop_toTopOf="@id/txt_input_layout_sucursal" />
+
+
+                <!-- revisar en progra cuando deshabilitar-->
+                <View
+                    android:id="@+id/dots_sucursal"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:background="@drawable/dots"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/curtain_sucursal"
+                    app:layout_constraintLeft_toLeftOf="@id/curtain_sucursal"
+                    app:layout_constraintRight_toRightOf="@id/curtain_sucursal" />
+
+                <ProgressBar
+                    android:id="@+id/progress_sucursal"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:elevation="4dp"
+                    android:progressDrawable="@drawable/circular_progress_bar"
+                    android:visibility="visible"
+                    app:layout_constraintRight_toRightOf="@+id/txt_input_layout_sucursal"
+                    app:layout_constraintTop_toTopOf="@+id/txt_input_layout_sucursal" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cortinaLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#dcffffff"
+        android:elevation="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/progressbar_change_user"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:elevation="20dp"
+            android:progressDrawable="@drawable/custom_progress_bar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+        <View
+            android:id="@+id/view_agenda_docentes"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:elevation="8dp"
+            android:backgroundTint="@color/white"
+            />
+        <TextView
+            android:layout_height="25dp"
+            android:text="@string/loading"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/progressbar_change_user"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

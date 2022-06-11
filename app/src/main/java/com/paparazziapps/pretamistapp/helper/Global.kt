@@ -12,17 +12,22 @@ import android.text.InputFilter
 import android.text.SpannableString
 import android.text.Spanned
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatButton
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -142,13 +147,13 @@ import java.util.*
     }
 
 
-fun getValidateColorHex(color: Int = ctx().resources.getColor(R.color.primarycolordark_two)): Int{
+fun getValidateColorHex(color: Int = ctx().resources.getColor(R.color.colorPrimary)): Int{
     val hexColor = "#"+Integer.toHexString(color).substring(2)
     val validateColor = Color.parseColor(hexColor)
     return validateColor
 }
 
-fun AppCompatButton.standardSimpleButtonOutline(color: Int = resources.getColor(R.color.primarycolordark_two)){
+fun AppCompatButton.standardSimpleButtonOutline(color: Int = resources.getColor(R.color.colorPrimary)){
     this.apply {
         background = getRippleDrawable(BUTTON_OUTLINE)
         setTextColor(getValidateColorHex(color))
@@ -180,7 +185,7 @@ fun getRippleDrawable(type: String): RippleDrawable {
     return RippleDrawable(getPressedColorSelector2(), customDrawable, mask) //getRippleMask() try this
 }
 
-fun tintDrawable(drawable: Drawable, @ColorInt color: Int = ctx().resources.getColor(R.color.primarycolordark_two)): Drawable {
+fun tintDrawable(drawable: Drawable, @ColorInt color: Int = ctx().resources.getColor(R.color.colorPrimary)): Drawable {
     (drawable as? VectorDrawableCompat)
         ?.apply { setTintList(ColorStateList.valueOf(color)) }
         ?.let { return it }
@@ -197,8 +202,8 @@ fun tintDrawable(drawable: Drawable, @ColorInt color: Int = ctx().resources.getC
 }
 
 fun getPressedColorSelector2(
-    pressedColor : Int      = getColorWithAlpha(ctx().resources.getColor(R.color.primarycolordark_two), 0.3f),
-    normalColor  : Int      = getColorWithAlpha(ctx().resources.getColor(R.color.primarycolordark_two), 0.3f),
+    pressedColor : Int      = getColorWithAlpha(ctx().resources.getColor(R.color.colorPrimary), 0.3f),
+    normalColor  : Int      = getColorWithAlpha(ctx().resources.getColor(R.color.colorPrimary), 0.3f),
     isSelect     : Boolean  = false,
 ): ColorStateList {
     return ColorStateList(
@@ -258,6 +263,36 @@ fun View.hideKeyboardFrom(){
     inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
+fun setColorToStatusBar(activity: Activity, color: Int = getColor(ctx(),R.color.colorPrimary)) {
+    val window = activity.window
+    val hsv = FloatArray(3)
+    var darkColor: Int = color
+
+    Color.colorToHSV(darkColor, hsv)
+    hsv[2] *= 0.8f // value component
+    darkColor = Color.HSVToColor(hsv)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.statusBarColor = darkColor //Define color
+    }
+}
+
+inline fun <reified T> toJson(value : T) = Json{
+    encodeDefaults = true
+    ignoreUnknownKeys = true
+    isLenient = true
+}.encodeToString(value)
+
+
+
+inline fun <reified T> fromJson(json: String) : T {
+    return Json{
+        ignoreUnknownKeys = true
+        isLenient = true
+    }.decodeFromString(json)
+}
 
 
 

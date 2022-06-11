@@ -208,7 +208,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     {
                         diasRetrasados.text = "0"
                         binding.cardviewEnviarMsj.isVisible = false
-                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.primarycolordark_two)
+                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.colorPrimary)
                     }else
                     {
                         diasRetrasados.text = this
@@ -231,7 +231,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     if(this.toInt() == 0)
                     {
                         binding.cardviewEnviarMsj.isVisible = false
-                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.primarycolordark_two)
+                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.colorPrimary)
                     }else
                     {
                         if(this.toInt() == 1)

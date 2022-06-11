@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.modulos.registro.pojo
 
+
 data class Prestamo (
     var id:String?=null,
     var nombres:String? = null,

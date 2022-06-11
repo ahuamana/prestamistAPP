@@ -9,17 +9,20 @@
     <color name="white">#FFFFFFFF</color>
     <color name="facebook_color_like">#0571ed</color>
 
+    <!--Primary colors 3 colors-->
+    <color name="colorPrimary">#86cdc5</color>
+    <color name="colorSecondary">#4CAFF6</color>
+    <color name="colorPrimaryLight">#cceefe</color>
+    <color name="colorPrimaryDark">#89c8c3</color>
+    <color name="colorThird">#FED1EF</color>
 
-    <color name="primarycolor">#cceefe</color>
-    <color name="primarycolordark">#86cdc5</color>
-    <color name="primarycolordark_two">#89c8c3</color>
-    <color name="secondarycolorlight">#4CAFF6</color>
-    <color name="thirdcolorlight">#FED1EF</color>
+
     <color name="red">#F44336</color>
     <color name="color_red_trasparente">#83D18989</color>
 
     <color name="colorDialogText">#757575</color>
     <color name="divider">#AFAFAF</color>
+    <color name="color_gray_web">#808080</color>
     <color name="linea_bottomsheet">#E7E7E7</color>
     <color name="icons">#A8A8A8</color>
     <color name="color_input_box">#F5F5F5</color>

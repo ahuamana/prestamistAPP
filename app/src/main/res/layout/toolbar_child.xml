@@ -13,6 +13,8 @@
             app:navigationIcon="@drawable/ic_arrow_back_white"
             app:collapseIcon="@drawable/ic_arrow_back_white"
             app:titleTextColor="@color/colorWhite"
+            app:title="Prueba"
+            app:contentInsetStartWithNavigation="0dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"/>
 
