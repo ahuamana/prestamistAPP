@@ -1,13 +1,22 @@
 package com.paparazziapps.pretamistapp.modulos.principal.views
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.Menu
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.findNavController
@@ -26,6 +35,9 @@ import androidx.fragment.app.FragmentManager
 import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome
+import com.paparazziapps.pretamistapp.modulos.login.views.LoginActivity
+import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
+import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
 
 
 class PrincipalActivity : AppCompatActivity() {
@@ -34,8 +46,11 @@ class PrincipalActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var toolbar: Toolbar
     private lateinit var layout_detalle_prestamo: BottomsheetDetallePrestamoBinding
-
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
+
+    private var isEnabledCheck = true
+
+    var _viewModelPrincipal = ViewModelPrincipal.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +60,8 @@ class PrincipalActivity : AppCompatActivity() {
         bottomNavigationView = binding.navView
         toolbar              = binding.tool.toolbar
 
-        /////////////////////////////////////////FREE TRIAL
 
-
-
-
+        MyPreferences().isLogin = true
 
         isFreeTrial()
         setUpBottomNav()
@@ -57,6 +69,76 @@ class PrincipalActivity : AppCompatActivity() {
         setupBottomSheetDetallePrestamo()
 
         //testCrashlytics()
+        _viewModelPrincipal.searchUserByEmail()
+        observers()
+    }
+
+    private fun observers() {
+
+        _viewModelPrincipal.getUser().observe(this){
+            if(it.isActiveUser)
+            {
+                binding.navView.isVisible = true
+            }else
+            {
+                //Usuario desactivado
+                binding.navView.isVisible = false
+                isUserActivePrincipal()
+            }
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_guardar, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+
+        val btnSave   = menu?.findItem(R.id.action_save_perfil)?.actionView?.findViewById<AppCompatButton>(R.id.btn_save_item)
+        val colorState = if (isEnabledCheck) ContextCompat.getColor(this@PrincipalActivity, R.color.red)
+        else ContextCompat.getColor(this@PrincipalActivity, R.color.color_text_web)
+        val colorStateTxt = ContextCompat.getColor(this@PrincipalActivity, R.color.colorWhite)
+
+
+        btnSave?.apply {
+            isEnabled = isEnabledCheck
+
+            //val resouse = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.corner_boton_outline) as Drawable
+            val resouse = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.border_mask) as Drawable
+            val customResource = tintDrawable(resouse, colorState)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                resouse.colorFilter = BlendModeColorFilter(ContextCompat.getColor(this@PrincipalActivity, R.color.red), BlendMode.SRC_ATOP)
+            }else{
+                resouse.setColorFilter(ContextCompat.getColor(this@PrincipalActivity, R.color.red), PorterDuff.Mode.SRC_ATOP)
+            }
+            background = customResource
+
+            val resouseDrawable = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.ic_logout) as Drawable
+            val customResourceDrawable = tintDrawable(resouseDrawable, colorStateTxt)
+
+            setCompoundDrawablesWithIntrinsicBounds(customResourceDrawable, null, null, null)
+            setTextColor(colorStateTxt)
+            setText("Cerrar sessión")
+            setOnClickListener {
+                if (isEnabledCheck){
+                    _viewModelPrincipal
+                    MyPreferences().isLogin = false
+                    startActivity(Intent(this@PrincipalActivity, LoginActivity::class.java)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
+
+        }
+
+
+        return true
+    }
+
+    fun isUserActivePrincipal()
+    {
+     binding.cortinaUserInactive.isVisible = true
     }
 
     private fun isFreeTrial() {
@@ -305,11 +387,11 @@ class PrincipalActivity : AppCompatActivity() {
         //Mostrar bottom sheet
        binding.cortinaBottomSheet.isVisible = true
        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 
-
-
-
-
+    override fun onDestroy() {
+        ViewModelPrincipal.destroyInstance()
+        super.onDestroy()
     }
 
 

@@ -25,6 +25,9 @@
     <string name="create_account">Registrate aquí</string>
     <string name="forget_pass">¿Has olvidado como ingresar?</string>
 
+    <!--User inactive-->
+    <string name="inactive_user">Usuario desactivado</string>
+
 
     <string name="loading">Cargando...</string>
 

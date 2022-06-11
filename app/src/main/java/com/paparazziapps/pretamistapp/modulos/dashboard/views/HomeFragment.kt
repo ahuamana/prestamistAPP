@@ -17,6 +17,7 @@ import com.paparazziapps.pretamistapp.helper.showMessageAboveMenuInferiorGlobal
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
+import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
@@ -25,7 +26,6 @@ import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegis
 class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     var _viewModel = ViewModelDashboard.getInstance()
-    var _viewModelregister = ViewModelRegister.getInstance()
 
     var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
@@ -59,13 +59,10 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
         //Configuration
         setupRecyclerPrestamos()
-
         //Observers
         observers()
 
-        //First time process
         obtenerPrestamosFirstTime()
-
 
         return view
     }
@@ -83,7 +80,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
     }
 
     private fun observers() {
-        _viewModel.receivePrestamos().observe(this) {
+        _viewModel.receivePrestamos().observe(viewLifecycleOwner) {
             if(it.count() == 0)
             {
                 binding.emptyPrestamo.isVisible = true
@@ -97,6 +94,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                 //showMessage(" Lista de prestamos ${it.count()}")
             }
         }
+
     }
 
     private fun showMessage(message:String)

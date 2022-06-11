@@ -18,15 +18,30 @@
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/fragment_registrar.xml" value="0.175" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/newPrestamist/prestamistAPP/app/src/main/res/layout/item_detalle_prestamo.xml" value="0.5" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable-hdpi/btn_disabled_outlined.xml" value="0.1365" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable-hdpi/ic_save.xml" value="0.2555" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable-v24/custom_progress_bar.xml" value="0.264" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable-v24/dots.xml" value="0.264" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable-v24/ic_person_white.xml" value="0.264" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/background_bottom_navigation.xml" value="0.1675" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/background_input_disable.xml" value="0.1675" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/border_mask.xml" value="0.1675" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/bottom_sheet_corner.xml" value="0.2555" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/button_corner.xml" value="0.2555" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/circle_outline.xml" value="0.1675" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/corner_boton_outline.xml" value="0.1675" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/drawable/ic_launcher_background.xml" value="0.264" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/activity_login.xml" value="0.33" />
-        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/activity_register.xml" value="0.5" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/activity_principal.xml" value="0.33" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/activity_register.xml" value="0.33" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/activity_registrar.xml" value="0.36666666666666664" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/fragment_finanzas.xml" value="0.36666666666666664" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/fragment_home.xml" value="0.22" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/fragment_registrar.xml" value="0.36666666666666664" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/item_menu_btn_save.xml" value="0.36666666666666664" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/toolbar_child.xml" value="0.25" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/layout/user_inactive.xml" value="0.22" />
+        <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/prestamistapp/prestamistAPP/app/src/main/res/menu/menu_guardar.xml" value="0.36666666666666664" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2765625" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/background_bottom_navigation.xml" value="0.3828125" />
         <entry key="..\:/Antony/Desarrollo/Android/KotlinProjects/pretamistapp/app/src/main/res/drawable/background_input_disable.xml" value="0.3828125" />

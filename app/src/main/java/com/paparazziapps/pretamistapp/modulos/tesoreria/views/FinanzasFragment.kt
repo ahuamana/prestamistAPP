@@ -12,6 +12,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentFinanzasBinding
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
+import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
+import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.PrestamoDetalleAdapter
 import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelTesoreria
 
@@ -20,10 +22,13 @@ class FinanzasFragment : Fragment() {
 
     val _viewModel = ViewModelTesoreria.getInstance()
 
+
     var _binding:FragmentFinanzasBinding?= null
     private val binding get() = _binding!!
 
     val prestamoDetalleAdapter = PrestamoDetalleAdapter()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +46,8 @@ class FinanzasFragment : Fragment() {
 
         //all code here
         initialCode()
+
+
         observers()
 
         binding.recyclerDetalle.apply {
@@ -106,8 +113,6 @@ class FinanzasFragment : Fragment() {
             }
 
         }
-
-
     }
 
     companion object {
@@ -118,5 +123,10 @@ class FinanzasFragment : Fragment() {
                 arguments = Bundle().apply {
                 }
             }
+    }
+
+    override fun onDestroy() {
+        ViewModelTesoreria.destroyInstance()
+        super.onDestroy()
     }
 }

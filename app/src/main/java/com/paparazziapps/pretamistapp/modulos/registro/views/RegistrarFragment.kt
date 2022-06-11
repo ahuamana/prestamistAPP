@@ -23,6 +23,8 @@ import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
 import com.paparazziapps.pretamistapp.helper.*
+import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
+import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 
@@ -121,7 +123,6 @@ class RegistrarFragment : Fragment() {
         observers()
         validateAll()
         continuar()
-
 
         return view
     }
@@ -365,6 +366,7 @@ class RegistrarFragment : Fragment() {
         }
 
 
+
     }
 
     private fun clearData()
@@ -400,5 +402,10 @@ class RegistrarFragment : Fragment() {
     override fun onResume() {
         binding.root.hideKeyboardFrom()
         super.onResume()
+    }
+
+    override fun onDestroy() {
+        ViewModelRegister.destroyInstance()
+        super.onDestroy()
     }
 }

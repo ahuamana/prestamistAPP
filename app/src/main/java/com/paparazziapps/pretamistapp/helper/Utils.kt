@@ -1,23 +1,31 @@
 package com.paparazziapps.pretamistapp.helper
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.VectorDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
-import android.text.Html
-import android.text.InputFilter
-import android.text.SpannableString
-import android.text.Spanned
+import android.telephony.TelephonyManager
+import android.text.*
+import android.util.Log
+import android.util.Patterns
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.ColorInt
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.graphics.drawable.DrawableCompat
@@ -32,6 +40,21 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+
+//Shared Preferences
+    private var appContext: Context? = null
+
+    val application: Context
+        get() = appContext ?: initAndGetAppCtxWithReflection()
+
+    @SuppressLint("PrivateApi")
+    private fun initAndGetAppCtxWithReflection(): Context {
+        val activityThread = Class.forName("android.app.ActivityThread")
+        val ctx = activityThread.getDeclaredMethod("currentApplication").invoke(null) as Context
+        appContext = ctx
+        return ctx
+    }
+
 
     val DiaUnixtime = 86400000;
 
@@ -292,6 +315,31 @@ inline fun <reified T> fromJson(json: String) : T {
         ignoreUnknownKeys = true
         isLenient = true
     }.decodeFromString(json)
+}
+
+fun isConnected(context:Context):Boolean
+{
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork = cm.activeNetworkInfo
+    try {
+        if (activeNetwork != null) {
+            val caps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                cm.getNetworkCapabilities(cm.activeNetwork)
+            } else {
+
+            }
+        }
+    } catch (e: Exception) {
+        Log.e("ERROR", "" + e.message)
+    }
+
+    return activeNetwork != null && activeNetwork.isConnected
+}
+
+
+
+fun isValidEmail(target: CharSequence?): Boolean {
+    return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
 }
 
 

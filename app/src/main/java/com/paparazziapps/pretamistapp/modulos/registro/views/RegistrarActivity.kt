@@ -30,6 +30,8 @@ import com.paparazziapps.pretamistapp.helper.setMaxLength
 
 class RegistrarActivity : AppCompatActivity() {
 
+    val _viewModel = ViewModelRegister.getInstance()
+
     lateinit var binding: ActivityRegistrarBinding
     var prestamoReceived = Prestamo()
 
@@ -47,8 +49,6 @@ class RegistrarActivity : AppCompatActivity() {
     lateinit var registerButton:MaterialButton
     lateinit var toolbar: Toolbar
     var fechaSelectedUnixtime:Long? = null
-
-    val _viewModel = ViewModelRegister.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
