@@ -1,6 +1,5 @@
 package com.paparazziapps.pretamistapp.modulos.principal.views
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -9,10 +8,8 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.view.Menu
 import android.view.View
-import android.view.WindowManager
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -27,13 +24,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityPrincipalBinding
 import com.paparazziapps.pretamistapp.databinding.BottomsheetDetallePrestamoBinding
-import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
-import androidx.fragment.app.FragmentManager
 import com.google.common.base.Strings.isNullOrEmpty
-import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
+import com.paparazziapps.pretamistapp.helper.views.beGone
+import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome
 import com.paparazziapps.pretamistapp.modulos.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
@@ -47,6 +42,7 @@ class PrincipalActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var layout_detalle_prestamo: BottomsheetDetallePrestamoBinding
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
+    private var preferences = MyPreferences()
 
     private var isEnabledCheck = true
 
@@ -64,10 +60,7 @@ class PrincipalActivity : AppCompatActivity() {
         MyPreferences().isLogin = true
 
         isFreeTrial()
-        setUpBottomNav()
         setUpInicialToolbar()
-        setupBottomSheetDetallePrestamo()
-
         //testCrashlytics()
         _viewModelPrincipal.searchUserByEmail()
         observers()
@@ -76,13 +69,23 @@ class PrincipalActivity : AppCompatActivity() {
     private fun observers() {
 
         _viewModelPrincipal.getUser().observe(this){
-            if(it.isActiveUser)
+            preferences.isAdmin = it.admin
+            preferences.isSuperAdmin = it.superAdmin
+            preferences.sucursalId = it.sucursalId?: INT_DEFAULT
+            preferences.sucursalName = it.sucursal?:""
+            preferences.email_login = it.email?:""
+            preferences.isActiveUser = it.activeUser
+
+            if(it.activeUser)
             {
-                binding.navView.isVisible = true
+                setUpBottomNav()
+                setupBottomSheetDetallePrestamo()
+                binding.navView.beVisible()
+
             }else
             {
                 //Usuario desactivado
-                binding.navView.isVisible = false
+                binding.navView.beGone()
                 isUserActivePrincipal()
             }
         }
@@ -138,7 +141,7 @@ class PrincipalActivity : AppCompatActivity() {
 
     fun isUserActivePrincipal()
     {
-     binding.cortinaUserInactive.isVisible = true
+     binding.cortinaUserInactive.beVisible()
     }
 
     private fun isFreeTrial() {
@@ -149,7 +152,7 @@ class PrincipalActivity : AppCompatActivity() {
             if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0)
             {
                 println("Fecha actual normal: ${getFechaActualNormalInUnixtime().minus(fecha7Dias)}")
-                binding.cortinaFreeTrial.isVisible = true
+                binding.cortinaFreeTrial.beVisible()
             }
         }
 

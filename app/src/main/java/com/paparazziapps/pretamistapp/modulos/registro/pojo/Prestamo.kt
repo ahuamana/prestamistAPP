@@ -17,9 +17,11 @@ data class Prestamo (
     var dias_restantes_por_pagar:Int?=null,
     var fechaUltimoPago: String? = null,
     var diasPagados: Int? = null,
-
     var montoTotalAPagar:Double?=null,
     var montoDiarioAPagar:Double?=null,
-    var state:String?= null //CERRADO,ABIERTO
+    var state:String?= null, //CERRADO,ABIERTO
+
+    //Sucursal
+    var sucursalId:Int?=null
 
 )

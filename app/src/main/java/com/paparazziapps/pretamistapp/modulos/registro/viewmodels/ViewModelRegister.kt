@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
+import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
 import java.lang.Exception
 
 open class ViewModelRegister private constructor(){
@@ -41,9 +42,7 @@ open class ViewModelRegister private constructor(){
     fun createPrestamo(prestamo: Prestamo, onComplete: (Boolean, String, String?, Boolean) -> Unit)
     {
         var isCorrect = false
-
         try {
-
         mPrestamoProvider.create(prestamo).addOnCompleteListener {
                 if(it.isSuccessful)
                 {

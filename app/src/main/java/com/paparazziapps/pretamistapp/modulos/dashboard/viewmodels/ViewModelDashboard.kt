@@ -3,10 +3,12 @@ package com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.ktx.toObject
+import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
+import java.util.*
 
 class ViewModelDashboard private constructor(){
 
@@ -65,7 +67,8 @@ class ViewModelDashboard private constructor(){
                     var detalle = DetallePrestamoSender(
                         idPrestamo = id,
                         fechaPago = fecha,
-                        pagoTotal = pagoTotal
+                        pagoTotal = pagoTotal,
+                        unixtime = getFechaActualNormalInUnixtime()
                     )
 
                     mDetallePrestamoProvider.createDetalle(detalle).addOnCompleteListener {

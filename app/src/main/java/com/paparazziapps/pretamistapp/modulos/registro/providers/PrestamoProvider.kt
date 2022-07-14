@@ -6,8 +6,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
 
 class PrestamoProvider {
+
+    var preferences = MyPreferences()
 
     companion object {
         private lateinit var mCollectionPrestamo:CollectionReference
@@ -27,13 +30,17 @@ class PrestamoProvider {
 
     fun create(prestamo: Prestamo): Task<Void>
     {
+        prestamo.sucursalId = preferences.sucursalId
         prestamo.id = mCollectionPrestamo.document().id
         return mCollectionPrestamo.document(prestamo.id!!).set(prestamo)
     }
 
     fun getPrestamos(): Task<QuerySnapshot>
     {
-      return  mCollectionPrestamo.whereEqualTo("state", "ABIERTO").get()
+      return  mCollectionPrestamo
+          .whereEqualTo("state", "ABIERTO")
+          .whereEqualTo("sucursalId",preferences.sucursalId)
+          .get()
     }
 
     fun setLastPayment(id:String, fecha:String,diasRestantesPorPagar:Int, diasPagados:Int): Task<Void>
@@ -53,6 +60,8 @@ class PrestamoProvider {
 
         return mCollectionPrestamo.document(id).update(map)
     }
+
+
 
 
 }

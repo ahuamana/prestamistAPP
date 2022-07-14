@@ -22,6 +22,7 @@ import com.paparazziapps.pretamistapp.databinding.ActivityRegisterBinding
 import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
 import com.paparazziapps.pretamistapp.helper.isValidEmail
 import com.paparazziapps.pretamistapp.helper.setColorToStatusBar
+import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.pojo.User
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegistroUsuario
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
@@ -50,6 +51,7 @@ class RegisterActivity : AppCompatActivity() {
     var btnSignUp: MaterialButton? = null
 
     var userNew = User()
+    var listaSucursales = mutableListOf<Sucursales>()
 
 
     lateinit var sucursalesTextView: AppCompatAutoCompleteTextView
@@ -222,6 +224,11 @@ class RegisterActivity : AppCompatActivity() {
             userNew.nombres = edtFullname?.text.toString().trim()
             userNew.sucursal = sucursalesTextView.text.toString().trim()
             userNew.password = edtPass?.text.toString().trim()  //Ocultar si no quieres que se muestre la contraseña
+
+            listaSucursales.forEach {
+                if(it.name?.equals(sucursalesTextView.text.toString().trim()) == true)  userNew.sucursalId = it.id
+            }
+            //Register
             _viewModelRegistro.createUser(
                 edtEmail!!.text.toString().trim(),
                 edtPass!!.text.toString().trim())
@@ -243,7 +250,13 @@ class RegisterActivity : AppCompatActivity() {
 
             if(it.isNotEmpty())
             {
-                val adapterSucursales= ArrayAdapter(this,R.layout.select_items, it)
+                listaSucursales = it.toMutableList()
+                var scrsales = mutableListOf<String>()
+                it.forEach {
+                    scrsales.add(it.name?:"")
+                }
+
+                val adapterSucursales= ArrayAdapter(this,R.layout.select_items, scrsales)
                 sucursalesTextView.setAdapter(adapterSucursales)
                 sucursalesTextView.setOnClickListener { sucursalesTextView.showDropDown() }
                 sucursalesLayout.setEndIconOnClickListener { sucursalesTextView.showDropDown() }

@@ -11,125 +11,264 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!--Card Dates-->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardview_empty"
-                android:visibility="visible"
+                android:id="@+id/cardview_caja"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:visibility="gone"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="6dp"
-                android:layout_margin="16dp">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingStart="@dimen/dimen_18"
-                    android:paddingEnd="@dimen/dimen_18"
-                    android:layout_height="wrap_content">
+                    android:paddingEnd="@dimen/dimen_18">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/caja_title_admin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="15dp"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Caja Admin"
+                        android:textColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fechaInicioLayout"
+                        style="@style/CustomTextField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        app:endIconDrawable="@drawable/ic_calendar"
+                        app:endIconMode="custom"
+                        app:errorEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/caja_title_admin">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/fecha_inicio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:hint="Inicio"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fechaFinLayout"
+                        style="@style/CustomTextField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        app:endIconDrawable="@drawable/ic_calendar"
+                        app:endIconMode="custom"
+                        app:errorEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/fechaInicioLayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/fecha_fin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:hint="Fin"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/caja_text_result_title_admin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="15dp"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Caja Total:"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        app:layout_constraintEnd_toStartOf="@+id/caja_result_money_admin"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/fechaFinLayout" />
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/caja_result_money_admin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="15dp"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="S./ 0.00"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:background="@drawable/buttom_corners"
+                        android:paddingVertical="8dp"
+                        android:backgroundTint="@color/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/caja_text_result_title_admin"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/fechaFinLayout" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/cardview_caja"
+                android:visibility="visible"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dimen_18"
+                    android:paddingEnd="@dimen/dimen_18">
 
                     <LinearLayout
                         android:id="@+id/content_prestamo_size"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent">
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:layout_weight="1"
                             android:layout_width="0dp"
-                            android:textStyle="bold"
-
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="Prestamós"/>
+                            android:fontFamily="@font/product_sans_bold"
+                            android:layout_weight="1"
+                            android:text="Prestamós"
+                            android:textStyle="bold" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/lbl_prestamos_Activos"
-                            android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="end"
                             android:layout_marginTop="16dp"
-                            android:text="0 activos"/>
+                            android:fontFamily="@font/product_sans_regular"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="0 activos" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/content_caja_all"
-                        app:layout_constraintTop_toBottomOf="@+id/content_prestamo_size"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@+id/content_prestamo_size">
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:layout_weight="1"
                             android:layout_width="0dp"
-                            android:textStyle="bold"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="Caja"/>
+                            android:fontFamily="@font/product_sans_bold"
+                            android:layout_weight="1"
+                            android:text="Caja"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/content_caja_hoy"
-                        app:layout_constraintTop_toBottomOf="@+id/content_caja_all"
                         android:layout_width="match_parent"
-                        android:layout_marginStart="15dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginStart="15dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@+id/content_caja_all">
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:layout_weight="1"
                             android:layout_width="0dp"
-                            android:textStyle="bold"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="Hoy"/>
+                            android:layout_weight="1"
+                            android:fontFamily="@font/product_sans_bold"
+                            android:text="Hoy"
+                            android:textStyle="bold" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/lbl_caja_hoy"
-                            android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="end"
                             android:layout_marginTop="16dp"
+                            android:fontFamily="@font/product_sans_regular"
                             android:layout_marginBottom="6dp"
-                            android:text="@string/tipo_moneda_defecto_cero"/>
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@string/tipo_moneda_defecto_cero" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/content_caja_ayer"
-                        app:layout_constraintTop_toBottomOf="@+id/content_caja_hoy"
                         android:layout_width="match_parent"
-                        android:layout_marginStart="15dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginStart="15dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@+id/content_caja_hoy">
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:layout_weight="1"
                             android:layout_width="0dp"
-                            android:textStyle="bold"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="Ayer"/>
+                            android:layout_weight="1"
+                            android:text="Ayer"
+                            android:fontFamily="@font/product_sans_bold"
+                            android:textStyle="bold" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/lbl_caja_ayer"
-                            android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="end"
                             android:layout_marginTop="16dp"
                             android:layout_marginBottom="6dp"
-                            android:text="@string/tipo_moneda_defecto_cero"/>
+                            android:layout_weight="1"
+                            android:fontFamily="@font/product_sans_regular"
+                            android:gravity="end"
+                            android:text="@string/tipo_moneda_defecto_cero" />
 
                     </LinearLayout>
 
@@ -137,11 +276,11 @@
                         android:id="@+id/view_divider"
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="@color/divider"
                         android:layout_marginTop="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/content_caja_ayer"
+                        android:background="@color/divider"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"/>
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/content_caja_ayer" />
 
                     <LinearLayout
                         android:id="@+id/title_clientes_con_deuda"
@@ -158,6 +297,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_weight="1"
                             android:text="Clientes con deuda"
+                            android:fontFamily="@font/product_sans_bold"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -166,8 +306,8 @@
                         android:id="@+id/content_prestamos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constrainedHeight="true"
                         android:layout_marginTop="16dp"
+                        app:layout_constrainedHeight="true"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/title_clientes_con_deuda">
 
@@ -176,8 +316,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clipToPadding="false"
+                            android:overScrollMode="never"
                             android:paddingBottom="16dp"
-                            android:overScrollMode = "never"
                             android:visibility="visible"
                             app:layout_constrainedHeight="true"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -186,11 +326,11 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/img_empty_deuda"
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:background="@color/white"
                         android:src="@drawable/empty_no_data"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/content_prestamos"
                         app:layout_constraintStart_toStartOf="@+id/content_prestamos"
@@ -198,11 +338,11 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/lbl_empty_deuda"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
                         android:text="No hay clientes con deudas"
+                        android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/content_prestamos"
                         app:layout_constraintEnd_toEndOf="@+id/content_prestamos"
                         app:layout_constraintStart_toStartOf="@+id/content_prestamos"
@@ -211,11 +351,9 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
             </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 

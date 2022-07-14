@@ -93,7 +93,6 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun setUpToolbarInitialize() {
-
         toolbar.title = "Registrar"
         toolbar.setNavigationOnClickListener {
             finish()

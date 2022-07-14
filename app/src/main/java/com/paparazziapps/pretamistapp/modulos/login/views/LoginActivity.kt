@@ -175,13 +175,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun openNewRegistro() {
-
         txtRegistroNuevo.apply {
             setOnClickListener {
                 startActivity(Intent(this@LoginActivity,RegisterActivity::class.java))
             }
         }
-
     }
 
     private fun _showMessageMainThread(message: String) {

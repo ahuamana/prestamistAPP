@@ -17,15 +17,11 @@ class ViewModelTesoreria private constructor() {
     val mDetallePrestamo = DetallePrestamoProvider()
 
     var _prestamos = MutableLiveData<MutableList<Prestamo>>()
+    var _pagosTotalesByTime = MutableLiveData<Double>()
 
-    fun getMessage() : LiveData<String> {
-        return  _message
-    }
-
-    fun receivePrestamos (): LiveData<MutableList<Prestamo>>
-    {
-        return _prestamos
-    }
+    fun getMessage() : LiveData<String> =  _message
+    fun receivePrestamos (): LiveData<MutableList<Prestamo>> =_prestamos
+    fun getPagosTotalesByTime():LiveData<Double> = _pagosTotalesByTime
 
     fun getPrestamosSize(onComplete: (Boolean, String, Int?, Boolean) -> Unit)
     {
@@ -55,7 +51,6 @@ class ViewModelTesoreria private constructor() {
                 println("Error: ${it.message}")
                 isCorrect = false
                 onComplete(isCorrect, "No se pudo obtener los prestamos, porfavor comuníquese con soporte!", null, false)
-
             }
 
         }catch (t:Throwable)
@@ -63,9 +58,40 @@ class ViewModelTesoreria private constructor() {
             println("Error throwable: ${t.message}")
             isCorrect = false
             onComplete(isCorrect, "No se pudo obtener los pagos de hoy, porfavor comuníquese con soporte!", null, false)
-
         }
     }
+
+    fun getPrestamosByTime(timeStart:Long, timeEnd:Long)
+    {
+        var pagosTotalesXfecha = 0.0
+
+        try {
+            mDetallePrestamo.getPrestamosByDate(timeStart, timeEnd.plus(DiaUnixtime)).addOnSuccessListener {
+                if(it.isEmpty)
+                {
+                    println("Fechas Vacias")
+                    _pagosTotalesByTime.value = 0.0
+                }else
+                {
+                    it.forEach { document->
+                        var dps = document.toObject<DetallePrestamoSender>()
+                        println("Pago total de item: ${dps.pagoTotal}")
+                        pagosTotalesXfecha += dps.pagoTotal?:0.0
+                    }
+                    println("Total caja: $pagosTotalesXfecha")
+                    pagosTotalesXfecha = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesXfecha)?:0.0
+                    _pagosTotalesByTime.value = pagosTotalesXfecha
+                }
+
+            }.addOnFailureListener {
+                println("Error FailureListener: ${it.message}")
+            }
+
+        }catch (t:Throwable) {
+            println("Error throwable: ${t.message}")
+        }
+    }
+
 
     fun getPagosHoy(onComplete: (Boolean, String, Double?, Boolean) -> Unit)
     {

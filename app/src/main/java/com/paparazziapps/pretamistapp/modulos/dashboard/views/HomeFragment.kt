@@ -26,6 +26,7 @@ import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegis
 class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     var _viewModel = ViewModelDashboard.getInstance()
+    var _viewModelPrincipal = ViewModelPrincipal.getInstance()
 
     var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
@@ -81,7 +82,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     private fun observers() {
         _viewModel.receivePrestamos().observe(viewLifecycleOwner) {
-            if(it.count() == 0)
+            if(it.isEmpty())
             {
                 binding.emptyPrestamo.isVisible = true
                 recyclerPrestamos.isVisible = false

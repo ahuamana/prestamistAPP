@@ -33,6 +33,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
+import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -317,8 +318,7 @@ inline fun <reified T> fromJson(json: String) : T {
     }.decodeFromString(json)
 }
 
-fun isConnected(context:Context):Boolean
-{
+fun isConnected(context:Context):Boolean {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = cm.activeNetworkInfo
     try {
@@ -332,14 +332,30 @@ fun isConnected(context:Context):Boolean
     } catch (e: Exception) {
         Log.e("ERROR", "" + e.message)
     }
-
     return activeNetwork != null && activeNetwork.isConnected
 }
 
-
-
 fun isValidEmail(target: CharSequence?): Boolean {
     return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+}
+
+
+fun getSucursales(text: String): List<Sucursales>{
+
+    var sucursalList = mutableListOf<Sucursales>()
+    var arrayAll = text.substring(0,text.lastIndex).split(",")
+
+    arrayAll.forEach {
+        var foundRight = ("=\\w*\\s*\\w*\\w*\\s*\\w*\\s*\\w*\\s*\\w*\\s*".toRegex()).find(it)
+        var foundLeft = ("\\w*=".toRegex()).find(it)
+        //dataRight.add(foundRight?.value?.replace("=","")?:"")
+        sucursalList.add(Sucursales(
+            id = foundLeft?.value?.replace("=","")?.toInt(),
+            name = foundRight?.value?.replace("=","")
+        ))
+    }
+
+    return sucursalList
 }
 
 

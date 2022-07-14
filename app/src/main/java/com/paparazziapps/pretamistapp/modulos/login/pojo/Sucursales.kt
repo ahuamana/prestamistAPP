@@ -6,12 +6,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Sucursales (
-    @SerialName("Sucursales")
-    val sucursales: List<SucusarBody>? = null
-)
+    @SerialName("id")
+    val id: Int? = null,
 
-@Serializable
-data class SucusarBody (
     @SerialName("name")
     val name: String? = null
 )
+

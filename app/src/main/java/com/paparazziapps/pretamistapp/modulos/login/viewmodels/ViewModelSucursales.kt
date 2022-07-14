@@ -7,7 +7,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.paparazziapps.pretamistapp.helper.getSucursales
 import com.paparazziapps.pretamistapp.helper.toJson
+import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.providers.SucursalesProvider
 
 class ViewModelSucursales private constructor(){
@@ -15,25 +17,21 @@ class ViewModelSucursales private constructor(){
 
     private var mProviderSucursal = SucursalesProvider()
 
-    var _sucursales = MutableLiveData<List<String>>()
+    var _sucursales = MutableLiveData<List<Sucursales>>()
 
-    fun showSucursales() : LiveData<List<String>> {
+    fun showSucursales() : LiveData<List<Sucursales>> {
         return  _sucursales
     }
 
     fun getSucursales(){
-
         try {
             mProviderSucursal.getSucursalesRepo().addOnCompleteListener {
                 try {
-                    var j = toJson(it.result.value.toString())
-                    var json = it.result.value.toString().replace("{","").replace("}","").replace("name=","")
-                    var sinbrackets =json.substring(1,json.lastIndex)
-                    var array = sinbrackets.split(", ")
-                    array.forEach {
-                        println("Sucursal: $it")
-                    }
-                    _sucursales.value = array
+
+                    var results = toJson(it.result.value.toString())
+
+                    _sucursales.value = getSucursales(results)
+
 
                 }catch (e:Exception){
                     println("Error e: ${it.exception}")
@@ -46,9 +44,6 @@ class ViewModelSucursales private constructor(){
         }
 
     }
-
-
-
 
     companion object Singleton{
         private var instance: ViewModelSucursales? = null
