@@ -27,41 +27,41 @@ class PrestamoProvider {
         FirebaseFirestore.getInstance().firestoreSettings = settings
     }
 
-
-    fun create(prestamo: Prestamo): Task<Void>
-    {
-        prestamo.sucursalId = preferences.sucursalId
+    //Super admin -- implemented
+    fun create(prestamo: Prestamo, idSucursal:Int): Task<Void> {
+        prestamo.sucursalId = if(preferences.isSuperAdmin) idSucursal else  preferences.sucursalId
         prestamo.id = mCollectionPrestamo.document().id
         return mCollectionPrestamo.document(prestamo.id!!).set(prestamo)
     }
 
-    fun getPrestamos(): Task<QuerySnapshot>
-    {
-      return  mCollectionPrestamo
-          .whereEqualTo("state", "ABIERTO")
-          .whereEqualTo("sucursalId",preferences.sucursalId)
-          .get()
+    //Super admin -- implemented
+    fun getPrestamos(): Task<QuerySnapshot> {
+        if(preferences.isSuperAdmin){
+            return  mCollectionPrestamo
+                .whereEqualTo("state", "ABIERTO")
+                .get()
+        }else{
+            return  mCollectionPrestamo
+                .whereEqualTo("state", "ABIERTO")
+                .whereEqualTo("sucursalId",preferences.sucursalId)
+                .get()
+        }
+
     }
 
-    fun setLastPayment(id:String, fecha:String,diasRestantesPorPagar:Int, diasPagados:Int): Task<Void>
-    {
+    //No need superAdmin - or Adming to update
+    fun setLastPayment(id:String, fecha:String,diasRestantesPorPagar:Int, diasPagados:Int): Task<Void> {
         val map = mutableMapOf<String,Any?>()
         map.put("fechaUltimoPago",fecha)
         map.put("dias_restantes_por_pagar",diasRestantesPorPagar)
         map.put("diasPagados",diasPagados)
-
         return mCollectionPrestamo.document(id).update(map)
     }
 
-    fun cerrarPrestamo(id: String):Task<Void>
-    {
+    //No need superAdmin - or Adming to update
+    fun cerrarPrestamo(id: String):Task<Void> {
         val map = mutableMapOf<String,Any?>()
         map.put("state","CERRADO")
-
         return mCollectionPrestamo.document(id).update(map)
     }
-
-
-
-
 }

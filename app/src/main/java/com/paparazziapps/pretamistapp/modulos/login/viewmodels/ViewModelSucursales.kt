@@ -29,14 +29,10 @@ class ViewModelSucursales private constructor(){
                 try {
 
                     var results = toJson(it.result.value.toString())
-
                     _sucursales.value = getSucursales(results)
-
-
                 }catch (e:Exception){
                     println("Error e: ${it.exception}")
                 }
-
             }
 
         }catch (t:Throwable) {

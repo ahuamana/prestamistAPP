@@ -21,6 +21,7 @@ class DetallePrestamoProvider {
         mCollectionDetallePrestamo = FirebaseFirestore.getInstance().collection("DetallePrestamo")
     }
 
+    // No need to implemented when is super admin
     fun createDetalle(detallePrestamo: DetallePrestamoSender): Task<Void>
     {
         detallePrestamo.id = mCollectionDetallePrestamo.document().id
@@ -28,6 +29,7 @@ class DetallePrestamoProvider {
         return mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo)
     }
 
+    // No need to implemented when is super admin
     fun getDetallePrestamosByFecha(fecha:String):Task<QuerySnapshot>
     {
         return mCollectionDetallePrestamo
@@ -36,12 +38,13 @@ class DetallePrestamoProvider {
             .get()
     }
 
-    fun getPrestamosByDate(timeStart:Long, timeEnd:Long): Task<QuerySnapshot>
+    // Process
+    fun getPrestamosByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): Task<QuerySnapshot>
     {
         return  mCollectionDetallePrestamo
             .whereGreaterThanOrEqualTo("unixtime", timeStart)
             .whereLessThanOrEqualTo("unixtime",timeEnd)
-            .whereEqualTo("sucursalId",preferences.sucursalId)
+            .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idSucursal else  preferences.sucursalId)
             .get()
     }
 }

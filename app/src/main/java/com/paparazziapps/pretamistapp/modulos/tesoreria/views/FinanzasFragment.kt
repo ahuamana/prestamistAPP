@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -16,7 +19,11 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentFinanzasBinding
+import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
+import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
+import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.PrestamoDetalleAdapter
 import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelTesoreria
 import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
@@ -27,6 +34,7 @@ import java.util.*
 class FinanzasFragment : Fragment() {
 
     val _viewModel = ViewModelTesoreria.getInstance()
+    var _viewModelSucursales = ViewModelSucursales.getInstance()
     val preferences = MyPreferences()
 
     var _binding:FragmentFinanzasBinding?= null
@@ -45,6 +53,14 @@ class FinanzasFragment : Fragment() {
 
     var fechaInicioUnixtime:Long?= null
     var fechaFinUnixtime:Long?= null
+
+    //Super Admin Componentes
+    var listaSucursales = mutableListOf<Sucursales>()
+    lateinit var sucursalTxt: AutoCompleteTextView
+    lateinit var sucursalTxtLayout:TextInputLayout
+    lateinit var viewProgressSucursal: View
+    lateinit var viewCurtainSucursal: View
+    lateinit var viewDotsSucursal: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,10 +83,17 @@ class FinanzasFragment : Fragment() {
             fechaIni            = fechaInicio
             fechaFi             = fechaFin
             cajaAdminTotalTxt   = cajaResultMoneyAdmin
+
+            sucursalTxt          = edtSucursal
+            sucursalTxtLayout    = txtInputLayoutSucursal
+            viewProgressSucursal = progressSucursal
+            viewDotsSucursal     = dotsSucursal
+            viewCurtainSucursal  = curtainSucursal
         }
 
         //all code here
         initialCode()
+        superAdminComponentes()
         otherComponents()
         observers()
 
@@ -83,11 +106,32 @@ class FinanzasFragment : Fragment() {
         return view
     }
 
+    private fun superAdminComponentes() {
+        if(preferences.isSuperAdmin){
+            binding.contentCajaAll.beGone()
+            binding.contentCajaHoy.beGone()
+            binding.contentCajaAyer.beGone()
+            cardViewCajaAdmin.beVisible()
+            sucursalTxtLayout.beVisible()
+            viewProgressSucursal.beVisible()
+            _viewModelSucursales.getSucursales()
+
+        }else{
+            if(preferences.isAdmin){
+                viewProgressSucursal.beGone()
+                sucursalTxtLayout.beGone()
+            }else{
+                //Usuario Normal
+                cardViewCajaAdmin.beGone()
+            }
+
+        }
+    }
+
     private fun otherComponents() {
-        if(preferences.isAdmin){
+        if(preferences.isAdmin || preferences.isSuperAdmin){
             cardViewCajaAdmin?.beVisible()
             validateCajaAdmin()
-
             layoutFechaInicio.setEndIconOnClickListener {
                 getCalendar(true)
             }
@@ -108,20 +152,28 @@ class FinanzasFragment : Fragment() {
 
     private fun validateCajaAdmin() {
         fechaIni.doAfterTextChanged {
-            showCajaAdminTotal()
+            showCajaTotal()
         }
 
         fechaFi.doAfterTextChanged {
-            showCajaAdminTotal()
+            showCajaTotal()
+        }
+
+        sucursalTxt.doAfterTextChanged {
+            showCajaTotal()
         }
     }
 
-    private fun showCajaAdminTotal() {
+    private fun showCajaTotal() {
 
         if(!fechaIni.text.toString().trim().isNullOrEmpty()&&
             !fechaIni.text.toString().trim().isNullOrEmpty()){
             //Traer prestamos caja de esa fecha
-            _viewModel.getPrestamosByTime(fechaInicioUnixtime?:0, fechaFinUnixtime?:0)
+            var idSucursalSelected:Int = INT_DEFAULT
+            listaSucursales.forEach {
+                if(it.name?.equals(sucursalTxt.text.toString().trim()) == true) idSucursalSelected = it.id?: INT_DEFAULT
+            }
+            _viewModel.getPrestamosByTime(fechaInicioUnixtime?:0, fechaFinUnixtime?:0, idSucursalSelected)
         }
     }
 
@@ -167,6 +219,28 @@ class FinanzasFragment : Fragment() {
 
                 prestamoDetalleAdapter.setData(it)
                 //showMessage(" Lista de prestamos ${it.count()}")
+            }
+
+            //Observers SuperAdmin
+            _viewModelSucursales.showSucursales().observe(viewLifecycleOwner){
+
+                if(it.isNotEmpty())
+                {
+                    listaSucursales = it.toMutableList()
+                    var scrsales = mutableListOf<String>()
+                    it.forEach {
+                        scrsales.add(it.name?:"")
+                    }
+
+                    val adapterSucursales= ArrayAdapter(requireContext(),R.layout.select_items, scrsales)
+                    sucursalTxt.setAdapter(adapterSucursales)
+                    sucursalTxt.setOnClickListener { sucursalTxt.showDropDown() }
+                    sucursalTxtLayout.setEndIconOnClickListener { sucursalTxt.showDropDown() }
+                    viewProgressSucursal.beGone()
+                    viewDotsSucursal.beGone()
+                    viewCurtainSucursal.beGone()
+                }
+
             }
         }
 

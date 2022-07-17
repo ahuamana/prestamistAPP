@@ -49,6 +49,72 @@
 
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txt_input_layout_sucursal"
+                        style="@style/CustomDropDown"
+                        android:layout_width="0dp"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
+                        android:layout_marginTop="16dp"
+                        app:errorEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/caja_title_admin">
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/edtSucursal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:fontFamily="@font/googlesans_regular"
+                            android:hint="Sucursal"
+                            android:lines="1"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!--Categoria  curtain -->
+                    <View
+                        android:id="@+id/curtain_sucursal"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginBottom="18dp"
+                        android:background="@drawable/background_input_disable"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_input_layout_sucursal"
+                        app:layout_constraintLeft_toLeftOf="@id/txt_input_layout_sucursal"
+                        app:layout_constraintRight_toRightOf="@id/txt_input_layout_sucursal"
+                        app:layout_constraintTop_toTopOf="@id/txt_input_layout_sucursal" />
+
+
+                    <!-- revisar en progra cuando deshabilitar-->
+                    <View
+                        android:id="@+id/dots_sucursal"
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:background="@drawable/dots"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@id/curtain_sucursal"
+                        app:layout_constraintLeft_toLeftOf="@id/curtain_sucursal"
+                        app:layout_constraintRight_toRightOf="@id/curtain_sucursal" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_sucursal"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="40dp"
+                        android:elevation="4dp"
+                        android:progressDrawable="@drawable/circular_progress_bar"
+                        android:visibility="gone"
+                        app:layout_constraintRight_toRightOf="@+id/txt_input_layout_sucursal"
+                        app:layout_constraintTop_toTopOf="@+id/txt_input_layout_sucursal" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/fechaInicioLayout"
                         style="@style/CustomTextField"
                         android:layout_width="match_parent"
@@ -62,7 +128,7 @@
                         app:errorEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/caja_title_admin">
+                        app:layout_constraintTop_toBottomOf="@+id/txt_input_layout_sucursal">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/fecha_inicio"
@@ -76,6 +142,8 @@
                             android:lines="1"
                             android:maxLength="50" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
                     <com.google.android.material.textfield.TextInputLayout

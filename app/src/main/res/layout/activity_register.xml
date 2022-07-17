@@ -96,7 +96,7 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:fontFamily="@font/googlesans_regular"
-                        android:hint="Cucursal"
+                        android:hint="Sucursal"
                         android:lines="1"
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>

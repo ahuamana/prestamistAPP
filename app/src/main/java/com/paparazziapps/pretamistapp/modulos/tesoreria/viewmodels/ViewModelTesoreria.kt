@@ -61,12 +61,12 @@ class ViewModelTesoreria private constructor() {
         }
     }
 
-    fun getPrestamosByTime(timeStart:Long, timeEnd:Long)
+    fun getPrestamosByTime(timeStart:Long, timeEnd:Long, idSucursal:Int)
     {
         var pagosTotalesXfecha = 0.0
 
         try {
-            mDetallePrestamo.getPrestamosByDate(timeStart, timeEnd.plus(DiaUnixtime)).addOnSuccessListener {
+            mDetallePrestamo.getPrestamosByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal).addOnSuccessListener {
                 if(it.isEmpty)
                 {
                     println("Fechas Vacias")

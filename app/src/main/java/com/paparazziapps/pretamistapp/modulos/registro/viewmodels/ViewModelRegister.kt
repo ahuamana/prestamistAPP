@@ -39,11 +39,12 @@ open class ViewModelRegister private constructor(){
         }
     }
 
-    fun createPrestamo(prestamo: Prestamo, onComplete: (Boolean, String, String?, Boolean) -> Unit)
+    fun createPrestamo(prestamo: Prestamo, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit)
     {
         var isCorrect = false
         try {
-        mPrestamoProvider.create(prestamo).addOnCompleteListener {
+
+        mPrestamoProvider.create(prestamo, idSucursal = idSucursal).addOnCompleteListener {
                 if(it.isSuccessful)
                 {
                     _message.value = "El prestamo se registro correctamente"

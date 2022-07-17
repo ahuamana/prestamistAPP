@@ -22,19 +22,23 @@ import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegis
 import java.text.SimpleDateFormat
 import java.util.*
 import android.content.Intent
-import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
-import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
-import com.paparazziapps.pretamistapp.helper.hideKeyboardFrom
-import com.paparazziapps.pretamistapp.helper.setMaxLength
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import com.paparazziapps.pretamistapp.helper.*
+import com.paparazziapps.pretamistapp.helper.views.beVisible
+import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
+import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
 
 
 class RegistrarActivity : AppCompatActivity() {
 
     val _viewModel = ViewModelRegister.getInstance()
+    var _viewModelSucursales = ViewModelSucursales.getInstance()
 
     lateinit var binding: ActivityRegistrarBinding
     var prestamoReceived = Prestamo()
-
     lateinit var fecha:TextInputEditText
     lateinit var layoutFecha:TextInputLayout
     lateinit var nombres:TextInputEditText
@@ -49,6 +53,16 @@ class RegistrarActivity : AppCompatActivity() {
     lateinit var registerButton:MaterialButton
     lateinit var toolbar: Toolbar
     var fechaSelectedUnixtime:Long? = null
+
+    var preferences = MyPreferences()
+
+    //Sucursales Supér Admin
+    var listaSucursales = mutableListOf<Sucursales>()
+    lateinit var sucursalTxt:AutoCompleteTextView
+    lateinit var sucursalTxtLayout:TextInputLayout
+    lateinit var viewProgressSucursal: View
+    lateinit var viewCurtainSucursal: View
+    lateinit var viewDotsSucursal: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +83,16 @@ class RegistrarActivity : AppCompatActivity() {
         layoutDNI           = binding.dniLayout
         layoutCelular       = binding.celularLayout
 
+        //SuperAdmin
+        sucursalTxt         = binding.edtSucursal
+        sucursalTxtLayout   = binding.sucursalTxtInputLyt
+
+        viewProgressSucursal = binding.progressSucursal
+        viewDotsSucursal     = binding.dotsSucursal
+        viewCurtainSucursal  = binding.curtainSucursal
+
+        fieldsSuperAdmin()
+
         //Set max lengh Document
         dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
         layoutDNI.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
@@ -84,8 +108,39 @@ class RegistrarActivity : AppCompatActivity() {
         startObservers()
     }
 
+    private fun fieldsSuperAdmin() {
+        if(preferences.isSuperAdmin){
+            sucursalTxtLayout.beVisible()
+            viewProgressSucursal.beVisible()
+            _viewModelSucursales.getSucursales()
+        }
+    }
+
     private fun startObservers() {
         _viewModel.getMessage().observe(this){message ->  showMessage(message)}
+
+        _viewModelSucursales.showSucursales().observe(this){
+
+            if(it.isNotEmpty())
+            {
+                listaSucursales = it.toMutableList()
+                var scrsales = mutableListOf<String>()
+                it.forEach {
+                    scrsales.add(it.name?:"")
+                }
+
+                val adapterSucursales= ArrayAdapter(this,R.layout.select_items, scrsales)
+                sucursalTxt.setAdapter(adapterSucursales)
+                sucursalTxt.setOnClickListener { sucursalTxt.showDropDown() }
+                sucursalTxtLayout.setEndIconOnClickListener { sucursalTxt.showDropDown() }
+
+                viewProgressSucursal.isVisible = false
+                viewDotsSucursal.isVisible = false
+                viewCurtainSucursal.isVisible = false
+
+            }
+
+        }
     }
 
     private fun showMessage(message: String?) {
@@ -126,9 +181,15 @@ class RegistrarActivity : AppCompatActivity() {
                     state = "ABIERTO"
                 )
 
+                var idSucursalSelected:Int = INT_DEFAULT
+
+                listaSucursales.forEach {
+                    if(it.name?.equals(sucursalTxt.text.toString().trim()) == true) idSucursalSelected = it.id?: INT_DEFAULT
+                }
 
                 //Register ViewModel
-                _viewModel.createPrestamo(prestamo){
+                //Actualizar el idSucursal para crear un prestamo como superAdmin
+                _viewModel.createPrestamo(prestamo, idSucursal = idSucursalSelected){
                         isCorrect, msj, result, isRefresh ->
 
                     if(isCorrect)

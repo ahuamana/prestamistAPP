@@ -8,27 +8,18 @@ import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
-import java.util.*
 
 class ViewModelDashboard private constructor(){
 
     var _message = MutableLiveData<String>()
     var mPrestamoProvider = PrestamoProvider()
     var mDetallePrestamoProvider = DetallePrestamoProvider()
-
     var _prestamos = MutableLiveData<MutableList<Prestamo>>()
 
-    fun getMessage() : LiveData<String> {
-        return  _message
-    }
 
-    fun receivePrestamos (): LiveData<MutableList<Prestamo>>
-    {
-        return _prestamos
-    }
+    fun receivePrestamos (): LiveData<MutableList<Prestamo>> = _prestamos
 
-    fun getPrestamos()
-    {
+    fun getPrestamos() {
         try {
 
             var listPrestamos = mutableListOf<Prestamo>()
@@ -57,7 +48,7 @@ class ViewModelDashboard private constructor(){
 
     fun updateUltimoPago(id:String?, fecha:String?, pagoTotal:Double,diasRestantesPorPagar:Int, diasPagadosNuevo:Int,onComplete: (Boolean, String, String?, Boolean) -> Unit)
     {
-        var isCorrect = false
+        var isCorrect:Boolean
 
         try {
 
