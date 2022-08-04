@@ -38,7 +38,7 @@ class DetallePrestamoProvider {
             .get()
     }
 
-    // Process
+    // Completed - Super Admin Implemented
     fun getPrestamosByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): Task<QuerySnapshot>
     {
         return  mCollectionDetallePrestamo

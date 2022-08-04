@@ -127,7 +127,8 @@ class PrincipalActivity : AppCompatActivity() {
             setOnClickListener {
                 if (isEnabledCheck){
                     _viewModelPrincipal
-                    MyPreferences().isLogin = false
+                    preferences.isLogin = false
+                    preferences.removeLoginData()
                     startActivity(Intent(this@PrincipalActivity, LoginActivity::class.java)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
                 }

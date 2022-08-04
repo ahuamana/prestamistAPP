@@ -44,4 +44,15 @@ class MyPreferences {
     var sucursalId: Int
         get()      = prefs.getInt("sucursalId", INT_DEFAULT)
         set(value) = prefs.setInt("sucursalId", value)
+
+
+    fun removeLoginData(){
+        prefs.remove("isLogin")
+        prefs.remove("email_login")
+        prefs.remove("sucursalName")
+        prefs.remove("isAdmin")
+        prefs.remove("isSuperAdmin")
+        prefs.remove("isActiveUser")
+        prefs.remove("sucursalId")
+    }
 }
