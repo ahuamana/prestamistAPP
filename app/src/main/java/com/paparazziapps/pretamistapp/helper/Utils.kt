@@ -339,11 +339,10 @@ fun isValidEmail(target: CharSequence?): Boolean {
     return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
 }
 
-
 fun getSucursales(text: String): List<Sucursales>{
-
     var sucursalList = mutableListOf<Sucursales>()
     var arrayAll = text.substring(0,text.lastIndex).split(",")
+    println("Array all: $arrayAll")
 
     arrayAll.forEach {
         var foundRight = ("=\\w*\\s*\\w*\\w*\\s*\\w*\\s*\\w*\\s*\\w*\\s*".toRegex()).find(it)
@@ -356,6 +355,19 @@ fun getSucursales(text: String): List<Sucursales>{
     }
 
     return sucursalList
+}
+
+fun Context.getVersionName(): String {
+    var versionName = ""
+    try {
+        versionName = applicationContext.packageManager.getPackageInfo(
+            applicationContext.packageName,
+            0
+        ).versionName
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+    }
+    return versionName
 }
 
 

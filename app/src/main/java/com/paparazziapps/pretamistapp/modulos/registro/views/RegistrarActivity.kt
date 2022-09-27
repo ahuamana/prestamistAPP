@@ -121,8 +121,7 @@ class RegistrarActivity : AppCompatActivity() {
 
         _viewModelSucursales.showSucursales().observe(this){
 
-            if(it.isNotEmpty())
-            {
+            if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()
                 it.forEach {

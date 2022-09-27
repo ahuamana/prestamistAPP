@@ -224,8 +224,9 @@ class FinanzasFragment : Fragment() {
             //Observers SuperAdmin
             _viewModelSucursales.showSucursales().observe(viewLifecycleOwner){
 
-                if(it.isNotEmpty())
-                {
+                println("Sucursales Finanzas: $it")
+
+                if(it.isNotEmpty()) {
                     listaSucursales = it.toMutableList()
                     var scrsales = mutableListOf<String>()
                     it.forEach {

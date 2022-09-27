@@ -14,10 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityLoginBinding
-import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
-import com.paparazziapps.pretamistapp.helper.isConnected
-import com.paparazziapps.pretamistapp.helper.isValidEmail
-import com.paparazziapps.pretamistapp.helper.setColorToStatusBar
+import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelLogin
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
@@ -56,6 +53,8 @@ class LoginActivity : AppCompatActivity() {
 
         //Login Firebase
         loginFirebase()
+
+        binding.versioncode.text = "Versión ${getVersionName()}"
     }
 
     private fun showObservables() {

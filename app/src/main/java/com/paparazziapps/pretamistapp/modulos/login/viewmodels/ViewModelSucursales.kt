@@ -27,8 +27,8 @@ class ViewModelSucursales private constructor(){
         try {
             mProviderSucursal.getSucursalesRepo().addOnCompleteListener {
                 try {
-
                     var results = toJson(it.result.value.toString())
+                    println("Sucursales: ${(results)}")
                     _sucursales.value = getSucursales(results)
                 }catch (e:Exception){
                     println("Error e: ${it.exception}")
