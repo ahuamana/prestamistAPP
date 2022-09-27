@@ -120,7 +120,6 @@ class RegistrarActivity : AppCompatActivity() {
         _viewModel.getMessage().observe(this){message ->  showMessage(message)}
 
         _viewModelSucursales.showSucursales().observe(this){
-
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()
@@ -136,9 +135,7 @@ class RegistrarActivity : AppCompatActivity() {
                 viewProgressSucursal.isVisible = false
                 viewDotsSucursal.isVisible = false
                 viewCurtainSucursal.isVisible = false
-
             }
-
         }
     }
 

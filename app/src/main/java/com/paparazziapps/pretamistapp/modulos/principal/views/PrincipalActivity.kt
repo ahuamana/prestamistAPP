@@ -259,7 +259,17 @@ class PrincipalActivity : AppCompatActivity() {
                 standardSimpleButton()
             }
         }
+        layout_detalle_prestamo.contenCapitalPrestado.apply {
+            if(preferences.isAdmin || preferences.isSuperAdmin) this.beVisible()
+            else this.beGone()
+        }
 
+
+        layout_detalle_prestamo.tvMontoDiario.apply {
+            text= "S./ ${prestamo.montoDiarioAPagar}"
+        }
+
+        layout_detalle_prestamo.tvPlazoPrestamo.text = "${prestamo.plazo_vto.toString()} días"
 
         //Ocultar vistas si no tiene deudas
         if(prestamo.dias_restantes_por_pagar!! == 0)

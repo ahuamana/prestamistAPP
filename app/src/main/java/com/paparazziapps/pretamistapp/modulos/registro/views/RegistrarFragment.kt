@@ -124,7 +124,20 @@ class RegistrarFragment : Fragment() {
         validateAll()
         continuar()
 
+        redondear()
+
         return view
+    }
+
+    private fun redondear() {
+        binding.cardviewMontoDiario.setOnClickListener {
+            var newMontoDiario = Math.ceil(montoDiarioAPagar)
+            montoDiario.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario)}")
+            montoDiarioAPagar = getDoubleWithTwoDecimalsReturnDouble(newMontoDiario)?:0.0
+
+            montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(newMontoDiario* mesesEntero)?:0.0
+            montoTotal.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario *mesesEntero)}")
+        }
     }
 
     private fun continuar() {

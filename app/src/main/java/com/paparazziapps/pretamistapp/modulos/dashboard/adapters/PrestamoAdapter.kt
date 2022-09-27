@@ -37,14 +37,12 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         notifyDataSetChanged()
     }
 
-    fun updateItem(position: Int, prestamo: Prestamo)
-    {
+    fun updateItem(position: Int, prestamo: Prestamo) {
         prestamosList.set(position,prestamo)
         notifyItemChanged(position)
     }
 
-    fun removeItem(position: Int)
-    {
+    fun removeItem(position: Int) {
         prestamosList.removeAt(position)
         notifyItemRemoved(position)
     }
@@ -88,14 +86,10 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 //Metodo para el calculo de dias retrasados
                 calcularDiasRetrasados(itemView, numero_dias_retrasados, item, diasRetrasadosCardview, fechaActual)
 
-
-
                 //Enviar mensaje a whatsapp
                 cardViewEnviarMsj.apply {
                     setOnClickListener {
-
                         try {
-
                             //calcular el monto total a pagar
                             diasRetraso = numero_dias_retrasados.text.toString().toInt()
                             montoTotalAPagar = getDoubleWithOneDecimalsReturnDouble((diasRetraso * item.montoDiarioAPagar!!))
@@ -104,22 +98,14 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                             var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
                             "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
                             openWhatsapp(item.celular, msj)
-
-                        }catch (t:Throwable)
-                        {
+                        }catch (t:Throwable) {
                             Firebase.crashlytics.recordException(t)
                         }
 
                     }
                 }
-
-                //Separar los espacios telefono
-
-
                 //Asignar datos iniciales
                 telefono.setText(item.celular)
-
-
                 nombreCompleto.setText("${replaceFirstCharInSequenceToUppercase(item.nombres.toString().trim())}, ${replaceFirstCharInSequenceToUppercase(item.apellidos.toString().trim())}")
 
                 //Actualizar Pago al hacer click al itemview
@@ -128,12 +114,10 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     diasRetraso = numero_dias_retrasados.text.toString().toInt()
                     montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!))
 
-                    if(numero_dias_retrasados.text.toString().toInt() == 0)
-                    {
+                    if(numero_dias_retrasados.text.toString().toInt() == 0) {
                         println("numero de dias retrasados es cero: ${numero_dias_retrasados.text}")
                         setOnClickedPrestamo.actualizarPagoPrestamo(item, false, 0.0, adapterPosition, numero_dias_retrasados.text.toString())
-                    }else
-                    {
+                    }else {
                         println("monto total a pagar: ${montoTotalAPagar}")
                         setOnClickedPrestamo.actualizarPagoPrestamo(item, true, montoTotalAPagar?:0.0, adapterPosition,numero_dias_retrasados.text.toString())
                     }
