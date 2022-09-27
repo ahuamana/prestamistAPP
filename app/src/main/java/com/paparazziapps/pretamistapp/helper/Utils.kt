@@ -17,7 +17,9 @@ import android.telephony.TelephonyManager
 import android.text.*
 import android.util.Log
 import android.util.Patterns
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -368,6 +370,10 @@ fun Context.getVersionName(): String {
         e.printStackTrace()
     }
     return versionName
+}
+
+fun ViewGroup.inflate(layoutRes: Int): View {
+    return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
 
 

@@ -246,7 +246,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
     private fun observers() {
-        _viewModel.showSucursales().observe(this){
+        _viewModel.sucursales.observe(this){
 
             if(it.isNotEmpty())
             {

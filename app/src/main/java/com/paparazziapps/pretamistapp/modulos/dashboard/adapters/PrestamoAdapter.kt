@@ -1,7 +1,9 @@
 package com.paparazziapps.pretamistapp.modulos.dashboard.adapters
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +15,16 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
+import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : RecyclerView.Adapter<PrestamoAdapter.ViewHolder>() {
+class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var prestamosList: MutableList<Prestamo> = mutableListOf()
     var fechaActual:String
@@ -47,30 +51,49 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         notifyItemRemoved(position)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrestamoAdapter.ViewHolder {
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.content_prestamo, parent, false)
-
-        return ViewHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when(viewType){
+                TypePrestamo.TITLE.value->{
+                    ViewHolderTitle(parent.inflate(R.layout.content_title_prestamo))
+                }
+                else->{
+                    ViewHolder(parent.inflate(R.layout.content_prestamo))
+                }
+        }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return when(prestamosList[position].type){
+            0->TypePrestamo.TITLE.value
+            else-> TypePrestamo.CARD.value
+        }
+    }
 
-    override fun onBindViewHolder(holder: PrestamoAdapter.ViewHolder, position: Int) {
-
-        val currentItem = prestamosList[position]
-        holder.bind(currentItem, fechaActual, setOnClickedPrestamo)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as PrestamoViewHolder).bindView(prestamosList[position],fechaActual,setOnClickedPrestamo)
     }
 
     override fun getItemCount(): Int {
         return prestamosList.size
     }
 
+    interface PrestamoViewHolder {
+        fun bindView(
+            item: Prestamo,
+            fechaActual: String,
+            setOnClickedPrestamo: setOnClickedPrestamo
+        )
+    }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), PrestamoViewHolder {
 
         val binding = ContentPrestamoBinding.bind(itemView)
 
-        fun bind(item: Prestamo, fechaActual: String, setOnClickedPrestamo: setOnClickedPrestamo) {
+        override fun bindView(
+            item: Prestamo,
+            fechaActual: String,
+            setOnClickedPrestamo: setOnClickedPrestamo
+        ) {
             var telefono = binding.telefono
             var nombreCompleto = binding.nombreCompleto
             var numero_dias_retrasados = binding.numeroDiasRetrasados
@@ -79,7 +102,6 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             var lblDiasRetrasados = binding.lblDiasRetrasados
             var montoTotalAPagar:Double? = null
             var diasRetraso:Int = 10
-
 
             itemView.apply {
 
@@ -96,7 +118,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
                             //Mensaje
                             var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
-                            "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
+                                    "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
                             openWhatsapp(item.celular, msj)
                         }catch (t:Throwable) {
                             Firebase.crashlytics.recordException(t)
@@ -125,10 +147,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 }
 
             }
-
-
             setDiasRestantesPorPagar(item)
-
         }
 
         private fun setDiasRestantesPorPagar(item: Prestamo) {
@@ -236,9 +255,27 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
             }
 
-        }
+
 
     }
+
+    class ViewHolderTitle(itemView: View) : RecyclerView.ViewHolder(itemView), PrestamoViewHolder {
+
+        val binding = ContentTitlePrestamoBinding.bind(itemView)
+
+        override fun bindView(
+            item: Prestamo,
+            fechaActual: String,
+            setOnClickedPrestamo: setOnClickedPrestamo
+        ) {
+            var title = binding.title
+            itemView.apply {
+                title.text = item.title
+            }
+        }
+    }
+
+}
 
 
 

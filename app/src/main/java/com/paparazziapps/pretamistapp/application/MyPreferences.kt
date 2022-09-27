@@ -16,6 +16,11 @@ class MyPreferences {
         get()      = prefs.getString("sucursalName", "")
         set(value) = prefs.setString("sucursalName", value)
 
+    //Sucursales All
+    var sucusales: String
+    get()      = prefs.getString("sucusales", "")
+    set(value) = prefs.setString("sucusales", value)
+
 
     //PREFERENCES BOOLEAN
     var isLogin: Boolean

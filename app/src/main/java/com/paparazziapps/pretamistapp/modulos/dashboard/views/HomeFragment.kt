@@ -7,20 +7,21 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
-import com.paparazziapps.pretamistapp.helper.fromHtml
-import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
-import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
-import com.paparazziapps.pretamistapp.helper.showMessageAboveMenuInferiorGlobal
+import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
+import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
+import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
 
 
 class HomeFragment : Fragment(),setOnClickedPrestamo {
@@ -81,16 +82,46 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
     }
 
     private fun observers() {
-        _viewModel.receivePrestamos().observe(viewLifecycleOwner) {
-            if(it.isEmpty())
-            {
+        _viewModel.receivePrestamos().observe(viewLifecycleOwner) { prestamosAll ->
+            if(prestamosAll.isEmpty()) {
                 binding.emptyPrestamo.isVisible = true
                 recyclerPrestamos.isVisible = false
                 //showMessage("No hay prestamos")
-            }else
-            {
+            }else {
+                //Recibes todos los prestamos
                 binding.emptyPrestamo.isVisible = false
-                prestamoAdapter.setData(it)
+
+                if(MyPreferences().isSuperAdmin){
+                    var sucurs = MyPreferences().sucusales
+                    if(sucurs.isEmpty()){
+                        prestamoAdapter.setData(prestamosAll)
+                    }else{
+                        try {
+                            var newPrestamos = mutableListOf<Prestamo>()
+                            var localSucursales = fromJson<List<Sucursales>>(sucurs)
+                            localSucursales.forEach{ sucurlocal ->
+                                var item = Prestamo(
+                                    type = TypePrestamo.TITLE.value,
+                                    title = sucurlocal.name
+                                )
+                                newPrestamos.add(item)
+
+                                var items = prestamosAll.filter {
+                                    it.sucursalId == sucurlocal.id
+                                }
+                                newPrestamos.addAll(items)
+                            }
+                            prestamoAdapter.setData(newPrestamos)
+
+                        }catch (t:Throwable){
+                            FirebaseCrashlytics.getInstance().recordException(t)
+                        }
+                    }
+                }else{
+                    prestamoAdapter.setData(prestamosAll)
+                }
+
+
                 recyclerPrestamos.isVisible = true
                 //showMessage(" Lista de prestamos ${it.count()}")
             }
@@ -98,22 +129,11 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     }
 
-    private fun showMessage(message:String)
-    {
+    private fun showMessage(message:String) {
         showMessageAboveMenuInferiorGlobal(message,binding.root)
-        //Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_LONG).show()
-    }
-
-    private fun showShortMessage(message:String)
-    {
-        showMessageAboveMenuInferiorGlobal(message,binding.root)
-        //Snackbar.make(activity!!.findViewById(R.id.nav_view),"$message", Snackbar.LENGTH_SHORT).show()
     }
 
     fun openDialogActualizarPago(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition:Int) {
-
-
-
 
     }
 

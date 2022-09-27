@@ -14,14 +14,10 @@ import com.paparazziapps.pretamistapp.modulos.login.providers.SucursalesProvider
 
 class ViewModelSucursales private constructor(){
 
-
     private var mProviderSucursal = SucursalesProvider()
 
-    var _sucursales = MutableLiveData<List<Sucursales>>()
-
-    fun showSucursales() : LiveData<List<Sucursales>> {
-        return  _sucursales
-    }
+    private val _sucursales = MutableLiveData<List<Sucursales>>()
+    val sucursales : LiveData<List<Sucursales>> =  _sucursales
 
     fun getSucursales(){
         try {

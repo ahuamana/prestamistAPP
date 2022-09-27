@@ -30,6 +30,7 @@ import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.modulos.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
@@ -47,6 +48,7 @@ class PrincipalActivity : AppCompatActivity() {
     private var isEnabledCheck = true
 
     var _viewModelPrincipal = ViewModelPrincipal.getInstance()
+    var _viewModelSucursales = ViewModelSucursales.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +64,7 @@ class PrincipalActivity : AppCompatActivity() {
         isFreeTrial()
         setUpInicialToolbar()
         //testCrashlytics()
-        _viewModelPrincipal.searchUserByEmail()
+        _viewModelSucursales.getSucursales()
         observers()
     }
 
@@ -76,20 +78,26 @@ class PrincipalActivity : AppCompatActivity() {
             preferences.email_login = it.email?:""
             preferences.isActiveUser = it.activeUser
 
-            if(it.activeUser)
-            {
+            if(it.activeUser) {
                 setUpBottomNav()
                 setupBottomSheetDetallePrestamo()
                 binding.navView.beVisible()
 
-            }else
-            {
+            }else {
                 //Usuario desactivado
                 binding.navView.beGone()
                 isUserActivePrincipal()
             }
         }
 
+        _viewModelSucursales.sucursales.observe(this){
+            //save info sucursales
+            if(it.isNotEmpty()){
+                MyPreferences().sucusales = toJson(it)
+            }
+            //Get Info user
+            _viewModelPrincipal.searchUserByEmail()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

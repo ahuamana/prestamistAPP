@@ -1,6 +1,9 @@
 package com.paparazziapps.pretamistapp.modulos.registro.pojo
 
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 data class Prestamo (
     var id:String?=null,
     var nombres:String? = null,
@@ -22,6 +25,12 @@ data class Prestamo (
     var state:String?= null, //CERRADO,ABIERTO
 
     //Sucursal
-    var sucursalId:Int?=null
-
+    var sucursalId:Int?=null,
+    var type:Int?=null,
+    var title:String?=null
 )
+
+enum class TypePrestamo(val value: Int) {
+    TITLE(0),
+    CARD(1)
+}
