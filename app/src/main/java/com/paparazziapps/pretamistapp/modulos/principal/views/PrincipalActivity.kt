@@ -60,7 +60,6 @@ class PrincipalActivity : AppCompatActivity() {
 
 
         MyPreferences().isLogin = true
-
         isFreeTrial()
         setUpInicialToolbar()
         //testCrashlytics()
@@ -71,6 +70,7 @@ class PrincipalActivity : AppCompatActivity() {
     private fun observers() {
 
         _viewModelPrincipal.getUser().observe(this){
+            println("Info usuario: ${it.superAdmin}")
             preferences.isAdmin = it.admin
             preferences.isSuperAdmin = it.superAdmin
             preferences.sucursalId = it.sucursalId?: INT_DEFAULT
@@ -200,7 +200,6 @@ class PrincipalActivity : AppCompatActivity() {
     }
 
     private fun setUpInicialToolbar() {
-
         toolbar.title = "Dashboard"
         setSupportActionBar(toolbar)
     }

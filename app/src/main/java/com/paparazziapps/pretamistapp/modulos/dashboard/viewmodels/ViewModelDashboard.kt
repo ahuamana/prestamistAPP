@@ -8,6 +8,9 @@ import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ViewModelDashboard private constructor(){
 
@@ -21,17 +24,13 @@ class ViewModelDashboard private constructor(){
 
     fun getPrestamos() {
         try {
-
             var listPrestamos = mutableListOf<Prestamo>()
-
             mPrestamoProvider.getPrestamos().addOnSuccessListener { prestamosFirebase ->
-
-                if(prestamosFirebase.isEmpty)
-                {
+                if(prestamosFirebase.isEmpty) {
                     println(" lista prestamos esta vacia")
                 }
                 prestamosFirebase.forEach { document->
-                    listPrestamos.add(document.toObject<Prestamo>())
+                    listPrestamos.add(document.toObject())
                     println(" lista prestamos ${listPrestamos.size}")
                 }
 

@@ -37,10 +37,12 @@ class PrestamoProvider {
     //Super admin -- implemented
     fun getPrestamos(): Task<QuerySnapshot> {
         if(preferences.isSuperAdmin){
+            println("Super admin -- getPrestamos")
             return  mCollectionPrestamo
                 .whereEqualTo("state", "ABIERTO")
                 .get()
         }else{
+            println("Sucursal -- getPrestamos")
             return  mCollectionPrestamo
                 .whereEqualTo("state", "ABIERTO")
                 .whereEqualTo("sucursalId",preferences.sucursalId)

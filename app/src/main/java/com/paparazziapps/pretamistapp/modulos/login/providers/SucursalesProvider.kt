@@ -15,7 +15,7 @@ class SucursalesProvider {
     }
 
     init {
-        database = Firebase.database.reference.child("Sucursales")
+        database = Firebase.database.reference.child("sucusales")
     }
 
     fun getSucursalesRepo(): Task<DataSnapshot> {

@@ -3,14 +3,10 @@ package com.paparazziapps.pretamistapp.modulos.login.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.paparazziapps.pretamistapp.helper.getSucursales
-import com.paparazziapps.pretamistapp.helper.toJson
+import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursal
 import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.providers.SucursalesProvider
+
 
 class ViewModelSucursales private constructor(){
 
@@ -21,13 +17,19 @@ class ViewModelSucursales private constructor(){
 
     fun getSucursales(){
         try {
-            mProviderSucursal.getSucursalesRepo().addOnCompleteListener {
+            mProviderSucursal.getSucursalesRepo().addOnCompleteListener { dataSnapshot->
                 try {
-                    var results = toJson(it.result.value.toString())
-                    println("Sucursales: ${(results)}")
-                    _sucursales.value = getSucursales(results)
+                    var sucursales = ArrayList<Sucursales>()
+                    for (snapshot in dataSnapshot.result!!.children) {
+                        var sucursal = snapshot.getValue(Sucursales::class.java)
+                        if(sucursal != null){
+                            sucursales.add(sucursal)
+                        }
+                    }
+                    _sucursales.value = sucursales
+
                 }catch (e:Exception){
-                    println("Error e: ${it.exception}")
+                    println("Error e: ${e.message}")
                 }
             }
 
@@ -52,3 +54,4 @@ class ViewModelSucursales private constructor(){
         }
     }
 }
+

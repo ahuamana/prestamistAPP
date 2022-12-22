@@ -13,6 +13,7 @@ import android.graphics.drawable.VectorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.provider.ContactsContract.Data
 import android.telephony.TelephonyManager
 import android.text.*
 import android.util.Log
@@ -33,16 +34,19 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DataSnapshot
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
 import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.json.JSONObject
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 //Shared Preferences
     private var appContext: Context? = null
@@ -350,10 +354,10 @@ fun getSucursales(text: String): List<Sucursales>{
         var foundRight = ("=\\w*\\s*\\w*\\w*\\s*\\w*\\s*\\w*\\s*\\w*\\s*".toRegex()).find(it)
         var foundLeft = ("\\w*=".toRegex()).find(it)
         //dataRight.add(foundRight?.value?.replace("=","")?:"")
-        sucursalList.add(Sucursales(
+        /*sucursalList.add(Sucursales(
             id = foundLeft?.value?.replace("=","")?.toInt(),
             name = foundRight?.value?.replace("=","")
-        ))
+        ))*/
     }
 
     return sucursalList
@@ -374,6 +378,110 @@ fun Context.getVersionName(): String {
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
+}
+
+fun listRealTimeDatabaseToMap(list: List<*>): Map<String, *> {
+    val map = HashMap<String, Any>()
+    for (i in list.indices) {
+        map[i.toString()] = list[i] as Any
+    }
+    return map
+}
+
+fun Any?.toListRealTimeDatabase(): List<*> {
+    val list = ArrayList<Any>()
+    if (this is Map<*, *>) {
+        for (key in this.keys) {
+            list.add(this[key] as Any)
+        }
+    }
+    return list
+}
+
+fun DataSnapshot.toObjectsList(clazz: Class<*>): List<*> {
+    val list = ArrayList<Any>()
+    for (snapshot in this.children) {
+        list.add(snapshot.getValue(clazz) as Any)
+    }
+    return list
+}
+
+fun DataSnapshot.toObjectsSucursalList(): List<Sucursales> {
+    val list = ArrayList<Sucursales>()
+    for (snapshot in this.children) {
+        list.add(snapshot.getValue(Sucursales::class.java) as Sucursales)
+    }
+    return list
+}
+
+fun DataSnapshot.toObjectsMap(): Map<String, *> {
+    val map = HashMap<String, Any>()
+    for (snapshot in this.children) {
+        map[snapshot.key!!] = snapshot.getValue(Any::class.java) as Any
+    }
+    return map
+}
+
+fun DataSnapshot.toObjectsMapSucursal(): Map<String, Sucursales> {
+    val map = HashMap<String, Sucursales>()
+    for (snapshot in this.children) {
+        map[snapshot.key!!] = snapshot.getValue(Sucursales::class.java) as Sucursales
+    }
+    return map
+}
+
+fun mapToObjectsList(map: Map<String, *>): List<*> {
+    val list = ArrayList<Any>()
+    for (key in map.keys) {
+        list.add(map[key] as Any)
+    }
+    return list
+}
+
+fun mapToObjectsSucursalList(map: Map<String, *>): List<Sucursales> {
+    val list = ArrayList<Sucursales>()
+    for (key in map.keys) {
+        list.add(map[key] as Sucursales)
+    }
+    return list
+}
+
+fun  Map<String, *>?.toObjectsSucursalList(): List<Sucursales> {
+    val list = ArrayList<Sucursales>()
+    if (this != null) {
+        for (key in this.keys) {
+            list.add(this[key] as Sucursales)
+        }
+    }
+    return list
+}
+
+fun  Map.Entry<String, Any?>.toSucursal(): Sucursales {
+    return this.value as Sucursales
+}
+
+operator fun Map.Entry<String, Any?>.get(key: String): Any? {
+    return this.value as Any
+}
+
+fun Any?.toSucursal(): Sucursales {
+    return this as Sucursales
+}
+
+fun mapSnaptshotToClass(map: Map<String, Any?>): Sucursales {
+    return Sucursales(
+        id = map["id"] as Int,
+        name = map["name"] as String,
+        address = map["address"] as String,
+    )
+}
+
+fun dataSnapshotToHashMap(dataSnapshot: DataSnapshot): HashMap<String, Any?> {
+    val map = HashMap<String, Any?>()
+    for (snapshot in dataSnapshot.children) {
+        map[snapshot.key!!] = snapshot.value
+    }
+    return map
 }
 
 
