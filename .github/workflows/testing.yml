@@ -16,10 +16,6 @@ jobs:
       - name: Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Upload Unit Test Results
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: Unit Test Results
-          path: app/build/test-results/testDebugUnitTest
-          retention-days: 1
+      - name: Android Tests Reports
+        uses: asadmansr/android-test-report-action@v1.2.0
+        if: ${{ always() }}
