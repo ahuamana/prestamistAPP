@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -27,6 +28,7 @@ import com.paparazziapps.pretamistapp.databinding.BottomsheetDetallePrestamoBind
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.google.common.base.Strings.isNullOrEmpty
+import com.lee.avengergone.DisappearView
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome
@@ -65,6 +67,12 @@ class PrincipalActivity : AppCompatActivity() {
         //testCrashlytics()
         _viewModelSucursales.getSucursales()
         observers()
+
+        /*val disappearView = DisappearView.attach(this)
+        disappearView.execute(binding.layoutBottomsheetDetallePrestamo.root,
+            duration = 4000,
+            interpolator = AccelerateInterpolator(0.5f),
+            needDisappear = true)*/
     }
 
     private fun observers() {

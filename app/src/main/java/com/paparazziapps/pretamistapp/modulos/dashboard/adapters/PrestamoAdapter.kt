@@ -1,5 +1,7 @@
 package com.paparazziapps.pretamistapp.modulos.dashboard.adapters
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -143,6 +145,8 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                         println("monto total a pagar: ${montoTotalAPagar}")
                         setOnClickedPrestamo.actualizarPagoPrestamo(item, true, montoTotalAPagar?:0.0, adapterPosition,numero_dias_retrasados.text.toString())
                     }
+
+
 
                 }
 
