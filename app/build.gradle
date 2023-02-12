@@ -7,6 +7,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\Antony\\Desarrollo\\Android\\KeyStores\\prestamistapp.jks')
+            storePassword 'prestamistapp'
+            keyAlias '123456'
+            keyPassword '123456'
+        }
+    }
     compileSdk 31
 
     defaultConfig {

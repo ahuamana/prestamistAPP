@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Prestamos Diarios</string>
+    <string name="app_name">Loan Manager</string>
     <string name="title_calcular">Calcular</string>
     <string name="title_register">Registrar</string>
     <string name="otra_conexion">ó</string>
