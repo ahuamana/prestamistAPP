@@ -7,30 +7,22 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('D:\\Antony\\Desarrollo\\Android\\KeyStores\\prestamistapp.jks')
-            storePassword 'prestamistapp'
-            keyAlias '123456'
-            keyPassword '123456'
-        }
-    }
     compileSdk 31
 
     defaultConfig {
         applicationId "com.paparazziapps.pretamistapp"
         minSdk 22
         targetSdk 31
-        versionCode 3
-        versionName "2.0.1"
+        versionCode 4
+        versionName "2.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
@@ -51,10 +43,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     viewBinding {
@@ -111,7 +99,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:20.0.0'
     implementation 'com.google.firebase:firebase-auth:18.0.0'
     implementation 'com.google.firebase:firebase-core:17.0.0'
-
-    implementation 'com.github.Brooks0129:ThanosSnap:v1.0'
 
 }

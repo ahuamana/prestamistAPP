@@ -28,7 +28,6 @@ import com.paparazziapps.pretamistapp.databinding.BottomsheetDetallePrestamoBind
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.google.common.base.Strings.isNullOrEmpty
-import com.lee.avengergone.DisappearView
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome

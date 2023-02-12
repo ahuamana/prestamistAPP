@@ -16,27 +16,18 @@ class ViewModelSucursales private constructor(){
     val sucursales : LiveData<List<Sucursales>> =  _sucursales
 
     fun getSucursales(){
-        try {
-            mProviderSucursal.getSucursalesRepo().addOnCompleteListener { dataSnapshot->
-                try {
-                    var sucursales = ArrayList<Sucursales>()
-                    for (snapshot in dataSnapshot.result!!.children) {
-                        var sucursal = snapshot.getValue(Sucursales::class.java)
-                        if(sucursal != null){
-                            sucursales.add(sucursal)
-                        }
-                    }
-                    _sucursales.value = sucursales
-
-                }catch (e:Exception){
-                    println("Error e: ${e.message}")
+        mProviderSucursal.getSucursalesRepo().addOnCompleteListener { result ->
+            val sucursales = ArrayList<Sucursales>()
+            for (snapshot in result.result.children) {
+                val sucursal = snapshot.getValue(Sucursales::class.java)
+                sucursal?.let {
+                    sucursales.add(it)
                 }
             }
-
-        }catch (t:Throwable) {
-            println("Error: ${t.message}")
+            _sucursales.value = sucursales
+        }.addOnFailureListener { exception ->
+            println("Error: ${exception.message}")
         }
-
     }
 
     companion object Singleton{

@@ -19,7 +19,6 @@ import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.helper.MainApplication.Companion.ctx
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
@@ -187,7 +186,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             try {
 
                 var msg = "Its Working"
-                ctx().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=${ctx().getString(R.string.codigo_pais)}" + celular + "&text=" + msj)).apply {
+                ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=${ctx.getString(R.string.codigo_pais)}" + celular + "&text=" + msj)).apply {
                     setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 })
             }catch (t: Throwable){
@@ -215,7 +214,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     {
                         diasRetrasados.text = "0"
                         binding.cardviewEnviarMsj.isVisible = false
-                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.colorPrimary)
+                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.colorPrimary)
                     }else
                     {
                         diasRetrasados.text = this
@@ -225,7 +224,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                         }
 
                         binding.cardviewEnviarMsj.isVisible = true
-                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.red)
+                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.red)
                     }
                 }
 
@@ -238,7 +237,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     if(this.toInt() == 0)
                     {
                         binding.cardviewEnviarMsj.isVisible = false
-                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.colorPrimary)
+                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.colorPrimary)
                     }else
                     {
                         if(this.toInt() == 1)
@@ -247,7 +246,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                         }
 
                         binding.cardviewEnviarMsj.isVisible = true
-                        diasRetrasadosCardview.backgroundTintList = ctx().resources.getColorStateList(R.color.red)
+                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.red)
                     }
                 }
 
