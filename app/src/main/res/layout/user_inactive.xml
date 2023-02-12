@@ -39,16 +39,29 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/materialTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="20dp"
                     android:fontFamily="@font/googlesans_bold"
                     android:text="@string/inactive_user"
                     android:textColor="@color/red"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/logo"
                     app:layout_constraintStart_toStartOf="@+id/logo"
                     app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/logout"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:layout_marginVertical="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialTextView" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

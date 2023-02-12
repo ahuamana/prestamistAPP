@@ -142,11 +142,7 @@ class PrincipalActivity : AppCompatActivity() {
             setText("Cerrar sessión")
             setOnClickListener {
                 if (isEnabledCheck){
-                    _viewModelPrincipal
-                    preferences.isLogin = false
-                    preferences.removeLoginData()
-                    startActivity(Intent(this@PrincipalActivity, LoginActivity::class.java)
-                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+                    logout()
                 }
             }
 
@@ -156,9 +152,18 @@ class PrincipalActivity : AppCompatActivity() {
         return true
     }
 
-    fun isUserActivePrincipal()
-    {
-     binding.cortinaUserInactive.beVisible()
+    fun logout(){
+        preferences.isLogin = false
+        preferences.removeLoginData()
+        startActivity(Intent(this@PrincipalActivity, LoginActivity::class.java)
+            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+    }
+
+    fun isUserActivePrincipal() {
+        binding.cortinaUserInactive.beVisible()
+        binding.userInactiveLayout.btnLogout.setOnClickListener {
+            logout()
+        }
     }
 
     private fun isFreeTrial() {

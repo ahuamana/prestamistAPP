@@ -30,9 +30,7 @@
 
 
     <string name="loading">Cargando...</string>
-
-
-
+    <string name="logout">Cerrar Sessión</string>
 
 
 </resources>
