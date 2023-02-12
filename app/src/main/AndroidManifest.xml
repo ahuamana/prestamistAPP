@@ -37,6 +37,11 @@
             android:name=".modulos.registro.views.RegistrarActivity"
             android:exported="true"
             android:theme="@style/Theme.noActionBar" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4239770697814982~8264196307" />
+
     </application>
 
 </manifest>

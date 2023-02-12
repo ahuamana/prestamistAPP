@@ -1,5 +1,7 @@
 package com.paparazziapps.pretamistapp.modulos.principal.views
 
+import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -28,6 +30,7 @@ import com.paparazziapps.pretamistapp.databinding.BottomsheetDetallePrestamoBind
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.google.common.base.Strings.isNullOrEmpty
+import com.paparazziapps.pretamistapp.helper.views.AppOpenAd
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome
@@ -37,8 +40,7 @@ import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrin
 import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
 
 
-class PrincipalActivity : AppCompatActivity() {
-
+class PrincipalActivity : AppCompatActivity(){
     private lateinit var binding:ActivityPrincipalBinding
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var toolbar: Toolbar
@@ -214,6 +216,11 @@ class PrincipalActivity : AppCompatActivity() {
     private fun setUpInicialToolbar() {
         toolbar.title = "Dashboard"
         setSupportActionBar(toolbar)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        moveTaskToBack(true)
     }
 
     private fun setUpBottomNav() {
@@ -426,7 +433,4 @@ class PrincipalActivity : AppCompatActivity() {
         ViewModelPrincipal.destroyInstance()
         super.onDestroy()
     }
-
-
-
 }

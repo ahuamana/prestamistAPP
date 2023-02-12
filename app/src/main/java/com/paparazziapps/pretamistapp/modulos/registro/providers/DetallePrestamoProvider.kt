@@ -22,16 +22,14 @@ class DetallePrestamoProvider {
     }
 
     // No need to implemented when is super admin
-    fun createDetalle(detallePrestamo: DetallePrestamoSender): Task<Void>
-    {
+    fun createDetalle(detallePrestamo: DetallePrestamoSender): Task<Void> {
         detallePrestamo.id = mCollectionDetallePrestamo.document().id
         detallePrestamo.sucursalId = preferences.sucursalId
         return mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo)
     }
 
     // No need to implemented when is super admin
-    fun getDetallePrestamosByFecha(fecha:String):Task<QuerySnapshot>
-    {
+    fun getDetallePrestamosByFecha(fecha:String):Task<QuerySnapshot> {
         return mCollectionDetallePrestamo
             .whereEqualTo("fechaPago",fecha)
             .whereEqualTo("sucursalId",preferences.sucursalId)
@@ -39,8 +37,7 @@ class DetallePrestamoProvider {
     }
 
     // Completed - Super Admin Implemented
-    fun getPrestamosByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): Task<QuerySnapshot>
-    {
+    fun getPrestamosByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): Task<QuerySnapshot> {
         return  mCollectionDetallePrestamo
             .whereGreaterThanOrEqualTo("unixtime", timeStart)
             .whereLessThanOrEqualTo("unixtime",timeEnd)

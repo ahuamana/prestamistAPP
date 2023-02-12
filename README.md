@@ -71,7 +71,20 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 ```bash
   Disfrútalo 💕 💕 💕
 ```
-    
+## Demo
+
+Super Admin credentials
+- Username: superadmin@gmail.com
+- Password: 123456
+
+Admin credentials
+- Username: admin@gmail.com
+- Password: 123456
+
+Cashier credentials
+- Username: 1@gmail.com
+- Password: 123456
+
 ## Authors
 
 - [@ahuamana](https://www.github.com/ahuamana)
