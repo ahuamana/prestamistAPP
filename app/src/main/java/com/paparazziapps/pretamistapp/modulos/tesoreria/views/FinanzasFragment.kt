@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -26,7 +25,7 @@ import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.PrestamoDetalleAdapter
 import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelTesoreria
-import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
+import com.paparazziapps.pretamistapp.application.MyPreferences
 import java.text.SimpleDateFormat
 import java.util.*
 

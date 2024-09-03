@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
-import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
 import java.lang.Exception
 
 open class ViewModelRegister private constructor(){

@@ -1,7 +1,5 @@
 package com.paparazziapps.pretamistapp.modulos.principal.views
 
-import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -12,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -30,14 +27,13 @@ import com.paparazziapps.pretamistapp.databinding.BottomsheetDetallePrestamoBind
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.google.common.base.Strings.isNullOrEmpty
-import com.paparazziapps.pretamistapp.helper.views.AppOpenAd
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.modulos.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
-import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
+import com.paparazziapps.pretamistapp.application.MyPreferences
 
 
 class PrincipalActivity : AppCompatActivity(){

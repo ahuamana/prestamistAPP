@@ -1,7 +1,6 @@
 package com.paparazziapps.pretamistapp.modulos.registro.views
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,7 +20,6 @@ import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.Intent
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -29,7 +27,7 @@ import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
-import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
+import com.paparazziapps.pretamistapp.application.MyPreferences
 
 
 class RegistrarActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.paparazziteam.yakulap.helper.applicacion
+package com.paparazziapps.pretamistapp.application
 
 import android.content.Context
 import android.content.SharedPreferences

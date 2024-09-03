@@ -13,8 +13,6 @@ import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.helper.views.beGone
-import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
@@ -25,7 +23,7 @@ import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
-import com.paparazziteam.yakulap.helper.applicacion.MyPreferences
+import com.paparazziapps.pretamistapp.application.MyPreferences
 
 
 class HomeFragment : Fragment(),setOnClickedPrestamo {

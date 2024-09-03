@@ -1,6 +1,7 @@
-package com.paparazziteam.yakulap.helper.applicacion
+package com.paparazziapps.pretamistapp.application
 
 import android.graphics.Color
+import com.paparazziapps.pretamistapp.application.CacheData
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 
 class MyPreferences {
