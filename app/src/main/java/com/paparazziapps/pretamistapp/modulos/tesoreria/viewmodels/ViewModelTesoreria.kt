@@ -2,6 +2,7 @@ package com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.android.gms.common.internal.Constants
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.helper.*
@@ -10,7 +11,7 @@ import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
 
-class ViewModelTesoreria private constructor() {
+class ViewModelTesoreria private constructor() : ViewModel() {
 
     var  _message = MutableLiveData<String>()
     val mPrestamoProvider = PrestamoProvider()

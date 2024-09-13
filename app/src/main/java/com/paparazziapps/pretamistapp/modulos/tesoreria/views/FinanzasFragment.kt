@@ -201,47 +201,44 @@ class FinanzasFragment : Fragment() {
 
     private fun observers() {
         _viewModel.receivePrestamos().observe(viewLifecycleOwner) {
-            if(it.count() == 0)
-            {
+            if(it.count() == 0) {
                 binding.apply {
                     imgEmptyDeuda.isVisible = true
                     lblEmptyDeuda.isVisible = true
                 }
                 //showMessage("No hay prestamos")
-            }else
-            {
+            }else {
                 binding.apply {
                     imgEmptyDeuda.isVisible = false
                     lblEmptyDeuda.isVisible = false
                     recyclerDetalle.isVisible = true
                 }
-
                 prestamoDetalleAdapter.setData(it)
                 //showMessage(" Lista de prestamos ${it.count()}")
             }
+        }
 
-            //Observers SuperAdmin
-            _viewModelSucursales.sucursales.observe(viewLifecycleOwner){
+        //Observers SuperAdmin
+        _viewModelSucursales.sucursalesFinanzas.observe(viewLifecycleOwner){
 
-                println("Sucursales Finanzas: $it")
+            println("Sucursales Finanzas: $it")
 
-                if(it.isNotEmpty()) {
-                    listaSucursales = it.toMutableList()
-                    var scrsales = mutableListOf<String>()
-                    it.forEach {
-                        scrsales.add(it.name?:"")
-                    }
-
-                    val adapterSucursales= ArrayAdapter(requireContext(),R.layout.select_items, scrsales)
-                    sucursalTxt.setAdapter(adapterSucursales)
-                    sucursalTxt.setOnClickListener { sucursalTxt.showDropDown() }
-                    sucursalTxtLayout.setEndIconOnClickListener { sucursalTxt.showDropDown() }
-                    viewProgressSucursal.beGone()
-                    viewDotsSucursal.beGone()
-                    viewCurtainSucursal.beGone()
+            if(it.isNotEmpty()) {
+                listaSucursales = it.toMutableList()
+                var scrsales = mutableListOf<String>()
+                it.forEach {
+                    scrsales.add(it.name?:"")
                 }
 
+                val adapterSucursales= ArrayAdapter(requireContext(),R.layout.select_items, scrsales)
+                sucursalTxt.setAdapter(adapterSucursales)
+                sucursalTxt.setOnClickListener { sucursalTxt.showDropDown() }
+                sucursalTxtLayout.setEndIconOnClickListener { sucursalTxt.showDropDown() }
+                viewProgressSucursal.beGone()
+                viewDotsSucursal.beGone()
+                viewCurtainSucursal.beGone()
             }
+
         }
 
         _viewModel.getPagosTotalesByTime().observe(viewLifecycleOwner){

@@ -1,0 +1,45 @@
+package com.paparazziapps.pretamistapp.modulos.registro.pojo
+
+data class PaymentScheduled(
+    val id: Int,
+    val name: String,
+    val description: String,
+    val paymentScheduled: PaymentScheduledEnum
+) {
+    companion object {
+        fun getPaymentScheduledById(id: Int): PaymentScheduledEnum {
+            return PaymentScheduledEnum.values().first { it.id == id }
+        }
+
+        fun getPaymentScheduledByName(name: String): PaymentScheduledEnum {
+            return PaymentScheduledEnum.values().first { it.displayName == name }
+        }
+
+        fun getIdPaymentScheduledByName(name: String): Int {
+            return PaymentScheduledEnum.values().first { it.displayName == name }.id
+        }
+
+        fun getPaymentScheduledList(): List<PaymentScheduled> {
+            return PaymentScheduledEnum.values().map {
+                PaymentScheduled(it.id, it.displayName, it.displayName, it)
+            }
+        }
+
+        fun getPaymentScheduledListString(): ArrayList<String> {
+            return PaymentScheduledEnum.values().map {
+                it.displayName
+            } as? ArrayList<String> ?: arrayListOf()
+        }
+    }
+}
+
+enum class PaymentScheduledEnum(val id: Int, val displayName: String, val days:Int) {
+    DAILY(1, "Diario (cada día)", 1),
+    WEEKLY(2, "Semanal (cada 7 días)", 7),
+    FORTNIGHTLY(3, "Quincenal (cada 15 días)", 15),
+    MONTHLY(4, "Mensual (cada 30 días)", 30),
+    BIMONTHLY(5, "Bimestral (cada 60 días)", 60),
+    QUARTERLY(6, "Trimestral (cada 90 días)", 90),
+    SEMIANNUAL(7, "Semestral (cada 180 días)", 180),
+    ANNUAL(8, "Anual (cada 365 días)", 365)
+}

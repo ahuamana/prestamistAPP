@@ -25,6 +25,8 @@ import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 
@@ -66,9 +68,10 @@ class RegistrarFragment : Fragment() {
     var prestamo = Prestamo()
 
     //Layout
-    val listaIntereses = arrayListOf<String>("8%","10%","20%","30%","40%","50%")
-    val listaPlazos = arrayListOf<String>("30 dias","60 dias","90 dias","120 dias","180 dias")
-    val listmode = arrayListOf(M_STANDAR, M_PERSONALIZADO)
+    private val listaIntereses = arrayListOf<String>("8%","10%","20%","30%","40%","50%")
+    private val listaPlazos = arrayListOf<String>("30 dias","60 dias","90 dias","120 dias","180 dias")
+    private val listTypePaymentScheduled: ArrayList<String> = PaymentScheduled.getPaymentScheduledListString()
+    private val listmode = arrayListOf(M_STANDAR, M_PERSONALIZADO)
 
     //Result for activity
     val startForResult  = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
@@ -254,6 +257,51 @@ class RegistrarFragment : Fragment() {
             }
         }
 
+        //Validate pago programado
+
+        binding.modePaymentScheduled.doAfterTextChanged {
+
+            val text = binding.modePaymentScheduled.text.toString()
+            val paymentScheduled = PaymentScheduled.getPaymentScheduledByName(text)
+
+            when(paymentScheduled)
+            {
+                PaymentScheduledEnum.DAILY -> {
+                    meses.setText("30 dias")
+                    meses.isEnabled = false
+                }
+
+                PaymentScheduledEnum.WEEKLY -> {
+                    meses.setText("7 dias")
+                    meses.isEnabled = false
+                }
+
+                PaymentScheduledEnum.FORTNIGHTLY -> {
+                    meses.setText("15 dias")
+                    meses.isEnabled = false
+                }
+
+                PaymentScheduledEnum.MONTHLY -> {
+                    meses.setText("30 dias")
+                    meses.isEnabled = false
+                }
+
+                PaymentScheduledEnum.BIMONTHLY -> {
+                    meses.setText("60 dias")
+                    meses.isEnabled = false
+                }
+
+                PaymentScheduledEnum.QUARTERLY -> {
+                    meses.setText("90 dias")
+                    meses.isEnabled = false
+                }
+
+                else -> {
+                    meses.isEnabled = true
+                }
+            }
+        }
+
     }
 
     private fun setupSpinners() {
@@ -261,10 +309,12 @@ class RegistrarFragment : Fragment() {
         val adapterIntereses= ArrayAdapter<String>(requireContext(),R.layout.select_items, listaIntereses)
         val adapterPlazos= ArrayAdapter<String>(requireContext(),R.layout.select_items, listaPlazos)
         val adapterModos= ArrayAdapter<String>(requireContext(),R.layout.select_items, listmode)
+        val adapterModePaymentScheduled = ArrayAdapter(requireContext(),R.layout.select_items, listTypePaymentScheduled)
 
         intereses.setAdapter(adapterIntereses)
         meses.setAdapter(adapterPlazos)
         modos.setAdapter(adapterModos)
+        binding.modePaymentScheduled.setAdapter(adapterModePaymentScheduled)
 
 
         intereslayout.setEndIconOnClickListener { intereses.showDropDown() }
@@ -273,8 +323,7 @@ class RegistrarFragment : Fragment() {
         meseslayout.setEndIconOnClickListener { meses.showDropDown() }
         modoLayout.setEndIconOnClickListener { modos.showDropDown() }
         modos.setOnClickListener { modos.showDropDown() }
-
-
+        binding.modePaymentScheduled.setOnClickListener { binding.modePaymentScheduled.showDropDown() }
     }
 
     private fun validateFields ()

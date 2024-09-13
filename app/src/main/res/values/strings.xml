@@ -31,6 +31,7 @@
 
     <string name="loading">Cargando...</string>
     <string name="logout">Cerrar Sessión</string>
+    <string name="fragment_register_mode_pay_title">Modo de pago</string>
 
 
 </resources>
