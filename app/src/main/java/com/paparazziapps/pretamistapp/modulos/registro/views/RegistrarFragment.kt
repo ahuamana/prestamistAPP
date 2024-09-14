@@ -384,7 +384,6 @@ class RegistrarFragment : Fragment() {
         when (mode)
         {
             M_STANDAR -> {
-
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = intereses.text.substring(0,intereses.text.length-1).toInt()
                 mesesEntero = meses.text.substring(0,meses.text.length-5).toInt()
