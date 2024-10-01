@@ -85,7 +85,7 @@ tools:context=".modulos.registro.views.RegistrarFragment">
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/fragment_register_mode_pay_title"
-                    tools:text="Semanal (cada 7 dias)"
+                    tools:text="Diario (cada día)"
                     android:textStyle="bold"
                     android:inputType="textNoSuggestions"
                     android:lines="1"
@@ -130,7 +130,7 @@ tools:context=".modulos.registro.views.RegistrarFragment">
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/interesLayout"
                     android:layout_width="0dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     app:endIconMode="custom"
@@ -151,29 +151,40 @@ tools:context=".modulos.registro.views.RegistrarFragment">
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/plazosLayout"
+                <LinearLayout
+                    android:id="@+id/layoutParentQuotasStandar"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_marginLeft="10dp"
-                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="10dp"
                     android:layout_marginBottom="8dp"
-                    app:endIconMode="custom"
-                    app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
-                    app:errorEnabled="true"
-                    style="@style/CustomDropDown">
-
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                        android:id="@+id/plazos"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/plazosLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Plazo de vto"
-                        android:focusable="false"
-                        android:cursorVisible="false"
-                        android:inputType="textEmailAddress"
-                        android:lines="1"
-                        android:maxLength="50" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        app:endIconMode="custom"
+                        android:visibility="visible"
+                        app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
+                        app:errorEnabled="true"
+                        style="@style/CustomDropDown">
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/plazos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Plazo de vto"
+                            android:focusable="false"
+                            android:cursorVisible="false"
+                            android:inputType="textEmailAddress"
+                            android:lines="1"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                </LinearLayout>
+
 
 
             </LinearLayout>
@@ -182,6 +193,7 @@ tools:context=".modulos.registro.views.RegistrarFragment">
             <LinearLayout
                 android:id="@+id/layoutPersonalizado"
                 android:visibility="gone"
+                tools:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -208,25 +220,54 @@ tools:context=".modulos.registro.views.RegistrarFragment">
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/plazosLayoutP"
+                <LinearLayout
+                    android:id="@+id/layoutParentQuotasPersonalizado"
+                    android:orientation="horizontal"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_marginLeft="10dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    app:errorEnabled="true"
-                    style="@style/CustomTextField">
+                    android:layout_marginStart="10dp"
+                    android:layout_height="wrap_content">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/plazosP"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/plazosLayoutP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Plazo de vto en dias"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="50" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        tools:visibility="visible"
+                        android:visibility="gone"
+                        app:errorEnabled="true"
+                        style="@style/CustomTextField">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/plazosP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Plazo de vto en dias"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_quotas_personalize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:endIconMode="custom"
+                        android:visibility="gone"
+                        app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
+                        app:errorEnabled="true"
+                        style="@style/CustomDropDown">
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/quotas_text_personalize"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Cuotas"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="2" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -272,7 +313,7 @@ tools:context=".modulos.registro.views.RegistrarFragment">
 
                         <com.google.android.material.textview.MaterialTextView
                             android:layout_width="wrap_content"
-                            android:text="Monto a pagar diario"
+                            android:text="Monto a pagar \nDiario"
                             android:textStyle="bold"
                             android:gravity="center"
                             android:textSize="16dp"

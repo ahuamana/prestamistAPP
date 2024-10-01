@@ -25,11 +25,11 @@ open class ViewModelRegister private constructor(){
     fun calcularMontoDiario(capital:Int, interes:Int, dias:Int)
     {
         try {
-            var newCapital = capital.toDouble()
-            var newInteres = interes.toDouble()
+            val newCapital = capital.toDouble()
+            val newInteres = interes.toDouble()
 
-            var interesFinal = newCapital * (newInteres/100)
-            var montodiario = (interesFinal + newCapital)/dias
+            val interesFinal = newCapital * (newInteres/100)
+            val montodiario = (interesFinal + newCapital)/dias
             _montoDiario.value = getDoubleWithOneDecimalsReturnDouble(montodiario)?:-9999.00
 
         }catch (e:Exception)

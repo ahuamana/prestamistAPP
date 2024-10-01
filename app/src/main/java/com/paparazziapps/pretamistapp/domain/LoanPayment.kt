@@ -1,8 +1,6 @@
 package com.paparazziapps.pretamistapp.domain
 
-import com.paparazziapps.pretamistapp.domain.utils.PaymentSchedule
 import kotlin.math.ceil
-import kotlin.math.round
 
 data class LoanPayment (
     val interest: Double,

@@ -1,11 +1,10 @@
 package com.paparazziapps.pretamistapp.domain
 
-import com.paparazziapps.pretamistapp.domain.utils.PaymentSchedule
 import com.paparazziapps.pretamistapp.domain.utils.roundToOneDecimal
 import java.time.LocalDate
 import kotlin.math.ceil
 import kotlin.math.pow
-import kotlin.math.round
+import kotlin.math.roundToInt
 
 /**
  * BaseLoan is an abstract class that provides a base implementation for different types of loans.
@@ -23,32 +22,70 @@ abstract class BaseLoan : Loan {
      * @param termInMonths The term of the loan in months. e.g. 12 for a 1-year loan.
      * @return A LoanPayment object containing the total interest, periodic payment, and total payment for the loan.
      */
-    override fun calculatePayment(principal: Double, annualRate: Double, numberOfPayments: Int, startDate: LocalDate, roundedTo1Decimal:Boolean): LoanPayment {
+    override fun calculatePayment(
+        principal: Double,
+        annualRate: Double,
+        numberOfPayments: Int,
+        startDate: LocalDate,
+        isAmortized: Boolean,
+        roundedTo1Decimal: Boolean
+    ): LoanPayment {
         val periodicRate = annualRate / periodsPerYear
+        val exactRegularPayment = calculateExactRegularPayment(principal, periodicRate, numberOfPayments)
+        val roundedRegularPayment = if (roundedTo1Decimal) (exactRegularPayment * 10).roundToInt() / 10.0 else exactRegularPayment
+        val schedule = generatePaymentSchedule(principal, periodicRate, numberOfPayments, roundedRegularPayment, startDate)
 
-        // Calculate the periodic payment, total payment, and total interest
-        val periodicPayment = calculatePeriodicPayment(principal, periodicRate, numberOfPayments.toDouble())
+        val totalInterest = schedule.sumOf { it.interestPaid }
+        val totalPayment = schedule.sumOf { it.payment }
 
-        // Generate the payment schedule
-        val schedule = generatePaymentSchedule(principal, periodicRate, numberOfPayments, periodicPayment, startDate)
-
-
-        val totalPayment = periodicPayment * numberOfPayments
-        val totalInterest = totalPayment - principal
-
-        return if (!roundedTo1Decimal) {
-            LoanPayment.create(totalInterest, periodicPayment, totalPayment, schedule)
-        } else LoanPayment.createToOneDecimal(totalInterest, periodicPayment, totalPayment, schedule)
+        return LoanPayment.createToOneDecimal(totalInterest, roundedRegularPayment, totalPayment, schedule)
     }
 
+    private fun calculateExactRegularPayment(principal: Double, periodicRate: Double, numberOfPayments: Int): Double {
+        return (principal * periodicRate) / (1 - (1 + periodicRate).pow(-numberOfPayments))
+    }
 
-
-    private fun generatePaymentSchedule(principal: Double, periodicRate: Double, numberOfPayments: Int, periodicPayment: Double, startDate: LocalDate): List<PaymentSchedule> {
+    private fun generatePaymentSchedule(
+        principal: Double,
+        periodicRate: Double,
+        numberOfPayments: Int,
+        roundedRegularPayment: Double,
+        startDate: LocalDate
+    ): List<PaymentSchedule> {
         var remainingBalance = principal
-        var currentDate = startDate // Start date for the first payment
+        var currentDate = startDate
+        val schedule = mutableListOf<PaymentSchedule>()
 
-        //Adjust the start date based on the periods per year
-        currentDate = when (periodsPerYear) {
+        for (paymentNumber in 1..numberOfPayments) {
+            currentDate = getNextPaymentDate(currentDate)
+            val interestPaid = remainingBalance * periodicRate
+            var principalPaid = roundedRegularPayment - interestPaid
+            var payment = roundedRegularPayment
+
+            if (paymentNumber == numberOfPayments) {
+                // Adjust the final payment to cover any remaining balance
+                principalPaid = remainingBalance
+                payment = (principalPaid + interestPaid * 10).roundToInt() / 10.0
+            }
+
+            remainingBalance -= principalPaid
+
+            schedule.add(PaymentSchedule(
+                date = currentDate,
+                payment = payment,
+                principalPaid = principalPaid,
+                interestPaid = interestPaid,
+                remainingBalance = remainingBalance.coerceAtLeast(0.0) // Ensure balance doesn't go below 0
+            ))
+
+            if (remainingBalance <= 0) break
+        }
+
+        return schedule
+    }
+
+    private fun getNextPaymentDate(currentDate: LocalDate): LocalDate {
+        return when (periodsPerYear) {
             365 -> currentDate.plusDays(1)
             52 -> currentDate.plusWeeks(1)
             26 -> currentDate.plusWeeks(2)
@@ -58,45 +95,6 @@ abstract class BaseLoan : Loan {
             2 -> currentDate.plusMonths(6)
             1 -> currentDate.plusYears(1)
             else -> currentDate.plusMonths(1)
-        }
-
-        // Create a list of payments with only the integer part
-        val payments = MutableList(numberOfPayments) { periodicPayment.toString().split(".")[0].toDoubleOrNull()?:0.0 }
-
-        // Create a list of the decimal parts of each payment
-        val paymentDecimals = MutableList(numberOfPayments) { periodicPayment - payments[it] }
-
-        // Calculate the sum of the decimal parts
-        val totalDecimals = paymentDecimals.sum()
-
-        // Add the sum of the decimal parts to the final payment include the decimals
-        payments[payments.size - 1]  = roundToOneDecimal(payments[payments.size - 1] + totalDecimals)
-
-        // Create the payment schedule
-        return (1..numberOfPayments).map {
-            val interestPaid = remainingBalance * periodicRate
-            val principalPaid = payments[it - 1] - interestPaid
-            remainingBalance -= principalPaid
-
-            PaymentSchedule(
-                date = currentDate,
-                payment = payments[it - 1].toDouble(),
-                principalPaid = principalPaid,
-                interestPaid = interestPaid,
-                remainingBalance = remainingBalance
-            ).also {
-                currentDate = when (periodsPerYear) {
-                    365 -> currentDate.plusDays(1)
-                    52 -> currentDate.plusWeeks(1)
-                    26 -> currentDate.plusWeeks(2)
-                    12 -> currentDate.plusMonths(1)
-                    6 -> currentDate.plusMonths(2)
-                    4 -> currentDate.plusMonths(3)
-                    2 -> currentDate.plusMonths(6)
-                    1 -> currentDate.plusYears(1)
-                    else -> currentDate.plusMonths(1)
-                }
-            }
         }
     }
 

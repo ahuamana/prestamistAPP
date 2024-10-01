@@ -1,4 +1,4 @@
-package com.paparazziapps.pretamistapp.domain.utils
+package com.paparazziapps.pretamistapp.domain
 
 import java.time.LocalDate
 

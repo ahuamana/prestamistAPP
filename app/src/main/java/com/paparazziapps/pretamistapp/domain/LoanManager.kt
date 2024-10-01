@@ -38,7 +38,7 @@ class LoanManager {
      * @param termInMonths The term of the loan in months. e.g. 12 for a 1-year loan.
      * @return The calculated loan payment.
      */
-    fun calculatePayment(loan: Loan, principal: Double, annualRate: Double, termInMonths: Int, localDate: LocalDate, roundedToOneDecimal:Boolean): LoanPayment {
-        return loan.calculatePayment(principal, annualRate, termInMonths,localDate, roundedToOneDecimal)
+    fun calculatePayment(loan: Loan, principal: Double, annualRate: Double, termInMonths: Int, localDate: LocalDate, isAmortized:Boolean, roundedToOneDecimal:Boolean): LoanPayment {
+        return loan.calculatePayment(principal, annualRate, termInMonths,localDate, roundedToOneDecimal, isAmortized = isAmortized)
     }
 }

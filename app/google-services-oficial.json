@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "668972476088",
+    "firebase_url": "https://prestamist-pstore-default-rtdb.firebaseio.com",
+    "project_id": "prestamist-pstore",
+    "storage_bucket": "prestamist-pstore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:668972476088:android:74ea2c29ad1c585d2cb64d",
+        "android_client_info": {
+          "package_name": "com.paparazziapps.pretamistapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "668972476088-8khvs49ooiqum0e3q9ppco55jc9crkep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIMJhI4kvM1sdZovBz8sWsZRBp89uE5Us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "668972476088-8khvs49ooiqum0e3q9ppco55jc9crkep.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

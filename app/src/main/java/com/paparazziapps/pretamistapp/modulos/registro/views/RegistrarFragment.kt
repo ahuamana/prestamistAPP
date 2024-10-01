@@ -23,8 +23,8 @@ import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
-import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
+import com.paparazziapps.pretamistapp.helper.views.beGone
+import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
@@ -42,8 +42,8 @@ class RegistrarFragment : Fragment() {
     lateinit var modoLayout: TextInputLayout
     lateinit var intereses: AppCompatAutoCompleteTextView
     lateinit var intereslayout: TextInputLayout
-    lateinit var meses: AppCompatAutoCompleteTextView
-    lateinit var meseslayout: TextInputLayout
+    lateinit var plazos: AppCompatAutoCompleteTextView
+    lateinit var plazosLayout: TextInputLayout
     lateinit var capitalPrestado: TextInputEditText
     lateinit var btnContinuar: MaterialButton
 
@@ -104,8 +104,8 @@ class RegistrarFragment : Fragment() {
         //Modo Standar
         intereses = binding.interesSP
         intereslayout = binding.interesLayout
-        meses = binding.plazos
-        meseslayout = binding.plazosLayout
+        plazos = binding.plazos
+        plazosLayout = binding.plazosLayout
         capitalPrestado = binding.capitalprestadoEdt
         montoDiario = binding.montoDiario
         montoTotal = binding.montoTotal
@@ -175,15 +175,15 @@ class RegistrarFragment : Fragment() {
             }
         }
 
-        meses.doAfterTextChanged {
+        plazos.doAfterTextChanged {
 
-            if(meses.text.toString() != "" && meses.text != null)
+            if(plazos.text.toString() != "" && plazos.text != null)
             {
                 isValidMeses = true
                 validateFields()
             }else
             {
-                Log.e("TAG","meses: ${meses.text}")
+                Log.e("TAG","meses: ${plazos.text}")
                 isValidMeses = false
             }
         }
@@ -239,65 +239,143 @@ class RegistrarFragment : Fragment() {
 
             when (modos.text.toString()){
                 M_STANDAR -> {
-                    binding.layoutdefecto.isVisible = true
-                    binding.layoutPersonalizado.isVisible = false
+                    binding.apply {
+                        layoutdefecto.beVisible()
+                        layoutPersonalizado.beGone()
+                        plazos.beVisible()
+                        plazosLayoutP.beGone()
+                        quotasTextPersonalize.beGone()
+                    }
                     validateFields()
                 }
 
                 M_PERSONALIZADO ->{
-                    binding.layoutdefecto.isVisible = false
-                    binding.layoutPersonalizado.isVisible = true
+                    binding.apply {
+                        layoutdefecto.beGone()
+                        layoutPersonalizado.beVisible()
+                        plazos.beGone()
+                        quotasTextPersonalize.beGone() // Only works for weekly, fortnightly, monthly, bimonthly, quarterly, semiannual, annual
+                        plazosLayoutP.beVisible()
+                    }
                     clearData()
                     validateFields()
 
                 }
 
                 else -> { showMessage("Error cambiando de modo")}
-
             }
         }
 
-        //Validate pago programado
 
+        //Validate pago programado
         binding.modePaymentScheduled.doAfterTextChanged {
 
             val text = binding.modePaymentScheduled.text.toString()
             val paymentScheduled = PaymentScheduled.getPaymentScheduledByName(text)
+            clearData()
 
-            when(paymentScheduled)
-            {
+            when(paymentScheduled) {
                 PaymentScheduledEnum.DAILY -> {
-                    meses.setText("30 dias")
-                    meses.isEnabled = false
+                    plazos.isEnabled = true
+                    plazosLayout.beVisible()
+                    binding.apply {
+                        modeLayout.beVisible()
+                        if(modos.text.toString() == M_STANDAR) {
+                            layoutdefecto.beVisible()
+                            layoutPersonalizado.beGone()
+                            plazosLayoutP.beGone()
+                            plazosLayout.beVisible()
+                        } else {
+                            layoutdefecto.beGone()
+                            plazosLayout.beGone()
+                            layoutPersonalizado.beVisible()
+                            plazosLayoutP.beVisible()
+
+                        }
+                    }
+                    clearData()
                 }
 
                 PaymentScheduledEnum.WEEKLY -> {
-                    meses.setText("7 dias")
-                    meses.isEnabled = false
+                    plazos.isEnabled = false
+                    binding.apply {
+                        modeLayout.beGone()
+                        layoutdefecto.beGone()
+                        plazosLayoutP.beGone()
+                        layoutPersonalizado.beVisible()
+                        layoutQuotasPersonalize.beVisible()
+                    }
                 }
 
                 PaymentScheduledEnum.FORTNIGHTLY -> {
-                    meses.setText("15 dias")
-                    meses.isEnabled = false
+                    plazos.isEnabled = false
+                    plazosLayout.beGone()
+                    binding.apply {
+                        modeLayout.beGone()
+                        plazosLayoutP.beGone()
+                        layoutdefecto.beGone()
+                        layoutPersonalizado.beVisible()
+                        layoutQuotasPersonalize.beVisible()
+                    }
                 }
 
                 PaymentScheduledEnum.MONTHLY -> {
-                    meses.setText("30 dias")
-                    meses.isEnabled = false
+                    plazos.isEnabled = false
+                    plazosLayout.beGone()
+                    binding.apply {
+                        modeLayout.beGone()
+                        plazosLayoutP.beGone()
+                        layoutdefecto.beGone()
+                        layoutPersonalizado.beVisible()
+                        layoutQuotasPersonalize.beVisible()
+                    }
                 }
 
                 PaymentScheduledEnum.BIMONTHLY -> {
-                    meses.setText("60 dias")
-                    meses.isEnabled = false
+                    plazos.isEnabled = false
+                    plazosLayout.beGone()
+                    binding.apply {
+                        modeLayout.beGone()
+                        plazosLayoutP.beGone()
+                        layoutdefecto.beGone()
+                        layoutPersonalizado.beVisible()
+                        layoutQuotasPersonalize.beVisible()
+                    }
                 }
 
                 PaymentScheduledEnum.QUARTERLY -> {
-                    meses.setText("90 dias")
-                    meses.isEnabled = false
+                    plazos.isEnabled = false
+                    plazosLayout.beGone()
+                    binding.apply {
+                        modeLayout.beGone()
+                        plazosLayoutP.beGone()
+                        layoutdefecto.beGone()
+                        layoutPersonalizado.beVisible()
+                        layoutQuotasPersonalize.beVisible()
+                    }
                 }
 
-                else -> {
-                    meses.isEnabled = true
+                PaymentScheduledEnum.SEMIANNUAL -> {
+                    plazos.isEnabled = false
+                    plazosLayout.beGone()
+                    binding.apply {
+                        modeLayout.beGone()
+                        plazosLayoutP.beGone()
+                        layoutdefecto.beGone()
+                        layoutPersonalizado.beVisible()
+                        layoutQuotasPersonalize.beVisible()
+                    }
+                }
+                PaymentScheduledEnum.ANNUAL -> {
+                    plazos.isEnabled = false
+                    plazosLayout.beGone()
+                    binding.apply {
+                        modeLayout.beGone()
+                        plazosLayoutP.beGone()
+                        layoutdefecto.beGone()
+                        layoutPersonalizado.beVisible()
+                        layoutQuotasPersonalize.beVisible()
+                    }
                 }
             }
         }
@@ -312,15 +390,15 @@ class RegistrarFragment : Fragment() {
         val adapterModePaymentScheduled = ArrayAdapter(requireContext(),R.layout.select_items, listTypePaymentScheduled)
 
         intereses.setAdapter(adapterIntereses)
-        meses.setAdapter(adapterPlazos)
+        plazos.setAdapter(adapterPlazos)
         modos.setAdapter(adapterModos)
         binding.modePaymentScheduled.setAdapter(adapterModePaymentScheduled)
 
 
         intereslayout.setEndIconOnClickListener { intereses.showDropDown() }
         intereses.setOnClickListener { intereses.showDropDown() }
-        meses.setOnClickListener { meses.showDropDown() }
-        meseslayout.setEndIconOnClickListener { meses.showDropDown() }
+        plazos.setOnClickListener { plazos.showDropDown() }
+        plazosLayout.setEndIconOnClickListener { plazos.showDropDown() }
         modoLayout.setEndIconOnClickListener { modos.showDropDown() }
         modos.setOnClickListener { modos.showDropDown() }
         binding.modePaymentScheduled.setOnClickListener { binding.modePaymentScheduled.showDropDown() }
@@ -386,7 +464,7 @@ class RegistrarFragment : Fragment() {
             M_STANDAR -> {
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = intereses.text.substring(0,intereses.text.length-1).toInt()
-                mesesEntero = meses.text.substring(0,meses.text.length-5).toInt()
+                mesesEntero = plazos.text.substring(0,plazos.text.length-5).toInt()
                 _viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
             }
 
@@ -434,6 +512,11 @@ class RegistrarFragment : Fragment() {
     {
         mesesP.setText("")
         interesesP.setText("")
+        binding.apply {
+            quotasTextPersonalize.setText("")
+            plazosP.setText("")
+            plazos.setText("")
+        }
         montoDiario.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
         montoTotal.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
 
