@@ -217,7 +217,7 @@ tools:context=".modulos.registro.views.RegistrarFragment">
                         android:lines="1"
                         android:cursorVisible="true"
                         android:focusable="true"
-                        android:maxLength="50" />
+                        android:maxLength="3" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -247,22 +247,67 @@ tools:context=".modulos.registro.views.RegistrarFragment">
                             android:lines="1"
                             android:maxLength="50" />
                     </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layoutParentExtras"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/interesLayoutExtras"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    app:errorEnabled="true"
+                    style="@style/CustomTextField">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/interesExtras"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Interés %"
+                        android:inputType="number"
+                        android:lines="1"
+                        android:cursorVisible="true"
+                        android:focusable="true"
+                        android:maxLength="3" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutParentQuotasExtras"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layout_quotas_personalize"
+                        android:id="@+id/layout_quotas_extras"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:endIconMode="custom"
-                        android:visibility="gone"
-                        app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
+                        android:visibility="visible"
                         app:errorEnabled="true"
                         style="@style/CustomDropDown">
 
                         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                            android:id="@+id/quotas_text_personalize"
+                            android:id="@+id/quotas_text_extras"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Cuotas"
+                            android:focusable="true"
+                            android:cursorVisible="true"
                             android:inputType="number"
                             android:lines="1"
                             android:maxLength="2" />
@@ -271,8 +316,6 @@ tools:context=".modulos.registro.views.RegistrarFragment">
 
 
             </LinearLayout>
-
-
 
 
 
@@ -312,8 +355,9 @@ tools:context=".modulos.registro.views.RegistrarFragment">
                         android:layout_height="match_parent">
 
                         <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/dailyAmountTitle"
                             android:layout_width="wrap_content"
-                            android:text="Monto a pagar \nDiario"
+                            android:text="@string/monto_a_pagar_daily"
                             android:textStyle="bold"
                             android:gravity="center"
                             android:textSize="16dp"

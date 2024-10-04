@@ -69,23 +69,19 @@ fun turnOffDarkModeInAllApp(resources: Resources){
 
 val DiaUnixtime = 86400000;
 
-fun getDoubleWithTwoDecimals (number:Double):String?
-{
+fun getDoubleWithTwoDecimals (number:Double):String? {
     return DecimalFormat("###,###,###.00").format(number)
 }
 
-fun getDoubleWithTwoDecimalsReturnDouble (number:Double):Double?
-{
+fun getDoubleWithTwoDecimalsReturnDouble (number:Double):Double {
     return number.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
 }
 
-fun getDoubleWithOneDecimalsReturnDouble (number:Double):Double?
-{
+fun getDoubleWithOneDecimalsReturnDouble (number:Double):Double? {
     return number.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble()
 }
 
-fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int
-{
+fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int {
     var diasInUnixtime =  DiaUnixtime * plazo_vto!!.toLong()
     //println("Dias Unixtime $diasInUnixtime")
     var fechaFinalUnixtime= (convertFechaActualNormalToUnixtime(fecha_inicio) + diasInUnixtime )
