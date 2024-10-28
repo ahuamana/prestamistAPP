@@ -38,15 +38,13 @@ class ViewModelDashboard private constructor(){
                 _prestamos.value = listPrestamos
             }
 
-        }catch (t:Throwable)
-        {
+        }catch (t:Throwable) {
             println("Error: ${t.message}")
         }
 
     }
 
-    fun updateUltimoPago(id:String?, fecha:String?, pagoTotal:Double,diasRestantesPorPagar:Int, diasPagadosNuevo:Int,onComplete: (Boolean, String, String?, Boolean) -> Unit)
-    {
+    fun updateUltimoPago(id:String?, fecha:String?, pagoTotal:Double,diasRestantesPorPagar:Int, diasPagadosNuevo:Int,onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect:Boolean
 
         try {
@@ -98,8 +96,7 @@ class ViewModelDashboard private constructor(){
         }
     }
 
-    fun cerrarPrestamo(id:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit)
-    {
+    fun cerrarPrestamo(id:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect = false
 
         try {
@@ -120,8 +117,7 @@ class ViewModelDashboard private constructor(){
             }
 
 
-        }catch (t:Throwable)
-        {
+        }catch (t:Throwable) {
             isCorrect = false
             onComplete(isCorrect, "No se pudo cerrar el pago, porfavor comuníquese con soporte!", null, false)
 
