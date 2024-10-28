@@ -23,7 +23,6 @@ import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrin
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
-import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import com.paparazziapps.pretamistapp.application.MyPreferences
 
 
@@ -36,15 +35,14 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
     private var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
 
-    var preferences = MyPreferences()
-
-    //constructores
-    val prestamoAdapter = PrestamoAdapter(this)
+    private var preferences = MyPreferences()
+    private val prestamoAdapter = PrestamoAdapter(this)
 
     private lateinit var recyclerPrestamos: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.getLoans()
     }
 
     override fun onCreateView(
@@ -143,7 +141,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         preferences.isActiveUser = it.activeUser
 
         if(it.activeUser) {
-            viewModel.getPrestamos()
+            viewModel.getLoans()
         }
     }
 

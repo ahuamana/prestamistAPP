@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,12 +10,10 @@ import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class ViewModelDashboard private constructor() : ViewModel(){
 
+    private val tag = ViewModelDashboard::class.java.simpleName
     var _message = MutableLiveData<String>()
     var mPrestamoProvider = PrestamoProvider()
     var mDetallePrestamoProvider = DetallePrestamoProvider()
@@ -23,24 +22,24 @@ class ViewModelDashboard private constructor() : ViewModel(){
 
     fun receivePrestamos (): LiveData<MutableList<Prestamo>> = _prestamos
 
-    fun getPrestamos() {
+    fun getLoans() {
         try {
             var listPrestamos = mutableListOf<Prestamo>()
             mPrestamoProvider.getPrestamos().addOnSuccessListener { prestamosFirebase ->
                 if(prestamosFirebase.isEmpty) {
-                    println(" lista prestamos esta vacia")
+                    Log.d(tag," lista prestamos esta vacia")
                 }
                 prestamosFirebase.forEach { document->
                     listPrestamos.add(document.toObject())
-                    println(" lista prestamos ${listPrestamos.size}")
+                    Log.d(tag," lista prestamos ${listPrestamos.size}")
                 }
 
-                println("ViewModel --->_Prestamos: ${listPrestamos.size}")
+                Log.d(tag,"ViewModel --->_Prestamos: ${listPrestamos.size}")
                 _prestamos.value = listPrestamos
             }
 
         }catch (t:Throwable) {
-            println("Error: ${t.message}")
+            Log.d(tag,"Error: ${t.message}")
         }
 
     }
@@ -73,14 +72,14 @@ class ViewModelDashboard private constructor() : ViewModel(){
                             onComplete(isCorrect, "No se pudo crear el ultimo pago, inténtelo otra vez", null, false)
                         }
                     }.addOnFailureListener {
-                        println("Error: ${it.message}")
+                        Log.d(tag,"Error: ${it.message}")
                         isCorrect = false
                         onComplete(isCorrect, "No se pudo crear el ultimo pago, porfavor comuníquese con soporte!", null, false)
                     }
 
                 }else
                 {
-                    println("ViewModelRegister --> : Error ${it.exception?.message}")
+                    Log.d(tag,"ViewModelRegister --> : Error ${it.exception?.message}")
                     //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
                     isCorrect = false
                     onComplete(isCorrect, "No se pudo actualizar el pago, inténtelo otra vez", null, false)
@@ -88,12 +87,11 @@ class ViewModelDashboard private constructor() : ViewModel(){
             }
 
 
-        }catch (t:Throwable)
-        {
+        }catch (t:Throwable) {
             isCorrect = false
             onComplete(isCorrect, "No se pudo actualizar el pago, porfavor comuníquese con soporte!", null, false)
 
-            println("Error throable model ----> ${t.message}")
+            Log.d(tag,"Error throable model ----> ${t.message}")
         }
     }
 
@@ -103,14 +101,12 @@ class ViewModelDashboard private constructor() : ViewModel(){
         try {
 
             mPrestamoProvider.cerrarPrestamo(id?:"").addOnCompleteListener {
-                if(it.isSuccessful)
-                {
+                if(it.isSuccessful) {
                     isCorrect = true
                     onComplete(isCorrect, "Se cerro el pago", null, false)
 
-                }else
-                {
-                    println("ViewModelRegister --> : Error ${it.exception?.message}")
+                }else {
+                    Log.d(tag,"ViewModelRegister --> : Error ${it.exception?.message}")
                     //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
                     isCorrect = false
                     onComplete(isCorrect, "No se pudo cerrar el pago, inténtelo otra vez", null, false)
@@ -122,7 +118,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
             isCorrect = false
             onComplete(isCorrect, "No se pudo cerrar el pago, porfavor comuníquese con soporte!", null, false)
 
-            println("Error throable model ----> ${t.message}")
+            Log.d(tag,"Error throable model ----> ${t.message}")
         }
     }
 }
