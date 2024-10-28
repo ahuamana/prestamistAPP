@@ -2,6 +2,7 @@ package com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
@@ -12,7 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ViewModelDashboard private constructor(){
+class ViewModelDashboard private constructor() : ViewModel(){
 
     var _message = MutableLiveData<String>()
     var mPrestamoProvider = PrestamoProvider()
@@ -122,21 +123,6 @@ class ViewModelDashboard private constructor(){
             onComplete(isCorrect, "No se pudo cerrar el pago, porfavor comuníquese con soporte!", null, false)
 
             println("Error throable model ----> ${t.message}")
-        }
-    }
-
-
-    //constructor
-    companion object Singleton{
-        private var instance: ViewModelDashboard? = null
-
-        fun getInstance(): ViewModelDashboard =
-            instance ?: ViewModelDashboard(
-                //local y remoto
-            ).also { instance = it }
-
-        fun destroyInstance(){
-            instance = null
         }
     }
 }
