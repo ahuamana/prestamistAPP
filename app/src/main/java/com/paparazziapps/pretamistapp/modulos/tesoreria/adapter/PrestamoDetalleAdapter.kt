@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ItemDetallePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 
 class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewHolder>() {
 
 
 
-    var prestamosDetalle: MutableList<LoanResponse> = mutableListOf()
+    var prestamosDetalle: MutableList<LoanDomain> = mutableListOf()
 
-    fun setData(listLoanResponses: MutableList<LoanResponse>) {
-        prestamosDetalle = listLoanResponses
+    fun setData(listLoanRespons: MutableList<LoanDomain>) {
+        prestamosDetalle = listLoanRespons
         notifyDataSetChanged()
     }
 
@@ -41,7 +41,7 @@ class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewH
 
         val binding = ItemDetallePrestamoBinding.bind(itemView)
 
-        fun bind(item: LoanResponse){
+        fun bind(item: LoanDomain){
 
             var position = binding.circleCount
             var deuda = binding.btnDeuda

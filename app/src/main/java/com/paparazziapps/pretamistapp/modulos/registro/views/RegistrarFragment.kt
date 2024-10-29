@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -22,22 +23,23 @@ import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
+import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class RegistrarFragment : Fragment() {
 
-    var _binding: FragmentRegistrarBinding ?= null
+    private var _binding: FragmentRegistrarBinding ?= null
     private val binding get() = _binding!!
 
-    var _viewModel = ViewModelRegister.getInstance()
+    private val viewModel by viewModels<ViewModelRegister>()
 
     //Variables
     lateinit var modos: AppCompatAutoCompleteTextView
@@ -67,7 +69,7 @@ class RegistrarFragment : Fragment() {
     var interesEntero:Int = 0
     var montoDiarioAPagar:Double = 0.0
     var montoTotalAPagar:Double = 0.0
-    var loanResponse = LoanResponse()
+    var loanDomain = LoanDomain()
 
     //Layout
     private val listaIntereses = arrayListOf<String>("8%","10%","20%","30%","40%","50%")
@@ -80,19 +82,12 @@ class RegistrarFragment : Fragment() {
         if (it.resultCode == Activity.RESULT_OK) {
             val msj = it.data?.getStringExtra("mensaje")
             // Handle the Intent
-            println("Resultado de actividad: $msj")
+            Log.d(tag,"Resultado de actividad: $msj")
             showMessage(msj?:"")
-        }else
-        {
-            println("Resultado de actividad--> null")
+        }else {
+            Log.d(tag,"Resultado de actividad--> null")
         }
 
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
     }
 
     override fun onCreateView(
@@ -148,30 +143,43 @@ class RegistrarFragment : Fragment() {
     private fun continuar() {
         btnContinuar.setOnClickListener {
 
-            loanResponse.capital = capitalEntero
-            loanResponse.interes = interesEntero
-            loanResponse.plazo_vto = mesesEntero
-            loanResponse.montoDiarioAPagar = montoDiarioAPagar
-            loanResponse.montoTotalAPagar = montoTotalAPagar
+            loanDomain.capital = binding.capitalprestadoEdt.text.toString().toInt()
+            loanDomain.plazo_vto = mesesEntero // Only works for daily and personalized
+            loanDomain.montoDiarioAPagar = montoDiarioAPagar
+            loanDomain.montoTotalAPagar = montoTotalAPagar
+            //fields new version 2.0
+
+            // TODO: Modify depending on the mode selected
+            val mode = binding.modePaymentScheduled.text.toString()
+            val paymentScheduled = PaymentScheduled.getPaymentScheduledByName(mode)
+            if(paymentScheduled == PaymentScheduledEnum.DAILY) {
+                loanDomain.interes = interesEntero
+            } else {
+                loanDomain.interes = binding.interesExtras.text.toString().toIntOrNull()?:0
+            }
+
+            loanDomain.typeLoan = PaymentScheduled.getPaymentScheduledByName(binding.modePaymentScheduled.text.toString()).id
+            loanDomain.typeLoanDays = PaymentScheduled.getPaymentScheduledByName(binding.modePaymentScheduled.text.toString()).days
+            loanDomain.quotas = binding.quotasTextExtras.text.toString().toIntOrNull()?:0
 
             val gson = Gson()
-            val prestamoJson = gson.toJson(loanResponse)
+            val prestamoJson = gson.toJson(loanDomain)
 
             //Show next activity - Register pagos
-            startForResult.launch(Intent(context, RegistrarActivity::class.java).putExtra("prestamoJson",prestamoJson))
+            val intent = Intent(context, RegistrarActivity::class.java).apply {
+                putExtra(PAConstants.EXTRA_LOAN_JSON,prestamoJson)
+            }
+            startForResult.launch(intent)
         }
     }
 
     private fun validateAll() {
 
         intereses.doAfterTextChanged {
-
-            if(intereses.text.toString() != "" && intereses.text != null)
-            {
+            if(intereses.text.toString() != "" && intereses.text != null) {
                 isValidInteres = true
                 validateFields()
-            }else
-            {
+            }else {
                 Log.e("TAG","intereses: ${intereses.text}")
                 isValidInteres = false
             }
@@ -179,12 +187,10 @@ class RegistrarFragment : Fragment() {
 
         plazos.doAfterTextChanged {
 
-            if(plazos.text.toString() != "" && plazos.text != null)
-            {
+            if(plazos.text.toString() != "" && plazos.text != null) {
                 isValidMeses = true
                 validateFields()
-            }else
-            {
+            }else {
                 Log.e("TAG","meses: ${plazos.text}")
                 isValidMeses = false
             }
@@ -193,15 +199,12 @@ class RegistrarFragment : Fragment() {
         capitalPrestado.doAfterTextChanged {
             Log.e("TAG","Capital prestado: ${capitalPrestado.text}")
 
-            if(capitalPrestado.text!!.length < 9)
-            {
-                if(capitalPrestado.text?.trim().toString() != "")
-                {
+            if(capitalPrestado.text!!.length < 9) {
+                if(capitalPrestado.text?.trim().toString() != "") {
                     isValidCapitalPrestado = true
                     validateFields()
                 }
-            }else
-            {
+            }else {
                 isValidCapitalPrestado = false
                 validateFields()
             }
@@ -322,7 +325,7 @@ class RegistrarFragment : Fragment() {
                         }
                         layoutParentExtras.beGone()
                     }
-                    _viewModel.setDailyStringMode(paymentScheduled.displayName)
+                    viewModel.setDailyStringMode(paymentScheduled.displayName)
                     clearData()
                 }
 
@@ -339,7 +342,7 @@ class RegistrarFragment : Fragment() {
                         modeLayout.beGone()
                         layoutParentExtras.beVisible()
                     }
-                    _viewModel.setDailyStringMode(paymentScheduled.displayName)
+                    viewModel.setDailyStringMode(paymentScheduled.displayName)
                     clearData()
                 }
             }
@@ -417,17 +420,13 @@ class RegistrarFragment : Fragment() {
         }
     }
 
-    private fun activateContinuar(isValidEverything: Boolean)
-    {
-        if(isValidEverything)
-        {
+    private fun activateContinuar(isValidEverything: Boolean) {
+        if(isValidEverything) {
             btnContinuar.backgroundTintMode = PorterDuff.Mode.SCREEN
             btnContinuar.backgroundTintList= ContextCompat.getColorStateList(requireContext(),R.color.colorPrimary)
             btnContinuar.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             btnContinuar.isEnabled = true
-
-        } else
-        {
+        } else {
             btnContinuar.isEnabled = false
             btnContinuar.backgroundTintMode = PorterDuff.Mode.MULTIPLY
             btnContinuar.backgroundTintList= ContextCompat.getColorStateList(requireContext(),R.color.color_input_text)
@@ -442,20 +441,20 @@ class RegistrarFragment : Fragment() {
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = intereses.text.substring(0,intereses.text.length-1).toInt()
                 mesesEntero = plazos.text.substring(0,plazos.text.length-5).toInt()
-                _viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
+                viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
             }
             M_PERSONALIZADO -> {
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = interesesP.text.toString().toInt()
                 mesesEntero = mesesP.text.toString().toInt()
-                _viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
+                viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
             }
 
             M_EXTRA -> {
                 val capitalInteger = binding.capitalprestadoEdt.text.toString().toInt()
                 val interestExtras = binding.interesExtras.text.toString().toInt()
                 val quotasExtras = binding.quotasTextExtras.text.toString().toInt()
-                _viewModel.calcularMontoDiario(capitalInteger,interestExtras,quotasExtras)
+                viewModel.calcularMontoDiario(capitalInteger,interestExtras,quotasExtras)
             }
 
             else -> showMessage("No se pudo procesar tu solicitud")
@@ -465,11 +464,11 @@ class RegistrarFragment : Fragment() {
 
     private fun observers() {
 
-        _viewModel.getMessage().observe(viewLifecycleOwner) { message ->
+        viewModel.getMessage().observe(viewLifecycleOwner) { message ->
             if(message!= null)  showMessage(message)
         }
 
-        _viewModel.getMontoDiario().observe(viewLifecycleOwner){ montodiario ->
+        viewModel.getMontoDiario().observe(viewLifecycleOwner){ montodiario ->
             if(montodiario !=null) {
                 Log.d(tag, "Monto Diario: $montodiario")
                 //Asginar datos a variables globales
@@ -487,7 +486,7 @@ class RegistrarFragment : Fragment() {
         }
 
         lifecycleScope.launch{
-            _viewModel.dailyStringMode.collectLatest {
+            viewModel.dailyStringMode.collectLatest {
                 //bring string resource
                 val descriptionWithArgument = getString(R.string.monto_a_pagar_daily_with_argument, it)
                 binding.dailyAmountTitle.text = descriptionWithArgument
@@ -507,8 +506,7 @@ class RegistrarFragment : Fragment() {
     }
 
 
-    private fun clearData()
-    {
+    private fun clearData() {
         mesesP.setText("")
         interesesP.setText("")
         binding.apply {
@@ -521,35 +519,19 @@ class RegistrarFragment : Fragment() {
 
     }
 
-    private fun showMessage(message:String)
-    {
+    private fun showMessage(message:String) {
         showMessageAboveMenuInferiorGlobal(message,binding.root)
-        //Snackbar.make(requireActivity().findViewById(R.id.nav_view),"$message",Snackbar.LENGTH_LONG).show()
     }
-
 
     companion object {
 
         const val M_PERSONALIZADO = "Personalizado"
         const val M_STANDAR = "Estándar"
         const val M_EXTRA = "Extra"
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RegistrarFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
     }
 
     override fun onResume() {
         binding.root.hideKeyboardFrom()
         super.onResume()
-    }
-
-    override fun onDestroy() {
-        ViewModelRegister.destroyInstance()
-        super.onDestroy()
     }
 }

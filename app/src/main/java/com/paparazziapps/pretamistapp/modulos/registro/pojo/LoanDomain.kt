@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class LoanResponse (
+data class LoanDomain (
     @SerialName("id")
     var id:String?=null,
     @SerialName("nombres")
@@ -48,7 +48,17 @@ data class LoanResponse (
     @SerialName("type")
     var type:Int?=null,
     @SerialName("title")
-    var title:String?=null
+    var title:String?=null,
+
+
+    //New fields for the new version v2.0
+    @SerialName("typeLoan")
+    var typeLoan:Int?=null,
+    @SerialName("typeLoanDays")
+    var typeLoanDays:Int?=null,
+    @SerialName("quotas")
+    var quotas:Int?=null,
+
 )
 
 enum class TypePrestamo(val value: Int) {

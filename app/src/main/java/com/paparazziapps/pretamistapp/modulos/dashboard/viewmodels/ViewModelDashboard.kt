@@ -1,12 +1,10 @@
 package com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
@@ -18,12 +16,12 @@ class ViewModelDashboard private constructor() : ViewModel(){
     private val tag = ViewModelDashboard::class.java.simpleName
     private val loanProvider = PrestamoProvider()
     private var detailLoanProvider = DetallePrestamoProvider()
-    private var _loans = MutableStateFlow<MutableList<LoanResponse>>(mutableListOf())
-    val loans: StateFlow<MutableList<LoanResponse>> = _loans
+    private var _loans = MutableStateFlow<MutableList<LoanDomain>>(mutableListOf())
+    val loans: StateFlow<MutableList<LoanDomain>> = _loans
 
     fun getLoans() {
         try {
-            val loans = mutableListOf<LoanResponse>()
+            val loans = mutableListOf<LoanDomain>()
             loanProvider.getPrestamos().addOnSuccessListener { querySnapshot ->
                 if(querySnapshot.isEmpty) {
                     Log.d(tag," lista prestamos esta vacia")

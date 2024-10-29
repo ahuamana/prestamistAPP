@@ -191,99 +191,242 @@
                         android:clickable="false"
                         android:cursorVisible="false"
                         android:focusable="false"
-                        android:hint="Fecha"
+                        android:hint="@string/loan_beginning_date_hint"
                         android:inputType="number"
                         android:lines="1"
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/interesLayout"
-                    style="@style/CustomTextField"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/container_expiration_date_and_interest"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="false"
-                    android:layout_marginTop="6dp"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:layout_marginRight="10dp"
-                    app:errorEnabled="true"
+                    android:orientation="vertical"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/plazo_vto_layout"
-                    app:layout_constraintTop_toBottomOf="@+id/fechaLayout">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/interes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Interes"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="50"
-                        android:text="10%" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <View
-                    android:id="@+id/curtain_interes"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="18dp"
-                    android:background="@drawable/background_input_disable"
-                    app:layout_constraintLeft_toLeftOf="@+id/interesLayout"
-                    app:layout_constraintRight_toRightOf="@+id/interesLayout"
-                    app:layout_constraintTop_toTopOf="@+id/interesLayout"
-                    app:layout_constraintBottom_toBottomOf="@+id/interesLayout"
-                    />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/plazo_vto_layout"
-                    style="@style/CustomTextField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="false"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginLeft="10dp"
-                    app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/interesLayout"
                     app:layout_constraintTop_toBottomOf="@+id/fechaLayout">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/plazos_en_dias"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/typeLoanLayout"
+                        style="@style/CustomTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Plazo en dias"
-                        android:inputType="number"
-                        android:lines="1"
+                        android:layout_weight="1"
                         android:clickable="false"
+                        android:layout_marginTop="6dp"
                         android:cursorVisible="false"
                         android:focusable="false"
-                        android:maxLength="50"
-                        android:text="10 dias" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginRight="10dp"
+                        app:errorEnabled="true"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/plazo_vto_layout"
+                        app:layout_constraintTop_toBottomOf="parent">
 
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/typeLoan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Tipo de prestamo"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="50"
+                            tools:text="Diario (cada dia)" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <View
-                    android:id="@+id/curtain_plazo_vto"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="18dp"
-                    android:background="@drawable/background_input_disable"
-                    app:layout_constraintLeft_toLeftOf="@+id/plazo_vto_layout"
-                    app:layout_constraintRight_toRightOf="@+id/plazo_vto_layout"
-                    app:layout_constraintTop_toTopOf="@+id/plazo_vto_layout"
-                    app:layout_constraintBottom_toBottomOf="@+id/plazo_vto_layout"
-                    />
+                    <LinearLayout
+                        android:id="@+id/container_daily"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_height="wrap_content">
 
+                        <!-- layout interes -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/interesLayout"
+                            style="@style/CustomTextField"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:layout_marginTop="6dp"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:layout_marginRight="10dp"
+                            app:errorEnabled="true"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/plazo_vto_layout"
+                            app:layout_constraintTop_toBottomOf="parent">
 
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/interes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Interes"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:focusable="false"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:maxLength="50"
+                                tools:text="10%" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <View
+                            android:id="@+id/curtain_interes"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="18dp"
+                            android:background="@drawable/background_input_disable"
+                            app:layout_constraintLeft_toLeftOf="@+id/interesLayout"
+                            app:layout_constraintRight_toRightOf="@+id/interesLayout"
+                            app:layout_constraintTop_toTopOf="@+id/interesLayout"
+                            app:layout_constraintBottom_toBottomOf="@+id/interesLayout" />
+
+                        <!-- layout expiration date -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/plazo_vto_layout"
+                            style="@style/CustomTextField"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginStart="10dp"
+                            app:errorEnabled="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/interesLayout"
+                            app:layout_constraintTop_toBottomOf="parent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/plazos_en_dias"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Plazo en dias"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:focusable="false"
+                                android:maxLength="50"
+                                android:text="10 dias" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <View
+                            android:id="@+id/curtain_plazo_vto"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="18dp"
+                            android:background="@drawable/background_input_disable"
+                            app:layout_constraintLeft_toLeftOf="@+id/plazo_vto_layout"
+                            app:layout_constraintRight_toRightOf="@+id/plazo_vto_layout"
+                            app:layout_constraintTop_toTopOf="@+id/plazo_vto_layout"
+                            app:layout_constraintBottom_toBottomOf="@+id/plazo_vto_layout"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/container_other"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_height="wrap_content">
+
+                        <!-- layout interes -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/interesLayoutOther"
+                            style="@style/CustomTextField"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:layout_marginTop="6dp"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:layout_marginRight="10dp"
+                            app:errorEnabled="true"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/plazo_vto_layoutOther"
+                            app:layout_constraintTop_toBottomOf="parent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/interesOther"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Interes"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:focusable="false"
+                                android:inputType="none"
+                                android:lines="1"
+                                android:maxLength="50"
+                                tools:text="10%" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <View
+                            android:id="@+id/curtain_interes_other"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="18dp"
+                            android:background="@drawable/background_input_disable"
+                            app:layout_constraintLeft_toLeftOf="@+id/interesLayoutOther"
+                            app:layout_constraintRight_toRightOf="@+id/interesLayoutOther"
+                            app:layout_constraintTop_toTopOf="@+id/interesLayoutOther"
+                            app:layout_constraintBottom_toBottomOf="@+id/interesLayoutOther" />
+
+                        <!-- layout expiration date -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/plazo_vto_layout_other"
+                            style="@style/CustomTextField"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginStart="10dp"
+                            app:errorEnabled="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/interesLayoutOther"
+                            app:layout_constraintTop_toBottomOf="parent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/quotas_other"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Cuotas"
+                                android:inputType="none"
+                                android:lines="1"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:focusable="false"
+                                android:maxLength="50"
+                                tools:text="10" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <View
+                            android:id="@+id/curtain_plazo_vto_other"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="18dp"
+                            android:background="@drawable/background_input_disable"
+                            app:layout_constraintLeft_toLeftOf="@+id/plazo_vto_layoutOther"
+                            app:layout_constraintRight_toRightOf="@+id/plazo_vto_layoutOther"
+                            app:layout_constraintTop_toTopOf="@+id/plazo_vto_layoutOther"
+                            app:layout_constraintBottom_toBottomOf="@+id/plazo_vto_layoutOther"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -297,7 +440,7 @@
                     android:focusable="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/interesLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/container_expiration_date_and_interest">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/capital"
@@ -339,6 +482,12 @@
                     android:text="Registrar"
                     app:layout_constraintTop_toBottomOf="@+id/capitalLayout"
                     style="?android:textAppearanceSmall"/>
+
+                <Space
+                    android:id="@+id/space_bottom"
+                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@+id/registrar_button"
+                    android:layout_height="20dp"/>
 
 
                 <!--Categoria  curtain -->

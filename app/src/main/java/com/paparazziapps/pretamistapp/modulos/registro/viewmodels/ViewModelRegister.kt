@@ -6,14 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.paparazziapps.pretamistapp.domain.LoanType
 import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.lang.Exception
 
-open class ViewModelRegister private constructor() : ViewModel(){
+class ViewModelRegister private constructor() : ViewModel(){
 
     private val tag = ViewModelRegister::class.java.simpleName
 
@@ -52,11 +52,10 @@ open class ViewModelRegister private constructor() : ViewModel(){
         }
     }
 
-    fun createPrestamo(loanResponse: LoanResponse, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
+    fun createPrestamo(loanDomain: LoanDomain, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect = false
         try {
-
-        mPrestamoProvider.create(loanResponse, idSucursal = idSucursal).addOnCompleteListener {
+        mPrestamoProvider.create(loanDomain, idSucursal = idSucursal).addOnCompleteListener {
                 if(it.isSuccessful)
                 {
                     _message.value = "El prestamo se registro correctamente"
@@ -80,11 +79,9 @@ open class ViewModelRegister private constructor() : ViewModel(){
             isCorrect = false
             _message.value = "La solicitud no se pudo procesar, intentalo otra vez"
             onComplete(isCorrect, "La solicitud no se pudo procesar, intentalo otra vez", "", false)
-
         }
 
-        }catch (t:Throwable)
-        {
+        }catch (t:Throwable) {
            var errorMessage = t.message.toString()
             println("Error : $errorMessage")
 
@@ -93,25 +90,6 @@ open class ViewModelRegister private constructor() : ViewModel(){
             isCorrect = false
             _message.value = "La solicitud no se proceso, contacte con soporte!"
             onComplete(isCorrect, "La solicitud no se proceso, contacte con soporte!", "", false)
-        }
-    }
-
-
-
-
-
-
-
-    companion object Singleton{
-        private var instance:ViewModelRegister? = null
-
-        fun getInstance():ViewModelRegister =
-            instance ?: ViewModelRegister(
-                //local y remoto
-            ).also { instance = it }
-
-        fun destroyInstance(){
-            instance = null
         }
     }
 

@@ -15,14 +15,14 @@ import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
 
 class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var prestamosList: MutableList<LoanResponse> = mutableListOf()
+    var prestamosList: MutableList<LoanDomain> = mutableListOf()
     var fechaActual:String
     //Time peru [Tiempo Actual]
     var fecha = SimpleDateFormat("dd/MM/yyyy").apply {
@@ -32,13 +32,13 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         }
     }
 
-    fun setData(listLoanResponses: MutableList<LoanResponse>) {
-        prestamosList = listLoanResponses
+    fun setData(listLoanRespons: MutableList<LoanDomain>) {
+        prestamosList = listLoanRespons
         notifyDataSetChanged()
     }
 
-    fun updateItem(position: Int, loanResponse: LoanResponse) {
-        prestamosList.set(position,loanResponse)
+    fun updateItem(position: Int, loanDomain: LoanDomain) {
+        prestamosList.set(position,loanDomain)
         notifyItemChanged(position)
     }
 
@@ -75,7 +75,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
     interface PrestamoViewHolder {
         fun bindView(
-            item: LoanResponse,
+            item: LoanDomain,
             fechaActual: String,
             setOnClickedPrestamo: setOnClickedPrestamo
         )
@@ -86,7 +86,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         val binding = ContentPrestamoBinding.bind(itemView)
 
         override fun bindView(
-            item: LoanResponse,
+            item: LoanDomain,
             fechaActual: String,
             setOnClickedPrestamo: setOnClickedPrestamo
         ) {
@@ -148,7 +148,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             setDiasRestantesPorPagar(item)
         }
 
-        private fun setDiasRestantesPorPagar(item: LoanResponse) {
+        private fun setDiasRestantesPorPagar(item: LoanDomain) {
 
             val lblDiasPorPagar = binding.lblDiasPorPagar
             val numeroDiasPorPagar = binding.numeroDiasPorPagar
@@ -193,7 +193,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         private fun calcularDiasRetrasados(
             itemView: View,
             diasRetrasados: MaterialTextView,
-            item: LoanResponse,
+            item: LoanDomain,
             diasRetrasadosCardview: CardView,
             fechaActual: String
         ) {
@@ -262,7 +262,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         val binding = ContentTitlePrestamoBinding.bind(itemView)
 
         override fun bindView(
-            item: LoanResponse,
+            item: LoanDomain,
             fechaActual: String,
             setOnClickedPrestamo: setOnClickedPrestamo
         ) {

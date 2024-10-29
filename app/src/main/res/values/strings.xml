@@ -34,7 +34,7 @@
     <string name="fragment_register_mode_pay_title">Modo de pago</string>
     <string name="monto_a_pagar_daily">Monto a pagar \nDiario</string>
     <string name="monto_a_pagar_daily_with_argument">Monto a pagar \n%1$s</string>
-
+    <string name="loan_beginning_date_hint">Fecha de inicio de prestamo</string>
 
 
 </resources>

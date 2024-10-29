@@ -23,11 +23,10 @@ import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.pojo.User
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 
@@ -91,7 +90,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
     }
 
-    fun updatePrestamos(prestamosAll:MutableList<LoanResponse>){
+    fun updatePrestamos(prestamosAll:MutableList<LoanDomain>){
         if(prestamosAll.isEmpty()) {
             binding.emptyPrestamo.isVisible = true
             recyclerPrestamos.isVisible = false
@@ -106,21 +105,21 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                     prestamoAdapter.setData(prestamosAll)
                 }else{
                     try {
-                        val newLoanResponses = mutableListOf<LoanResponse>()
+                        val newLoanRespons = mutableListOf<LoanDomain>()
                         val localSucursales = fromJson<List<Sucursales>>(branches)
                         localSucursales.forEach{ sucurlocal ->
-                            val item = LoanResponse(
+                            val item = LoanDomain(
                                 type = TypePrestamo.TITLE.value,
                                 title = sucurlocal.name
                             )
-                            newLoanResponses.add(item)
+                            newLoanRespons.add(item)
 
                             val items = prestamosAll.filter {
                                 it.sucursalId == sucurlocal.id
                             }
-                            newLoanResponses.addAll(items)
+                            newLoanRespons.addAll(items)
                         }
-                        prestamoAdapter.setData(newLoanResponses)
+                        prestamoAdapter.setData(newLoanRespons)
 
                     }catch (t:Throwable){
                         FirebaseCrashlytics.getInstance().recordException(t)
@@ -161,13 +160,13 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         var setOnClickedPrestamoHome:setOnClickedPrestamo? = null
     }
 
-    override fun actualizarPagoPrestamo(loanResponse: LoanResponse, needUpdate:Boolean, montoTotalAPagar:Double, adapterPosition:Int, diasRestrasado:String) {
+    override fun actualizarPagoPrestamo(loanDomain: LoanDomain, needUpdate:Boolean, montoTotalAPagar:Double, adapterPosition:Int, diasRestrasado:String) {
         context.apply {
-            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(loanResponse, montoTotalAPagar, diasRestrasado, adapterPosition, needUpdate)
+            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(loanDomain, montoTotalAPagar, diasRestrasado, adapterPosition, needUpdate)
         }
     }
 
-    override fun openDialogoActualizarPrestamo(loanResponse: LoanResponse, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int, isClosed:Boolean) {
+    override fun openDialogoActualizarPrestamo(loanDomain: LoanDomain, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int, isClosed:Boolean) {
 
         binding.cntCortina.isVisible = true
 
@@ -182,10 +181,10 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
         if(isClosed) {
             title.text = "¿Estas seguro de cerrar el préstamo?"
-            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(loanResponse.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanResponse.apellidos.toString())}").fromHtml()
+            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos.toString())}").fromHtml()
         }else {
             title.text = "¿Estas seguro de actualizar la deuda?"
-            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(loanResponse.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanResponse.apellidos.toString())} </b>" +
+            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos.toString())} </b>" +
                     ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${montoTotalAPagar}<b>").fromHtml()
         }
 
@@ -211,7 +210,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
             setOnClickListener {
                 dialog.dismiss()
                 if (isClosed) {
-                    viewModel.cerrarPrestamo(loanResponse.id){
+                    viewModel.cerrarPrestamo(loanDomain.id){
                             isCorrect, msj, result, isRefresh ->
                         if(isCorrect) {
                             prestamoAdapter.removeItem(adapterPosition)//remover item de  local recycler View
@@ -221,14 +220,14 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                         }
                     }
                 }else {
-                    viewModel.updateUltimoPago(loanResponse.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
+                    viewModel.updateUltimoPago(loanDomain.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
                             isCorrect, msj, result, isRefresh ->
 
                         if(isCorrect) {
-                            loanResponse.fechaUltimoPago = getFechaActualNormalCalendar()
-                            loanResponse.dias_restantes_por_pagar = diasRestantesPorPagar
-                            loanResponse.diasPagados = diasPagados
-                            prestamoAdapter.updateItem(adapterPosition, loanResponse)//Actualizar local recycler View
+                            loanDomain.fechaUltimoPago = getFechaActualNormalCalendar()
+                            loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar
+                            loanDomain.diasPagados = diasPagados
+                            prestamoAdapter.updateItem(adapterPosition, loanDomain)//Actualizar local recycler View
                             showMessage(msj)
                         }else {
                             showMessage(msj)
