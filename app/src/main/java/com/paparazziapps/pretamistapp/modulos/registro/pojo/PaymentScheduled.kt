@@ -8,25 +8,15 @@ data class PaymentScheduled(
 ) {
     companion object {
         fun getPaymentScheduledById(id: Int): PaymentScheduledEnum {
-            return PaymentScheduledEnum.values().first { it.id == id }
+            return PaymentScheduledEnum.entries.firstOrNull { it.id == id } ?: PaymentScheduledEnum.DAILY
         }
 
         fun getPaymentScheduledByName(name: String): PaymentScheduledEnum {
-            return PaymentScheduledEnum.values().first { it.displayName == name }
-        }
-
-        fun getIdPaymentScheduledByName(name: String): Int {
-            return PaymentScheduledEnum.values().first { it.displayName == name }.id
-        }
-
-        fun getPaymentScheduledList(): List<PaymentScheduled> {
-            return PaymentScheduledEnum.values().map {
-                PaymentScheduled(it.id, it.displayName, it.displayName, it)
-            }
+            return PaymentScheduledEnum.entries.firstOrNull { it.displayName == name } ?: PaymentScheduledEnum.DAILY
         }
 
         fun getPaymentScheduledListString(): ArrayList<String> {
-            return PaymentScheduledEnum.values().map {
+            return PaymentScheduledEnum.entries.map {
                 it.displayName
             } as? ArrayList<String> ?: arrayListOf()
         }

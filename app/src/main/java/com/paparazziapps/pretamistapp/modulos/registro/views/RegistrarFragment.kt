@@ -236,27 +236,26 @@ class RegistrarFragment : Fragment() {
 
         binding.interesExtras.doAfterTextChanged {
 
-            val interes = binding.interesExtras.text.toString()
+            val interest = binding.interesExtras.text.toString()
             val quotas = binding.quotasTextExtras.text.toString()
             val capital = binding.capitalprestadoEdt.text.toString()
 
-            if(interes.isEmpty()) return@doAfterTextChanged
+            if(interest.isEmpty()) return@doAfterTextChanged
             if(quotas.isEmpty()) return@doAfterTextChanged
             if(capital.isEmpty()) return@doAfterTextChanged
-
-            calcularTodo(M_EXTRA)
+            validateFields ()
         }
 
         binding.quotasTextExtras.doAfterTextChanged {
-            val interes = binding.interesExtras.text.toString()
+            val interest = binding.interesExtras.text.toString()
             val quotas = binding.quotasTextExtras.text.toString()
             val capital = binding.capitalprestadoEdt.text.toString()
 
-            if(interes.isEmpty()) return@doAfterTextChanged
+            if(interest.isEmpty()) return@doAfterTextChanged
             if(quotas.isEmpty()) return@doAfterTextChanged
             if(capital.isEmpty()) return@doAfterTextChanged
 
-            calcularTodo(M_EXTRA)
+            validateFields ()
         }
 
 
@@ -370,9 +369,9 @@ class RegistrarFragment : Fragment() {
         binding.modePaymentScheduled.setOnClickListener { binding.modePaymentScheduled.showDropDown() }
     }
 
-    private fun validateFields ()
-    {
+    private fun validateFields () {
         val text = binding.modePaymentScheduled.text.toString()
+        if(text.isEmpty()) return
         val paymentScheduled = PaymentScheduled.getPaymentScheduledByName(text)
         if(paymentScheduled == PaymentScheduledEnum.DAILY) {
             validateDaily()
@@ -382,11 +381,11 @@ class RegistrarFragment : Fragment() {
     }
 
     private fun validateExtras(){
-        val interes = binding.interesExtras.text.toString()
+        val interest = binding.interesExtras.text.toString()
         val quotas = binding.quotasTextExtras.text.toString()
         val capital = binding.capitalprestadoEdt.text.toString()
 
-        if(interes.isEmpty()) return
+        if(interest.isEmpty()) return
         if(quotas.isEmpty()) return
         if(capital.isEmpty()) return
 
@@ -437,33 +436,27 @@ class RegistrarFragment : Fragment() {
         }
     }
 
-    private fun calcularTodo( mode: String) {
-
-        when (mode)
-        {
+    private fun calcularTodo(mode: String) {
+        when (mode) {
             M_STANDAR -> {
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = intereses.text.substring(0,intereses.text.length-1).toInt()
                 mesesEntero = plazos.text.substring(0,plazos.text.length-5).toInt()
                 _viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
             }
-
             M_PERSONALIZADO -> {
-
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = interesesP.text.toString().toInt()
                 mesesEntero = mesesP.text.toString().toInt()
-
                 _viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
             }
 
             M_EXTRA -> {
-                val capitalEntero = binding.capitalprestadoEdt.text.toString().toInt()
-                val interesExtras = binding.interesExtras.text.toString().toInt()
+                val capitalInteger = binding.capitalprestadoEdt.text.toString().toInt()
+                val interestExtras = binding.interesExtras.text.toString().toInt()
                 val quotasExtras = binding.quotasTextExtras.text.toString().toInt()
-                _viewModel.calcularMontoDiario(capitalEntero,interesExtras,quotasExtras)
+                _viewModel.calcularMontoDiario(capitalInteger,interestExtras,quotasExtras)
             }
-            
 
             else -> showMessage("No se pudo procesar tu solicitud")
         }

@@ -79,8 +79,6 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         _viewModelPrincipal.searchUserByEmail()
     }
 
-
-
     private fun observers() {
         _viewModelPrincipal.getUser().observe(viewLifecycleOwner, Observer(::updateUser))
 
