@@ -65,7 +65,7 @@
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/cardview_dias_retrasados"
+            android:id="@+id/type_of_loan_label"
             android:layout_width="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
@@ -128,8 +128,8 @@
             android:fontFamily="@font/googlesans_regular"
             android:textColor="@color/black"
             android:text="Antony Nicolas Huaman Alikhan"
-            app:layout_constraintStart_toStartOf="@+id/cardview_dias_retrasados"
-            app:layout_constraintTop_toBottomOf="@+id/cardview_dias_retrasados" />
+            app:layout_constraintStart_toStartOf="@+id/type_of_loan_label"
+            app:layout_constraintTop_toBottomOf="@+id/type_of_loan_label" />
 
 
         <androidx.cardview.widget.CardView

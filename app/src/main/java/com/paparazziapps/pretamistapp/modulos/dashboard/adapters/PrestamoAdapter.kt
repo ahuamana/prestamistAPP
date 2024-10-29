@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
@@ -16,6 +17,7 @@ import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -92,15 +94,24 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
         ) {
             val nombreCompleto = binding.nombreCompleto
             val numero_dias_retrasados = binding.numeroDiasRetrasados
-            val diasRetrasadosCardview = binding.cardviewDiasRetrasados
             val lblDiasRetrasados = binding.lblDiasRetrasados
             var montoTotalAPagar:Double? = null
             var diasRetraso:Int = 10
 
             itemView.apply {
 
+                //Set name
+                nombreCompleto.setText("${replaceFirstCharInSequenceToUppercase(item.nombres.toString().trim())}, ${replaceFirstCharInSequenceToUppercase(item.apellidos.toString().trim())}")
+                //Set amount to pay
+                val amountToPayDailyWithCurrency = "${context.getString(R.string.tipo_moneda)} ${item.montoDiarioAPagar}"
+                binding.amountToPayValue.text = amountToPayDailyWithCurrency
+
+                //Set type of loan
+                val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(item.typeLoan?: INT_DEFAULT).displayName
+                binding.typeOfLoanLabel.text = typeLoanDisplayName
+
                 //Metodo para el calculo de dias retrasados
-                calcularDiasRetrasados(itemView, numero_dias_retrasados, item, diasRetrasadosCardview, fechaActual)
+                calcularDiasRetrasados(itemView, numero_dias_retrasados, item, binding.cardviewDiasRetrasadosV2, fechaActual)
 
                 //Enviar mensaje a whatsapp
                 binding.btnSendWhatsapp.apply {
@@ -111,7 +122,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                             montoTotalAPagar = getDoubleWithOneDecimalsReturnDouble((diasRetraso * item.montoDiarioAPagar!!))
 
                             //Mensaje
-                            var msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
+                            val msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
                                     "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
                             openWhatsapp(item.celular, msj)
                         }catch (t:Throwable) {
@@ -120,8 +131,6 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
                     }
                 }
-                //Asignar datos iniciales
-                nombreCompleto.setText("${replaceFirstCharInSequenceToUppercase(item.nombres.toString().trim())}, ${replaceFirstCharInSequenceToUppercase(item.apellidos.toString().trim())}")
 
                 //Actualizar Pago al hacer click al itemview
                 setOnClickListener {
@@ -181,7 +190,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             itemView: View,
             diasRetrasados: MaterialTextView,
             item: LoanDomain,
-            diasRetrasadosCardview: MaterialTextView,
+            diasRetrasadosCardview: CardView,
             fechaActual: String
         ) {
 
