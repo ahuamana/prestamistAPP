@@ -35,6 +35,7 @@
     <string name="monto_a_pagar_daily">Monto a pagar \nDiario</string>
     <string name="monto_a_pagar_daily_with_argument">Monto a pagar \n%1$s</string>
     <string name="loan_beginning_date_hint">Fecha de inicio de prestamo</string>
+    <string name="amount_to_pay">Monto a pagar</string>
 
 
 </resources>

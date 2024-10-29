@@ -2,9 +2,9 @@ package com.paparazziapps.pretamistapp.modulos.dashboard.adapters
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
@@ -90,12 +90,10 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             fechaActual: String,
             setOnClickedPrestamo: setOnClickedPrestamo
         ) {
-            var telefono = binding.telefono
-            var nombreCompleto = binding.nombreCompleto
-            var numero_dias_retrasados = binding.numeroDiasRetrasados
-            var diasRetrasadosCardview = binding.cardviewDiasRetrasados
-            var cardViewEnviarMsj = binding.cardviewEnviarMsj
-            var lblDiasRetrasados = binding.lblDiasRetrasados
+            val nombreCompleto = binding.nombreCompleto
+            val numero_dias_retrasados = binding.numeroDiasRetrasados
+            val diasRetrasadosCardview = binding.cardviewDiasRetrasados
+            val lblDiasRetrasados = binding.lblDiasRetrasados
             var montoTotalAPagar:Double? = null
             var diasRetraso:Int = 10
 
@@ -105,7 +103,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 calcularDiasRetrasados(itemView, numero_dias_retrasados, item, diasRetrasadosCardview, fechaActual)
 
                 //Enviar mensaje a whatsapp
-                cardViewEnviarMsj.apply {
+                binding.btnSendWhatsapp.apply {
                     setOnClickListener {
                         try {
                             //calcular el monto total a pagar
@@ -123,7 +121,6 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     }
                 }
                 //Asignar datos iniciales
-                telefono.setText(item.celular)
                 nombreCompleto.setText("${replaceFirstCharInSequenceToUppercase(item.nombres.toString().trim())}, ${replaceFirstCharInSequenceToUppercase(item.apellidos.toString().trim())}")
 
                 //Actualizar Pago al hacer click al itemview
@@ -139,11 +136,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                         println("monto total a pagar: ${montoTotalAPagar}")
                         setOnClickedPrestamo.actualizarPagoPrestamo(item, true, montoTotalAPagar?:0.0, adapterPosition,numero_dias_retrasados.text.toString())
                     }
-
-
-
                 }
-
             }
             setDiasRestantesPorPagar(item)
         }
@@ -153,15 +146,12 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             val lblDiasPorPagar = binding.lblDiasPorPagar
             val numeroDiasPorPagar = binding.numeroDiasPorPagar
 
-            var diasEnQueTermina = getDiasRestantesFromStart(item.fecha?:"",item.plazo_vto?:0)
+            val diasEnQueTermina = getDiasRestantesFromStart(item.fecha?:"",item.plazo_vto?:0)
 
-            if(diasEnQueTermina < 0)
-            {
+            if(diasEnQueTermina < 0) {
                 numeroDiasPorPagar.setText("0") // Dias por pagar es igual o menor a cero entonces Prestamó vencido - completado
             }else{
-                numeroDiasPorPagar.apply {
-                    setText(diasEnQueTermina.toString())
-                }
+                numeroDiasPorPagar.apply { setText(diasEnQueTermina.toString()) }
             }
 
 
@@ -171,12 +161,9 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     else -> "días por pagar "
                 }
             }
-
-
         }
 
-        fun openWhatsapp(celular: String?, msj: String)
-        {
+        fun openWhatsapp(celular: String?, msj: String) {
             //NOTE : please use with country code first 2digits without plus signed
             try {
 
@@ -194,67 +181,48 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             itemView: View,
             diasRetrasados: MaterialTextView,
             item: LoanDomain,
-            diasRetrasadosCardview: CardView,
+            diasRetrasadosCardview: MaterialTextView,
             fechaActual: String
         ) {
 
-            println("Adapter ----> Nombres:${item.nombres} --- Apellidos: ${item.apellidos} --- Fecha actual:${fechaActual} ----> Fecha registrada: ${item.fecha}")
+            Log.d(PrestamoAdapter::class.java.simpleName,"Adapter ----> Nombres:${item.nombres} --- Apellidos: ${item.apellidos} --- Fecha actual:${fechaActual} ----> Fecha registrada: ${item.fecha}")
 
-            if(item.fechaUltimoPago != null)
-            {
+            if(item.fechaUltimoPago != null) {
                 //Obtener dias restantes si ya esta pagando diariamente ---> de los pagos actualizados
                 getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha?:"",item.diasPagados?:0).apply {
-
-                    if(this.toInt() <= 0 )
-                    {
+                    if(this.toInt() <= 0 ) {
                         diasRetrasados.text = "0"
-                        binding.cardviewEnviarMsj.isVisible = false
+                        binding.btnSendWhatsapp.isVisible = false
                         diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.colorPrimary)
-                    }else
-                    {
+                    }else {
                         diasRetrasados.text = this
-                        if(this.toInt() == 1)
-                        {
+                        if(this.toInt() == 1) {
                             binding.lblDiasRetrasados.text = "día retrasado"
                         }
-
-                        binding.cardviewEnviarMsj.isVisible = true
+                        binding.btnSendWhatsapp.isVisible = true
                         diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.red)
                     }
                 }
 
-            }else
-            {
+            }else {
                 //Calcular la fecha con el ultimo dia
                 //Restar unixtime y obtener los dias restantes
                 getDiasRestantesFromDateToNow(item.fecha?:"").apply {
                     diasRetrasados.setText(this)
-                    if(this.toInt() == 0)
-                    {
-                        binding.cardviewEnviarMsj.isVisible = false
+                    if(this.toInt() == 0) {
+                        binding.btnSendWhatsapp.isVisible = false
                         diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.colorPrimary)
-                    }else
-                    {
-                        if(this.toInt() == 1)
-                        {
+                    }else {
+                        if(this.toInt() == 1) {
                             binding.lblDiasRetrasados.setText("día retrasado")
                         }
 
-                        binding.cardviewEnviarMsj.isVisible = true
+                        binding.btnSendWhatsapp.isVisible = true
                         diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.red)
                     }
                 }
-
             }
-
-
-
-
-
-            }
-
-
-
+        }
     }
 
     class ViewHolderTitle(itemView: View) : RecyclerView.ViewHolder(itemView), PrestamoViewHolder {
