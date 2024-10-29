@@ -142,7 +142,6 @@ class RegistrarFragment : Fragment() {
 
     private fun continuar() {
         btnContinuar.setOnClickListener {
-
             loanDomain.capital = binding.capitalprestadoEdt.text.toString().toInt()
             loanDomain.plazo_vto = mesesEntero // Only works for daily and personalized
             loanDomain.montoDiarioAPagar = montoDiarioAPagar
@@ -161,6 +160,7 @@ class RegistrarFragment : Fragment() {
             loanDomain.typeLoan = PaymentScheduled.getPaymentScheduledByName(binding.modePaymentScheduled.text.toString()).id
             loanDomain.typeLoanDays = PaymentScheduled.getPaymentScheduledByName(binding.modePaymentScheduled.text.toString()).days
             loanDomain.quotas = binding.quotasTextExtras.text.toString().toIntOrNull()?:0
+            loanDomain.typeLoanName = binding.modePaymentScheduled.text.toString()
 
             val gson = Gson()
             val prestamoJson = gson.toJson(loanDomain)

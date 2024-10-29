@@ -54,6 +54,8 @@ data class LoanDomain (
     //New fields for the new version v2.0
     @SerialName("typeLoan")
     var typeLoan:Int?=null,
+    @SerialName("typeLoanName")
+    var typeLoanName:String?=null,
     @SerialName("typeLoanDays")
     var typeLoanDays:Int?=null,
     @SerialName("quotas")

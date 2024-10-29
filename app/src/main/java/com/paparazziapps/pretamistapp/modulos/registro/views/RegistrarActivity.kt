@@ -172,7 +172,7 @@ class RegistrarActivity : AppCompatActivity() {
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
                     capital     = loanDomainReceived.capital,
                     interes     = loanDomainReceived.interes,
-                    plazo_vto   = loanDomainReceived.plazo_vto,
+                    plazo_vto   = loanDomainReceived.plazo_vto, // Only for daily loans
                     dias_restantes_por_pagar   = loanDomainReceived.plazo_vto,
                     diasPagados = 0,
                     montoDiarioAPagar = loanDomainReceived.montoDiarioAPagar,
@@ -182,7 +182,8 @@ class RegistrarActivity : AppCompatActivity() {
                     //fields new version 2.0
                     typeLoan = loanDomainReceived.typeLoan,
                     typeLoanDays = loanDomainReceived.typeLoanDays,
-                    quotas = loanDomainReceived.quotas
+                    typeLoanName = loanDomainReceived.typeLoanName,
+                    quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
                 )
 
                 var idSucursalSelected:Int = INT_DEFAULT
