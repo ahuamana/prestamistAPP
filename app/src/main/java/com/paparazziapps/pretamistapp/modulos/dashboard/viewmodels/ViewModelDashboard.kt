@@ -6,36 +6,36 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ViewModelDashboard private constructor() : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
-    var _message = MutableLiveData<String>()
-    var mPrestamoProvider = PrestamoProvider()
-    var mDetallePrestamoProvider = DetallePrestamoProvider()
-    var _prestamos = MutableLiveData<MutableList<Prestamo>>()
-
-
-    fun receivePrestamos (): LiveData<MutableList<Prestamo>> = _prestamos
+    private val loanProvider = PrestamoProvider()
+    private var detailLoanProvider = DetallePrestamoProvider()
+    private var _loans = MutableStateFlow<MutableList<LoanResponse>>(mutableListOf())
+    val loans: StateFlow<MutableList<LoanResponse>> = _loans
 
     fun getLoans() {
         try {
-            var listPrestamos = mutableListOf<Prestamo>()
-            mPrestamoProvider.getPrestamos().addOnSuccessListener { prestamosFirebase ->
-                if(prestamosFirebase.isEmpty) {
+            val loans = mutableListOf<LoanResponse>()
+            loanProvider.getPrestamos().addOnSuccessListener { querySnapshot ->
+                if(querySnapshot.isEmpty) {
                     Log.d(tag," lista prestamos esta vacia")
+                    return@addOnSuccessListener
                 }
-                prestamosFirebase.forEach { document->
-                    listPrestamos.add(document.toObject())
-                    Log.d(tag," lista prestamos ${listPrestamos.size}")
+                querySnapshot.forEach { document->
+                    loans.add(document.toObject())
+                    Log.d(tag," lista prestamos ${loans.size}")
                 }
 
-                Log.d(tag,"ViewModel --->_Prestamos: ${listPrestamos.size}")
-                _prestamos.value = listPrestamos
+                Log.d(tag,"ViewModel --->_Prestamos: ${loans.size}")
+                this._loans.value = loans
             }
 
         }catch (t:Throwable) {
@@ -49,7 +49,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
 
         try {
 
-            mPrestamoProvider.setLastPayment(id?:"",fecha?:"",diasRestantesPorPagar,diasPagadosNuevo).addOnCompleteListener {
+            loanProvider.setLastPayment(id?:"",fecha?:"",diasRestantesPorPagar,diasPagadosNuevo).addOnCompleteListener {
                 if(it.isSuccessful)
                 {
                     var detalle = DetallePrestamoSender(
@@ -59,7 +59,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
                         unixtime = getFechaActualNormalInUnixtime()
                     )
 
-                    mDetallePrestamoProvider.createDetalle(detalle).addOnCompleteListener {
+                    detailLoanProvider.createDetalle(detalle).addOnCompleteListener {
                         if(it.isSuccessful)
                         {
                             //_message.value = "Se actualizo el pago"
@@ -100,7 +100,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
 
         try {
 
-            mPrestamoProvider.cerrarPrestamo(id?:"").addOnCompleteListener {
+            loanProvider.cerrarPrestamo(id?:"").addOnCompleteListener {
                 if(it.isSuccessful) {
                     isCorrect = true
                     onComplete(isCorrect, "Se cerro el pago", null, false)

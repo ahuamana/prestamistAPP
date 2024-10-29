@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
@@ -23,14 +22,12 @@ import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
-import com.paparazziapps.pretamistapp.domain.FortnightlyLoan
-import com.paparazziapps.pretamistapp.domain.LoanType
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -70,7 +67,7 @@ class RegistrarFragment : Fragment() {
     var interesEntero:Int = 0
     var montoDiarioAPagar:Double = 0.0
     var montoTotalAPagar:Double = 0.0
-    var prestamo = Prestamo()
+    var loanResponse = LoanResponse()
 
     //Layout
     private val listaIntereses = arrayListOf<String>("8%","10%","20%","30%","40%","50%")
@@ -151,14 +148,14 @@ class RegistrarFragment : Fragment() {
     private fun continuar() {
         btnContinuar.setOnClickListener {
 
-            prestamo.capital = capitalEntero
-            prestamo.interes = interesEntero
-            prestamo.plazo_vto = mesesEntero
-            prestamo.montoDiarioAPagar = montoDiarioAPagar
-            prestamo.montoTotalAPagar = montoTotalAPagar
+            loanResponse.capital = capitalEntero
+            loanResponse.interes = interesEntero
+            loanResponse.plazo_vto = mesesEntero
+            loanResponse.montoDiarioAPagar = montoDiarioAPagar
+            loanResponse.montoTotalAPagar = montoTotalAPagar
 
             val gson = Gson()
-            val prestamoJson = gson.toJson(prestamo)
+            val prestamoJson = gson.toJson(loanResponse)
 
             //Show next activity - Register pagos
             startForResult.launch(Intent(context, RegistrarActivity::class.java).putExtra("prestamoJson",prestamoJson))

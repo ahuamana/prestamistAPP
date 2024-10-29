@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class Prestamo (
+data class LoanResponse (
     @SerialName("id")
     var id:String?=null,
     @SerialName("nombres")

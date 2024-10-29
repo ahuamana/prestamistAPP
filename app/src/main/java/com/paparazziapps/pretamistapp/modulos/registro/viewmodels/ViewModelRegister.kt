@@ -1,13 +1,12 @@
 package com.paparazziapps.pretamistapp.modulos.registro.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.paparazziapps.pretamistapp.domain.LoanType
 import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,11 +52,11 @@ open class ViewModelRegister private constructor() : ViewModel(){
         }
     }
 
-    fun createPrestamo(prestamo: Prestamo, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
+    fun createPrestamo(loanResponse: LoanResponse, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect = false
         try {
 
-        mPrestamoProvider.create(prestamo, idSucursal = idSucursal).addOnCompleteListener {
+        mPrestamoProvider.create(loanResponse, idSucursal = idSucursal).addOnCompleteListener {
                 if(it.isSuccessful)
                 {
                     _message.value = "El prestamo se registro correctamente"

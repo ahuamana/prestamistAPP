@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,7 +36,7 @@ class RegistrarActivity : AppCompatActivity() {
     var _viewModelSucursales = ViewModelSucursales.getInstance()
 
     lateinit var binding: ActivityRegistrarBinding
-    var prestamoReceived = Prestamo()
+    var loanResponseReceived = LoanResponse()
     lateinit var fecha:TextInputEditText
     lateinit var layoutFecha:TextInputLayout
     lateinit var nombres:TextInputEditText
@@ -157,7 +157,7 @@ class RegistrarActivity : AppCompatActivity() {
                 isEnabled = false
                 binding.cortina.isVisible = true
 
-                var prestamo = Prestamo(
+                var loanResponse = LoanResponse(
                     nombres     = nombres.text.toString().trim(),
                     apellidos   = apellidos.text.toString().trim(),
                     dni         = dni.text.toString().trim(),
@@ -165,13 +165,13 @@ class RegistrarActivity : AppCompatActivity() {
                     fecha       = fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
-                    capital     = prestamoReceived.capital,
-                    interes     = prestamoReceived.interes,
-                    plazo_vto   = prestamoReceived.plazo_vto,
-                    dias_restantes_por_pagar   = prestamoReceived.plazo_vto,
+                    capital     = loanResponseReceived.capital,
+                    interes     = loanResponseReceived.interes,
+                    plazo_vto   = loanResponseReceived.plazo_vto,
+                    dias_restantes_por_pagar   = loanResponseReceived.plazo_vto,
                     diasPagados = 0,
-                    montoDiarioAPagar = prestamoReceived.montoDiarioAPagar,
-                    montoTotalAPagar = prestamoReceived.montoTotalAPagar,
+                    montoDiarioAPagar = loanResponseReceived.montoDiarioAPagar,
+                    montoTotalAPagar = loanResponseReceived.montoTotalAPagar,
                     state = "ABIERTO"
                 )
 
@@ -183,7 +183,7 @@ class RegistrarActivity : AppCompatActivity() {
 
                 //Register ViewModel
                 //Actualizar el idSucursal para crear un prestamo como superAdmin
-                _viewModel.createPrestamo(prestamo, idSucursal = idSucursalSelected){
+                _viewModel.createPrestamo(loanResponse, idSucursal = idSucursalSelected){
                         isCorrect, msj, result, isRefresh ->
 
                     if(isCorrect)
@@ -348,10 +348,10 @@ class RegistrarActivity : AppCompatActivity() {
 
             if(!extras.isNullOrEmpty())
             {
-                prestamoReceived = gson.fromJson(extras, Prestamo::class.java)
-                binding.interes.setText("${prestamoReceived.interes!!.toInt()}%")
-                binding.capital.setText("${getString(R.string.tipo_moneda)} ${prestamoReceived.capital!!.toInt()}")
-                binding.plazosEnDias.setText("${prestamoReceived.plazo_vto.toString()} dias")
+                loanResponseReceived = gson.fromJson(extras, LoanResponse::class.java)
+                binding.interes.setText("${loanResponseReceived.interes!!.toInt()}%")
+                binding.capital.setText("${getString(R.string.tipo_moneda)} ${loanResponseReceived.capital!!.toInt()}")
+                binding.plazosEnDias.setText("${loanResponseReceived.plazo_vto.toString()} dias")
             }
         }
 

@@ -3,10 +3,9 @@ package com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.common.internal.Constants
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanResponse
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
@@ -17,17 +16,17 @@ class ViewModelTesoreria private constructor() : ViewModel() {
     val mPrestamoProvider = PrestamoProvider()
     val mDetallePrestamo = DetallePrestamoProvider()
 
-    var _prestamos = MutableLiveData<MutableList<Prestamo>>()
+    var _prestamos = MutableLiveData<MutableList<LoanResponse>>()
     var _pagosTotalesByTime = MutableLiveData<Double>()
 
     fun getMessage() : LiveData<String> =  _message
-    fun receivePrestamos (): LiveData<MutableList<Prestamo>> =_prestamos
+    fun receivePrestamos (): LiveData<MutableList<LoanResponse>> =_prestamos
     fun getPagosTotalesByTime():LiveData<Double> = _pagosTotalesByTime
 
     fun getPrestamosSize(onComplete: (Boolean, String, Int?, Boolean) -> Unit)
     {
         var isCorrect = false
-        var listPrestamos = mutableListOf<Prestamo>()
+        var listLoanResponses = mutableListOf<LoanResponse>()
 
         try {
 
@@ -41,9 +40,9 @@ class ViewModelTesoreria private constructor() : ViewModel() {
                 }else
                 {
                     it.forEach { document->
-                        listPrestamos.add(document.toObject<Prestamo>())
+                        listLoanResponses.add(document.toObject<LoanResponse>())
                     }
-                    _prestamos.value = listPrestamos
+                    _prestamos.value = listLoanResponses
                     onComplete(isCorrect,"",it.size(),false)
                 }
 
