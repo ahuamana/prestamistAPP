@@ -17,7 +17,7 @@ data class LoanDomain (
     @SerialName("celular")
     var celular:String? = null,
     @SerialName("fecha")
-    var fecha:String? = null,
+    var fecha_start_loan:String? = null,
     @SerialName("unixtime")
     var unixtime:Long?= null,
     @SerialName("unixtimeRegistered")
@@ -27,7 +27,7 @@ data class LoanDomain (
     @SerialName("interes")
     var interes:Int? = null,
     @SerialName("plazo_vto")
-    var plazo_vto:Int?=null,
+    var plazo_vto_in_days:Int?=null,
     //Calcular dias retrasados y
     @SerialName("dias_restantes_por_pagar")
     var dias_restantes_por_pagar:Int?=null,
@@ -61,7 +61,7 @@ data class LoanDomain (
     @SerialName("quotas")
     var quotas:Int?=null,
 
-)
+    )
 
 enum class TypePrestamo(val value: Int) {
     TITLE(0),

@@ -84,15 +84,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:backgroundTint="@color/sand_color"
-            app:cardCornerRadius="6dp"
+            app:cardCornerRadius="16dp"
             app:layout_constraintStart_toEndOf="@+id/cardview_dias_retrasados_v2"
             app:layout_constraintTop_toTopOf="@+id/cardview_dias_retrasados_v2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-0"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -111,7 +111,7 @@
                     android:padding="3dp"
                     android:fontFamily="@font/googlesans_regular"
                     android:text="días por pagar"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="9dp" />
 
             </LinearLayout>
@@ -137,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#F44336"
-            app:cardCornerRadius="6dp"
+            app:cardCornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/btn_send_whatsapp"
             app:layout_constraintStart_toStartOf="@+id/nombre_completo"
             app:layout_constraintTop_toTopOf="@+id/btn_send_whatsapp">
@@ -145,8 +145,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView

@@ -167,13 +167,13 @@ class RegistrarActivity : AppCompatActivity() {
                     apellidos   = apellidos.text.toString().trim(),
                     dni         = dni.text.toString().trim(),
                     celular     = celular.text.toString().trim(),
-                    fecha       = fecha.text.toString().trim(),
+                    fecha_start_loan       = fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
                     capital     = loanDomainReceived.capital,
                     interes     = loanDomainReceived.interes,
-                    plazo_vto   = loanDomainReceived.plazo_vto, // Only for daily loans
-                    dias_restantes_por_pagar   = loanDomainReceived.plazo_vto,
+                    plazo_vto_in_days   = loanDomainReceived.plazo_vto_in_days, // Only for daily loans
+                    dias_restantes_por_pagar   = loanDomainReceived.plazo_vto_in_days,
                     diasPagados = 0,
                     montoDiarioAPagar = loanDomainReceived.montoDiarioAPagar,
                     montoTotalAPagar = loanDomainReceived.montoTotalAPagar,
@@ -359,7 +359,7 @@ class RegistrarActivity : AppCompatActivity() {
                     PaymentScheduledEnum.DAILY -> {
                         binding.containerDaily.beVisible()
                         binding.containerOther.beGone()
-                        binding.plazosEnDias.setText("${loanDomainReceived.plazo_vto.toString()} dias")
+                        binding.plazosEnDias.setText("${loanDomainReceived.plazo_vto_in_days.toString()} dias")
                         binding.interes.setText("${loanDomainReceived.interes!!.toInt()}%")
 
                     }

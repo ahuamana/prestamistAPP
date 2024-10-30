@@ -264,7 +264,7 @@ class PrincipalActivity : AppCompatActivity(){
         println("FEcha Unixtime:${getFechaActualNormalInUnixtime()}")
 
         var diasRestantesPorPagarNuevo:Int?= null
-        var diasEnQueTermina = getDiasRestantesFromStart(loanDomain.fecha?:"",loanDomain.plazo_vto?:0)
+        var diasEnQueTermina = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",loanDomain.plazo_vto_in_days?:0)
         var isClosed:Boolean = false
 
 
@@ -291,7 +291,7 @@ class PrincipalActivity : AppCompatActivity(){
             text= "S./ ${loanDomain.montoDiarioAPagar}"
         }
 
-        layout_detalle_prestamo.tvPlazoPrestamo.text = "${loanDomain.plazo_vto.toString()} días"
+        layout_detalle_prestamo.tvPlazoPrestamo.text = "${loanDomain.plazo_vto_in_days.toString()} días"
 
         //Ocultar vistas si no tiene deudas
         if(loanDomain.dias_restantes_por_pagar!! == 0)
@@ -355,7 +355,7 @@ class PrincipalActivity : AppCompatActivity(){
         layout_detalle_prestamo.tvPlazoVto.text = "en $diasEnQueTermina días"
         layout_detalle_prestamo.tvDiasRetrasados.text = "$diasRestrasado días"
         layout_detalle_prestamo.tvDni.text = "${loanDomain.dni}"
-        layout_detalle_prestamo.tvFechaPrestamo.text = "${loanDomain.fecha}"
+        layout_detalle_prestamo.tvFechaPrestamo.text = "${loanDomain.fecha_start_loan}"
         layout_detalle_prestamo.tvMontoTotal.text = "S/. 0.00"
 
 

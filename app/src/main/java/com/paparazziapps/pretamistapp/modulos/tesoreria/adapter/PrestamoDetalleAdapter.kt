@@ -49,10 +49,10 @@ class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewH
             var plazo_vto = binding.tvDiasRestantes
 
             //
-            var plazo = getDiasRestantesFromStart(item.fecha?:"",item.plazo_vto?:0)
+            var plazo = getDiasRestantesFromStart(item.fecha_start_loan?:"",item.plazo_vto_in_days?:0)
 
             //Calcular deuda de dias no pagados
-            var deudaTotal = getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha?:"",item.diasPagados?:0).toInt().times(item.montoDiarioAPagar?:0.0)
+            var deudaTotal = getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan?:"",item.diasPagados?:0).toInt().times(item.montoDiarioAPagar?:0.0)
 
             itemView.apply {
                 position.text = adapterPosition.toString()

@@ -5,22 +5,26 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
+import com.paparazziapps.pretamistapp.domain.DelayCalculator
+import com.paparazziapps.pretamistapp.domain.MissingCalculator
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
 
 class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -111,7 +115,18 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 binding.typeOfLoanLabel.text = typeLoanDisplayName
 
                 //Metodo para el calculo de dias retrasados
-                calcularDiasRetrasados(itemView, numero_dias_retrasados, item, binding.cardviewDiasRetrasadosV2, fechaActual)
+                //calcularDiasRetrasados(itemView, numero_dias_retrasados, item, binding.cardviewDiasRetrasadosV2, fechaActual)
+
+                //set the delay for the type of loan
+                val delay = calculateDelayForTypeLoan(item)
+                updateDelayForLoanTypeInDays(item, delay) //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" only set days for every type of loan
+                updateUIForDelay(delay)
+
+                //set the missing days for the type of loan
+                val daysMissing = calculateTheMissingDaysForTypeLoan(item)
+                updateMissingForLoanTypeInDaysOrQuotas(item, daysMissing)
+
+                //setDiasRestantesPorPagar(item)
 
                 //Enviar mensaje a whatsapp
                 binding.btnSendWhatsapp.apply {
@@ -136,7 +151,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 setOnClickListener {
                     //calcular el monto total a pagar
                     diasRetraso = numero_dias_retrasados.text.toString().toInt()
-                    montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto!!)!!))
+                    montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto_in_days!!)!!))
 
                     if(numero_dias_retrasados.text.toString().toInt() == 0) {
                         println("numero de dias retrasados es cero: ${numero_dias_retrasados.text}")
@@ -147,24 +162,77 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     }
                 }
             }
-            setDiasRestantesPorPagar(item)
+        }
+
+        private fun updateMissingForLoanTypeInDaysOrQuotas(item: LoanDomain, daysMissing: Int) {
+            val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
+            Log.d("MissingDays", "Missing days: $daysMissing")
+            //validate if less than 0 then set 0
+            if(daysMissing < 0) {
+                //Prestamo vencido - completado
+                binding.numeroDiasPorPagar.text = ""
+                binding.lblDiasPorPagar.apply {
+                    text = "Préstamo vencido"
+                }
+                binding.numeroDiasPorPagar.isVisible = false
+                binding.cardviewDiasPorPagar.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.color_red_trasparente)
+
+                return //return to avoid the next code
+            }
+
+            when(tyLoan){
+                PaymentScheduledEnum.DAILY -> {
+                    val missingText = if (daysMissing == 1) "día por pagar" else "días por pagar"
+                    binding.lblDiasPorPagar.text = missingText
+                    binding.numeroDiasPorPagar.text = daysMissing.toString()
+                }
+                else ->{
+                    val quotas = if(daysMissing == 1) "cuota por pagar" else "cuotas por pagar"
+                    Log.d("Quotas", "Quotas: $quotas")
+                    //get the id of the type of loan to calculate the missing quotas depending on the days missing divided by the days of the type of loan
+                    val getDividedQuotas:Int = when(tyLoan){
+                        PaymentScheduledEnum.DAILY -> daysMissing
+                        PaymentScheduledEnum.WEEKLY -> ceil(daysMissing / 7.0).toInt()
+                        PaymentScheduledEnum.FORTNIGHTLY -> ceil(daysMissing / 15.0).toInt()
+                        PaymentScheduledEnum.MONTHLY -> ceil(daysMissing / 30.0).toInt()
+                        PaymentScheduledEnum.BIMONTHLY -> ceil(daysMissing / 60.0).toInt()
+                        PaymentScheduledEnum.QUARTERLY -> ceil(daysMissing / 90.0).toInt()
+                        PaymentScheduledEnum.SEMIANNUAL -> ceil(daysMissing / 180.0).toInt()
+                        PaymentScheduledEnum.ANNUAL -> ceil(daysMissing / 365.0).toInt()
+                    }
+                    Log.d("Quotas", "Quotas getDividedQuotas: $getDividedQuotas")
+
+                    //set the missing quotas in the textview
+                    binding.numeroDiasPorPagar.text = getDividedQuotas.toString()
+                    binding.lblDiasPorPagar.text = quotas
+                }
+            }
+
+
+        }
+
+        private fun updateUIForDelay(delay: Int) {
+            if (delay == 0) {
+                binding.btnSendWhatsapp.isVisible = false
+                binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.colorPrimary)
+            } else {
+                binding.btnSendWhatsapp.isVisible = true
+                binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.red)
+            }
         }
 
         private fun setDiasRestantesPorPagar(item: LoanDomain) {
 
-            val lblDiasPorPagar = binding.lblDiasPorPagar
-            val numeroDiasPorPagar = binding.numeroDiasPorPagar
-
-            val diasEnQueTermina = getDiasRestantesFromStart(item.fecha?:"",item.plazo_vto?:0)
+            val diasEnQueTermina = getDiasRestantesFromStart(item.fecha_start_loan?:"",item.plazo_vto_in_days?:0)
 
             if(diasEnQueTermina < 0) {
-                numeroDiasPorPagar.setText("0") // Dias por pagar es igual o menor a cero entonces Prestamó vencido - completado
+                binding.numeroDiasPorPagar.setText("0") // Dias por pagar es igual o menor a cero entonces Prestamó vencido - completado
             }else{
-                numeroDiasPorPagar.apply { setText(diasEnQueTermina.toString()) }
+                binding.numeroDiasPorPagar.apply { setText(diasEnQueTermina.toString()) }
             }
 
 
-            lblDiasPorPagar.apply {
+            binding.lblDiasPorPagar.apply {
                 text = when {
                     diasEnQueTermina == 1 -> "día por pagar"
                     else -> "días por pagar "
@@ -172,7 +240,17 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             }
         }
 
-        fun openWhatsapp(celular: String?, msj: String) {
+        private fun calculateTheMissingDaysForTypeLoan(loan: LoanDomain) : Int {
+            val missingCalculator = MissingCalculator()
+            val tyLoan = PaymentScheduled.getPaymentScheduledById(loan.typeLoan ?: INT_DEFAULT)
+            val daysWhenFinished = getDiasRestantesFromStart(loan.fecha_start_loan ?: "", loan.plazo_vto_in_days ?: 0)
+            val missingDays = missingCalculator.calculateDaysMissing(daysWhenFinished)
+            Log.d("MissingDays", "Missing days: $missingDays")
+            binding.numeroDiasPorPagar.text = missingDays.toString()
+            return missingDays
+        }
+
+        private fun openWhatsapp(celular: String?, msj: String) {
             //NOTE : please use with country code first 2digits without plus signed
             try {
 
@@ -186,53 +264,59 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             }
         }
 
-        private fun calcularDiasRetrasados(
-            itemView: View,
-            diasRetrasados: MaterialTextView,
-            item: LoanDomain,
-            diasRetrasadosCardview: CardView,
-            fechaActual: String
-        ) {
+        private fun calculateDelayForTypeLoan(item: LoanDomain): Int {
+            val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
+            val calculatorDelay = DelayCalculator()
+            val daysDelayed = if (item.fechaUltimoPago.isNullOrEmpty()) {
+                getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
+            } else {
+                getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.diasPagados ?: 0).toIntOrNull() ?: 0
+            }
 
-            Log.d(PrestamoAdapter::class.java.simpleName,"Adapter ----> Nombres:${item.nombres} --- Apellidos: ${item.apellidos} --- Fecha actual:${fechaActual} ----> Fecha registrada: ${item.fecha}")
-
-            if(item.fechaUltimoPago != null) {
-                //Obtener dias restantes si ya esta pagando diariamente ---> de los pagos actualizados
-                getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha?:"",item.diasPagados?:0).apply {
-                    if(this.toInt() <= 0 ) {
-                        diasRetrasados.text = "0"
-                        binding.btnSendWhatsapp.isVisible = false
-                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.colorPrimary)
-                    }else {
-                        diasRetrasados.text = this
-                        if(this.toInt() == 1) {
-                            binding.lblDiasRetrasados.text = "día retrasado"
-                        }
-                        binding.btnSendWhatsapp.isVisible = true
-                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.red)
-                    }
-                }
-
-            }else {
-                //Calcular la fecha con el ultimo dia
-                //Restar unixtime y obtener los dias restantes
-                getDiasRestantesFromDateToNow(item.fecha?:"").apply {
-                    diasRetrasados.setText(this)
-                    if(this.toInt() == 0) {
-                        binding.btnSendWhatsapp.isVisible = false
-                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.colorPrimary)
-                    }else {
-                        if(this.toInt() == 1) {
-                            binding.lblDiasRetrasados.setText("día retrasado")
-                        }
-
-                        binding.btnSendWhatsapp.isVisible = true
-                        diasRetrasadosCardview.backgroundTintList = ctx.resources.getColorStateList(R.color.red)
-                    }
-                }
+            return when (tyLoan) {
+                PaymentScheduledEnum.DAILY -> daysDelayed
+                PaymentScheduledEnum.WEEKLY -> calculatorDelay.calculateWeeksDelayed(daysDelayed)
+                PaymentScheduledEnum.FORTNIGHTLY -> calculatorDelay.calculateFortnightsDelayed(daysDelayed)
+                PaymentScheduledEnum.MONTHLY -> calculatorDelay.calculateMonthsDelayed(daysDelayed)
+                PaymentScheduledEnum.BIMONTHLY -> calculatorDelay.calculateBimonthsDelayed(daysDelayed)
+                PaymentScheduledEnum.QUARTERLY -> calculatorDelay.calculateQuartersDelayed(daysDelayed)
+                PaymentScheduledEnum.SEMIANNUAL -> calculatorDelay.calculateSemestersDelayed(daysDelayed)
+                PaymentScheduledEnum.ANNUAL -> calculatorDelay.calculateYearsDelayed(daysDelayed)
+                else -> 0
             }
         }
+
+        //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" else set "<WEEKS> semanas retrasadas" and so on
+
+        private fun updateDelayForLoanType(item: LoanDomain, delay: Int) {
+            val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
+            val delayText = when (tyLoan) {
+                PaymentScheduledEnum.DAILY -> if (delay == 1) "día retrasado" else " días retrasados"
+                PaymentScheduledEnum.WEEKLY -> if (delay == 1) " semana retrasada" else " semanas retrasadas"
+                PaymentScheduledEnum.FORTNIGHTLY -> if (delay == 1) " quincena retrasada" else " quincenas retrasadas"
+                PaymentScheduledEnum.MONTHLY -> if (delay == 1) " mes retrasado" else " meses retrasados"
+                PaymentScheduledEnum.BIMONTHLY -> if (delay == 1) " bimestre retrasado" else " bimestres retrasados"
+                PaymentScheduledEnum.QUARTERLY -> if (delay == 1) " trimestre retrasado" else " trimestres retrasados"
+                PaymentScheduledEnum.SEMIANNUAL -> if (delay == 1) " semestre retrasado" else " semestres retrasados"
+                PaymentScheduledEnum.ANNUAL -> if (delay == 1) " año retrasado" else " años retrasados"
+                else -> ""
+            }
+            binding.numeroDiasRetrasados.text = delay.toString()
+            binding.lblDiasRetrasados.text = delayText
+        }
+
+        ////set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" only set days for every type of loan
+
+        private fun updateDelayForLoanTypeInDays(item: LoanDomain, delay: Int) {
+            val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
+            val delayText = if (delay == 1) "día retrasado" else " días retrasados"
+            binding.numeroDiasRetrasados.text = delay.toString()
+            binding.lblDiasRetrasados.text = delayText
+        }
+
     }
+
+
 
     class ViewHolderTitle(itemView: View) : RecyclerView.ViewHolder(itemView), PrestamoViewHolder {
 

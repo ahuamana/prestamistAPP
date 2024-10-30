@@ -143,7 +143,7 @@ class RegistrarFragment : Fragment() {
     private fun continuar() {
         btnContinuar.setOnClickListener {
             loanDomain.capital = binding.capitalprestadoEdt.text.toString().toInt()
-            loanDomain.plazo_vto = mesesEntero // Only works for daily and personalized
+
             loanDomain.montoDiarioAPagar = montoDiarioAPagar
             loanDomain.montoTotalAPagar = montoTotalAPagar
             //fields new version 2.0
@@ -152,9 +152,13 @@ class RegistrarFragment : Fragment() {
             val mode = binding.modePaymentScheduled.text.toString()
             val paymentScheduled = PaymentScheduled.getPaymentScheduledByName(mode)
             if(paymentScheduled == PaymentScheduledEnum.DAILY) {
+                loanDomain.plazo_vto_in_days = mesesEntero // Only works for daily and personalized
                 loanDomain.interes = interesEntero
             } else {
                 loanDomain.interes = binding.interesExtras.text.toString().toIntOrNull()?:0
+                //multiply the quotas and the type of loan days
+                val quotas = binding.quotasTextExtras.text.toString().toIntOrNull()?:0
+                loanDomain.plazo_vto_in_days = quotas * paymentScheduled.days
             }
 
             loanDomain.typeLoan = PaymentScheduled.getPaymentScheduledByName(binding.modePaymentScheduled.text.toString()).id
