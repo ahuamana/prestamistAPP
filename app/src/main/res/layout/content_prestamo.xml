@@ -96,23 +96,26 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/numero_dias_por_pagar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-0"
-                    android:textColor="@color/black"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_dias_por_pagar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="3dp"
+                    android:layout_gravity="center"
                     android:fontFamily="@font/googlesans_regular"
-                    android:text="días por pagar"
+                    android:text="cuotas pagadas"
                     android:textColor="@color/black"
                     android:textSize="9dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/numero_dias_por_pagar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1/6"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
 
             </LinearLayout>
 
@@ -152,23 +155,27 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/numero_dias_retrasados"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-0"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_dias_retrasados"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/googlesans_regular"
                     android:padding="3dp"
+                    android:layout_gravity="center"
                     android:text="días retrasados"
                     android:textColor="@color/white"
                     android:textSize="9dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/numero_dias_retrasados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-0"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
 
             </LinearLayout>
 

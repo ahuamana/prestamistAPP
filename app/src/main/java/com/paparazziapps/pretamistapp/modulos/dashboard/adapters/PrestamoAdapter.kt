@@ -41,7 +41,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
     }
 
     fun updateItem(position: Int, loanDomain: LoanDomain) {
-        prestamosList.set(position,loanDomain)
+        prestamosList[position] = loanDomain
         notifyItemChanged(position)
     }
 
@@ -163,7 +163,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
         private fun updatePendingLoanTypeInDaysOrQuotas(item: LoanDomain, daysMissing: Int) {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
-            Log.d("MissingDays", "Missing days: $daysMissing")
+            Log.d("MissingDays", "Missing days or quotes: $daysMissing")
 
             if (daysMissing < 0) {
                 binding.numeroDiasPorPagar.text = ""
@@ -175,18 +175,24 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
             when (tyLoan) {
                 PaymentScheduledEnum.DAILY -> {
-                    val missingText = if (daysMissing == 1) "día por pagar" else "días por pagar"
+                    val daysPaid = item.diasPagados ?: 0
+                    val missingText = if (daysPaid == 1) "día pagado" else "días pagados"
                     binding.lblDiasPorPagar.text = missingText
                     binding.numeroDiasPorPagar.text = daysMissing.toString()
                 }
                 else -> {
-                    val quotasPendingBefore = item.quotasPending?:item.quotas?:0
-                    val quotas = if (quotasPendingBefore == 1) "cuota por pagar" else "cuotas por pagar"
-                    Log.d("QuotasPending", "Quotas: $quotasPendingBefore")
-                    binding.numeroDiasPorPagar.text = quotasPendingBefore.toString()
+                    val quotesPaid = item.quotasPaid?:0
+                    val quotas = if (quotesPaid == 1) "cuota pagada" else "cuotas pagadas"
+                    Log.d("QuotasPending", "Quotas: $quotesPaid")
+
+                    binding.numeroDiasPorPagar.text = formatQuotasRange(quotesPaid,item.quotas ?: 0)
                     binding.lblDiasPorPagar.text = quotas
                 }
             }
+        }
+
+        private fun formatQuotasRange(currentQuota: Int, totalQuotas: Int): String {
+            return "$currentQuota/$totalQuotas"
         }
 
         private fun updateUIForDelay(delay: Int) {
@@ -245,11 +251,13 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
             val calculatorDelay = DelayCalculator()
             val daysDelayed = if (item.fechaUltimoPago.isNullOrEmpty()) {
+                Log.d("FechaUltimoPago", "Fecha ultimo pago vacia")
                 getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
             } else {
+                Log.d("FechaUltimoPago", "Fecha ultimo pago: ${item.fechaUltimoPago}")
                 getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.diasPagados ?: 0).toIntOrNull() ?: 0
             }
-
+            Log.d("DaysDelayed", "Days delayed: $daysDelayed")
             return calculatorDelay.calculateDelay(tyLoan, daysDelayed)
         }
 

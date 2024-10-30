@@ -2,6 +2,7 @@ package com.paparazziapps.pretamistapp.modulos.dashboard.views
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
@@ -243,12 +244,15 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                                 else -> {
                                     //calculateTheNewDaysPaid
                                     val paidDaysBefore = loanDomain.diasPagados?:0
+                                    val quotesPaidBefore = loanDomain.quotasPaid?:0
                                     val currentLoanDays = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT).days
                                     val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(diasPagados))
 
+                                    Log.d("", "Dias pagados antes: $paidDaysBefore")
                                     loanDomain.quotasPending = diasRestantesPorPagar
                                     loanDomain.quotasPaid = diasPagados
-                                    loanDomain.dias_restantes_por_pagar = newCurrentPaidDays
+                                    loanDomain.diasPagados = diasPagados.times(currentLoanDays)
+                                    loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar.times(currentLoanDays)
                                     prestamoAdapter.updateItem(adapterPosition, loanDomain)
                                 }
                             }
