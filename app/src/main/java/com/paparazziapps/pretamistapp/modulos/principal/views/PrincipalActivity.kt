@@ -258,8 +258,6 @@ class PrincipalActivity : AppCompatActivity(){
 
 
     fun showBottomSheetDetallePrestamoPrincipal(loanDomain: LoanDomain, montoTotalAPagar: Double, diasRestrasado:String, adapterPosition: Int, needUpdate:Boolean) {
-        println("FEcha Unixtime:${getFechaActualNormalInUnixtime()}")
-
         var diasRestantesPorPagarNuevo:Int?= null
         val diasEnQueTermina = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",loanDomain.plazo_vto_in_days?:0)
         var isClosed:Boolean = false
@@ -401,21 +399,32 @@ class PrincipalActivity : AppCompatActivity(){
 
         //Validar
         layout_detalle_prestamo.edtDiasAPagar.doAfterTextChanged {
+            val input = it.toString().trim()
+            val maxLimit = when (typeLoan) {
+                PaymentScheduledEnum.DAILY -> (loanDomain.plazo_vto_in_days ?: 0) - (loanDomain.diasPagados ?: 0)
+                else -> (loanDomain.quotas ?: 0) - (loanDomain.quotasPaid ?: 0)
+            }
+
             layout_detalle_prestamo.contentLayoutDiasAPagar.error = when {
-                it.toString().isNullOrEmpty() -> "Los dias deben ser rellenados"
-                it.toString().toInt() == 0 -> "Los dias deben ser mayores a 0"
-                loanDomain.dias_restantes_por_pagar!! < it.toString().toInt() -> "Los dias no pueden superar a ${loanDomain.dias_restantes_por_pagar}"
+                input.isEmpty() -> "Debe ingresar un valor"
+                input.toInt() == 0 -> "El valor debe ser mayor a 0"
+                input.toInt() > maxLimit -> "El valor no puede superar a $maxLimit"
                 else -> null
             }
 
-            if(!it.toString().isNullOrEmpty() && it.toString().toInt() <= loanDomain.dias_restantes_por_pagar?:0) {
+            if (input.isNotEmpty() && input.toInt() <= maxLimit) {
                 layout_detalle_prestamo.btnPagar.apply {
                     this.standardSimpleButtonOutline()
                     isEnabled = true
                 }
 
-                layout_detalle_prestamo.tvMontoTotal.text = "S/. ${getDoubleWithTwoDecimals(loanDomain.montoDiarioAPagar!!.times(it.toString().toInt()))}"
-            }else {
+                val totalAmount = when (typeLoan) {
+                    PaymentScheduledEnum.DAILY -> loanDomain.montoDiarioAPagar?.times(input.toInt()) ?: 0.0
+                    else -> (loanDomain.montoDiarioAPagar?.times(input.toInt())) ?: 0.0
+                }
+                Log.d("TotalAmount", totalAmount.toString())
+                layout_detalle_prestamo.tvMontoTotal.text = "S/. ${getDoubleWithTwoDecimals(totalAmount)}"
+            } else {
                 layout_detalle_prestamo.btnPagar.apply {
                     this.standardSimpleButtonOutlineDisable()
                     isEnabled = false
