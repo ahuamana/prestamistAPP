@@ -93,6 +93,7 @@
                     android:id="@+id/conten_capital_prestado"
                     android:layout_width="0dp"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:paddingLeft="16dp"
@@ -126,6 +127,42 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/type_of_loan_container"
+                    android:layout_width="0dp"
+                    android:visibility="visible"
+                    tools:visibility="visible"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/conten_capital_prestado"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Tipo de préstamo"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_type_of_loan"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:layout_height="26dp"
+                        android:textColor="@color/color_text_web"
+                        android:fontFamily="@font/product_sans_regular"
+                        tools:text="@string/type_loan_example"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/content_monto_diario_pagar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,7 +172,7 @@
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:visibility="visible"
-                    app:layout_constraintTop_toBottomOf="@+id/conten_capital_prestado">
+                    app:layout_constraintTop_toBottomOf="@+id/type_of_loan_container">
 
                     <TextView
                         android:id="@+id/lbl_monto_diario"
@@ -306,6 +343,7 @@
                     app:layout_constraintRight_toRightOf="parent">
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/lbl_paid_days_or_quotas"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
                         android:gravity="left|center"
@@ -454,6 +492,7 @@
                         android:focusedByDefault="false"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
+                        tools:hint="Dia(s) a pagar"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -464,7 +503,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusedByDefault="false"
-                            android:hint="Dia(s) a pagar"
                             android:inputType="number"
                             android:lines="1"
                             android:maxLength="3" />

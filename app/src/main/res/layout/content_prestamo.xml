@@ -15,89 +15,107 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/shapeableImageView2"
+            android:id="@+id/img_avatar"
             android:layout_width="45dp"
             android:layout_marginTop="5dp"
             android:layout_height="45dp"
+            android:visibility="gone"
             android:layout_marginLeft="6dp"
             android:src="@drawable/ic_person"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview_dias_retrasados"
-            android:layout_width="wrap_content"
+            android:id="@+id/cardview_amount_to_pay"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:backgroundTint="#F44336"
+            app:cardBackgroundColor="@color/sand_color"
             app:cardCornerRadius="6dp"
-            app:layout_constraintStart_toEndOf="@+id/shapeableImageView2"
-            app:layout_constraintTop_toTopOf="@+id/shapeableImageView2">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/numero_dias_retrasados"
+                    android:id="@+id/amount_to_pay_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-0"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
+                    tools:text="Monto a pagar"
+                    android:text="@string/amount_to_pay"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/googlesans_bold" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/lbl_dias_retrasados"
+                    android:id="@+id/amount_to_pay_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="3dp"
-                    android:text="días retrasados"
-                    android:textColor="@color/white"
-                    android:textSize="9dp" />
+                    tools:text="S/ 0.00"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/googlesans_regular" />
 
             </LinearLayout>
 
-
         </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/type_of_loan_label"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/outline_textview"
+            android:fontFamily="@font/googlesans_bold"
+            android:padding="4dp"
+            android:text="Diario (cada dia)"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@+id/img_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/cardview_amount_to_pay" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview_dias_por_pagar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:backgroundTint="#F4CB36"
-            app:cardCornerRadius="6dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cardview_dias_retrasados">
+            android:layout_marginStart="6dp"
+            android:backgroundTint="@color/sand_color"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintStart_toEndOf="@+id/cardview_dias_retrasados_v2"
+            app:layout_constraintTop_toTopOf="@+id/cardview_dias_retrasados_v2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:orientation="horizontal">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/numero_dias_por_pagar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-0"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/lbl_dias_por_pagar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="3dp"
-                    android:text="días por pagar"
-                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/googlesans_regular"
+                    android:text="cuotas pagadas"
+                    android:textColor="@color/black"
                     android:textSize="9dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/numero_dias_por_pagar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1/6"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
 
             </LinearLayout>
 
@@ -109,58 +127,80 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textSize="16dp"
+            android:textSize="12sp"
+            android:fontFamily="@font/googlesans_regular"
+            android:textColor="@color/black"
             android:text="Antony Nicolas Huaman Alikhan"
-            app:layout_constraintStart_toStartOf="@+id/cardview_dias_retrasados"
-            app:layout_constraintTop_toBottomOf="@+id/cardview_dias_retrasados" />
+            app:layout_constraintStart_toStartOf="@+id/type_of_loan_label"
+            app:layout_constraintTop_toBottomOf="@+id/type_of_loan_label" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/telefono"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="16dp"
-            android:text="930 292 192"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/nombre_completo"
-            app:layout_constraintTop_toBottomOf="@+id/nombre_completo" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardview_enviar_msj"
+            android:id="@+id/cardview_dias_retrasados_v2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="6dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="3dp"
-            android:layout_marginBottom="6dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#F44336"
+            app:cardCornerRadius="16dp"
+            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/telefono">
+            app:layout_constraintStart_toStartOf="@+id/nombre_completo"
+            app:layout_constraintTop_toBottomOf="@+id/nombre_completo">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:padding="3dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:orientation="horizontal">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/lbl_dias_retrasados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/googlesans_regular"
+                    android:padding="3dp"
                     android:layout_gravity="center"
-                    android:foregroundGravity="left"
-                    android:src="@drawable/ic_whatsapp" />
+                    android:text="días retrasados"
+                    android:textColor="@color/white"
+                    android:textSize="9dp" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/numero_dias_retrasados"
                     android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
                     android:layout_height="wrap_content"
-                    android:text="Enviar mensaje"/>
+                    android:text="-0"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
 
             </LinearLayout>
 
+
         </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_send_whatsapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/facebook_color_like"
+            android:drawableStart="@drawable/ic_whatsapp"
+            android:letterSpacing="0.01"
+            android:lineSpacingExtra="0dp"
+            android:padding="6dp"
+            android:paddingVertical="0dp"
+            android:text="Enviar mensaje"
+            android:textAllCaps="false"
+            android:textSize="11sp"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_whatsapp"
+            app:iconTintMode="multiply"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/type_of_loan_label" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

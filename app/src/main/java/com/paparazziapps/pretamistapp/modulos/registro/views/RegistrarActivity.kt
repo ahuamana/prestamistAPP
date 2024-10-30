@@ -16,27 +16,32 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.activity.viewModels
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.domain.PAConstants
+import com.paparazziapps.pretamistapp.helper.views.beGone
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 
 
 class RegistrarActivity : AppCompatActivity() {
 
-    val _viewModel = ViewModelRegister.getInstance()
+    private val viewModel by viewModels<ViewModelRegister>()
     var _viewModelSucursales = ViewModelSucursales.getInstance()
 
     lateinit var binding: ActivityRegistrarBinding
-    var prestamoReceived = Prestamo()
+    var loanDomainReceived = LoanDomain()
     lateinit var fecha:TextInputEditText
     lateinit var layoutFecha:TextInputLayout
     lateinit var nombres:TextInputEditText
@@ -115,7 +120,7 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun startObservers() {
-        _viewModel.getMessage().observe(this){message ->  showMessage(message)}
+        viewModel.getMessage().observe(this){ message ->  showMessage(message)}
 
         _viewModelSucursales.sucursales.observe(this){
             if(it.isNotEmpty()) {
@@ -157,22 +162,28 @@ class RegistrarActivity : AppCompatActivity() {
                 isEnabled = false
                 binding.cortina.isVisible = true
 
-                var prestamo = Prestamo(
+                val loanDomain = LoanDomain(
                     nombres     = nombres.text.toString().trim(),
                     apellidos   = apellidos.text.toString().trim(),
                     dni         = dni.text.toString().trim(),
                     celular     = celular.text.toString().trim(),
-                    fecha       = fecha.text.toString().trim(),
+                    fecha_start_loan       = fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
-                    capital     = prestamoReceived.capital,
-                    interes     = prestamoReceived.interes,
-                    plazo_vto   = prestamoReceived.plazo_vto,
-                    dias_restantes_por_pagar   = prestamoReceived.plazo_vto,
+                    capital     = loanDomainReceived.capital,
+                    interes     = loanDomainReceived.interes,
+                    plazo_vto_in_days   = loanDomainReceived.plazo_vto_in_days, // Only for daily loans
+                    dias_restantes_por_pagar   = loanDomainReceived.plazo_vto_in_days,
                     diasPagados = 0,
-                    montoDiarioAPagar = prestamoReceived.montoDiarioAPagar,
-                    montoTotalAPagar = prestamoReceived.montoTotalAPagar,
-                    state = "ABIERTO"
+                    montoDiarioAPagar = loanDomainReceived.montoDiarioAPagar,
+                    montoTotalAPagar = loanDomainReceived.montoTotalAPagar,
+                    state = "ABIERTO",
+
+                    //fields new version 2.0
+                    typeLoan = loanDomainReceived.typeLoan,
+                    typeLoanDays = loanDomainReceived.typeLoanDays,
+                    typeLoanName = loanDomainReceived.typeLoanName,
+                    quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
                 )
 
                 var idSucursalSelected:Int = INT_DEFAULT
@@ -183,7 +194,7 @@ class RegistrarActivity : AppCompatActivity() {
 
                 //Register ViewModel
                 //Actualizar el idSucursal para crear un prestamo como superAdmin
-                _viewModel.createPrestamo(prestamo, idSucursal = idSucursalSelected){
+                viewModel.createPrestamo(loanDomain, idSucursal = idSucursalSelected){
                         isCorrect, msj, result, isRefresh ->
 
                     if(isCorrect)
@@ -275,7 +286,6 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun showbutton() {
-
         if(!nombres.text.toString().trim().isNullOrEmpty()          &&
             nombres.text.toString().trim().count() >= 4             &&
             !apellidos.text.toString().trim().isNullOrEmpty()       &&
@@ -305,14 +315,11 @@ class RegistrarActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showCalendar() {
         binding.fechaLayout.setEndIconOnClickListener {
                 getCalendar()
         }
     }
-
-
 
     @SuppressLint("SimpleDateFormat")
     private fun getCalendar() {
@@ -332,35 +339,39 @@ class RegistrarActivity : AppCompatActivity() {
                     binding.fecha.setText(it)
                 }
             }
-
         }
-
     }
 
-
-
     private fun getExtras() {
+        if(intent.extras != null) {
+           val extras  = intent.getStringExtra(PAConstants.EXTRA_LOAN_JSON)
+           val gson = Gson()
 
-        if(intent.extras != null)
-        {
-           var extras  = intent.getStringExtra("prestamoJson")
-           var gson = Gson()
+            if(!extras.isNullOrEmpty()) {
+                loanDomainReceived = gson.fromJson(extras, LoanDomain::class.java)
+                binding.capital.setText("${getString(R.string.tipo_moneda)} ${loanDomainReceived.capital!!.toInt()}")
+                val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(loanDomainReceived.typeLoan?: INT_DEFAULT).displayName
+                binding.typeLoan.setText(typeLoanDisplayName)
 
-            if(!extras.isNullOrEmpty())
-            {
-                prestamoReceived = gson.fromJson(extras, Prestamo::class.java)
-                binding.interes.setText("${prestamoReceived.interes!!.toInt()}%")
-                binding.capital.setText("${getString(R.string.tipo_moneda)} ${prestamoReceived.capital!!.toInt()}")
-                binding.plazosEnDias.setText("${prestamoReceived.plazo_vto.toString()} dias")
+                //New fields for the new version 2.0
+                val typeLoan = PaymentScheduled.getPaymentScheduledById(loanDomainReceived.typeLoan?: INT_DEFAULT)
+                when(typeLoan) {
+                    PaymentScheduledEnum.DAILY -> {
+                        binding.containerDaily.beVisible()
+                        binding.containerOther.beGone()
+                        binding.plazosEnDias.setText("${loanDomainReceived.plazo_vto_in_days.toString()} dias")
+                        binding.interes.setText("${loanDomainReceived.interes!!.toInt()}%")
+
+                    }
+                    else -> {
+                        binding.containerDaily.beGone()
+                        binding.containerOther.beVisible()
+                        binding.interesOther.setText("${loanDomainReceived.interes!!.toInt()}%")
+                        binding.quotasOther.setText(loanDomainReceived.quotas.toString())
+                    }
+                }
             }
         }
 
     }
-
-    override fun onDestroy() {
-
-        ViewModelRegister.destroyInstance()
-        super.onDestroy()
-    }
-
 }

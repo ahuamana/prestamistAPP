@@ -69,35 +69,33 @@ fun turnOffDarkModeInAllApp(resources: Resources){
 
 val DiaUnixtime = 86400000;
 
-fun getDoubleWithTwoDecimals (number:Double):String?
-{
+fun getDoubleWithTwoDecimals (number:Double):String? {
     return DecimalFormat("###,###,###.00").format(number)
 }
 
-fun getDoubleWithTwoDecimalsReturnDouble (number:Double):Double?
-{
-    return number.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+fun getDoubleWithTwoDecimalsReturnDouble(number: Double): Double {
+    return try {
+        number.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+    } catch (e: NumberFormatException) {
+        Log.e("Error", "Invalid number format: ${e.message}")
+        0.0 // or any default value you prefer
+    }
 }
 
-fun getDoubleWithOneDecimalsReturnDouble (number:Double):Double?
-{
+fun getDoubleWithOneDecimalsReturnDouble (number:Double):Double? {
     return number.toBigDecimal().setScale(1, RoundingMode.HALF_UP).toDouble()
 }
 
-fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int
-{
-    var diasInUnixtime =  DiaUnixtime * plazo_vto!!.toLong()
+fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int {
+    val diasInUnixtime =  DiaUnixtime * plazo_vto!!.toLong()
     //println("Dias Unixtime $diasInUnixtime")
-    var fechaFinalUnixtime= (convertFechaActualNormalToUnixtime(fecha_inicio) + diasInUnixtime )
+    val fechaFinalUnixtime= (convertFechaActualNormalToUnixtime(fecha_inicio) + diasInUnixtime )
     //println("fechadinal Unixtime $fechaFinalUnixtime")
-    var diasEnCuantoTerminado = (fechaFinalUnixtime - getFechaActualNormalInUnixtime()).div(DiaUnixtime)
+    val diasEnCuantoTerminado = (fechaFinalUnixtime - getFechaActualNormalInUnixtime()).div(DiaUnixtime)
     //println("diasEnCuantoTerminado Unixtime $diasEnCuantoTerminado")
 
     return diasEnCuantoTerminado.toInt()
 }
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fun getYesterdayFechaNormal():String
 {

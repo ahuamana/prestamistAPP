@@ -2,10 +2,14 @@ package com.paparazziapps.pretamistapp.modulos.dashboard.views
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -20,30 +24,28 @@ import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.pojo.User
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
-import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(),setOnClickedPrestamo {
 
-    var _viewModel = ViewModelDashboard.getInstance()
+    private val viewModel by viewModels<ViewModelDashboard>()
+    private val tag = HomeFragment::class.java.simpleName
     var _viewModelPrincipal = ViewModelPrincipal.getInstance()
 
-    var _binding: FragmentHomeBinding?= null
+    private var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
 
-    var preferences = MyPreferences()
-
-    //constructores
-    val prestamoAdapter = PrestamoAdapter(this)
+    private var preferences = MyPreferences()
+    private var prestamoAdapter = PrestamoAdapter(this)
 
     private lateinit var recyclerPrestamos: RecyclerView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +53,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
     ): View? {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        var view = binding.root
+        val view = binding.root
 
         setOnClickedPrestamoHome = this
 
@@ -79,14 +81,19 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         _viewModelPrincipal.searchUserByEmail()
     }
 
-
-
     private fun observers() {
         _viewModelPrincipal.getUser().observe(viewLifecycleOwner, Observer(::updateUser))
-        _viewModel.receivePrestamos().observe(viewLifecycleOwner, Observer(::updatePrestamos))
+
+        lifecycleScope.launch {
+            viewModel.loans.flowWithLifecycle(
+                lifecycle = lifecycle,
+                minActiveState = androidx.lifecycle.Lifecycle.State.STARTED
+            ).collectLatest(::updatePrestamos)
+        }
+
     }
 
-    fun updatePrestamos(prestamosAll:MutableList<Prestamo>){
+    fun updatePrestamos(prestamosAll:MutableList<LoanDomain>){
         if(prestamosAll.isEmpty()) {
             binding.emptyPrestamo.isVisible = true
             recyclerPrestamos.isVisible = false
@@ -96,26 +103,26 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
             binding.emptyPrestamo.isVisible = false
 
             if(MyPreferences().isSuperAdmin){
-                var sucurs = MyPreferences().sucusales
-                if(sucurs.isEmpty()){
+                val branches = MyPreferences().sucusales
+                if(branches.isEmpty()){
                     prestamoAdapter.setData(prestamosAll)
                 }else{
                     try {
-                        var newPrestamos = mutableListOf<Prestamo>()
-                        var localSucursales = fromJson<List<Sucursales>>(sucurs)
+                        val newLoanRespons = mutableListOf<LoanDomain>()
+                        val localSucursales = fromJson<List<Sucursales>>(branches)
                         localSucursales.forEach{ sucurlocal ->
-                            var item = Prestamo(
+                            val item = LoanDomain(
                                 type = TypePrestamo.TITLE.value,
                                 title = sucurlocal.name
                             )
-                            newPrestamos.add(item)
+                            newLoanRespons.add(item)
 
-                            var items = prestamosAll.filter {
+                            val items = prestamosAll.filter {
                                 it.sucursalId == sucurlocal.id
                             }
-                            newPrestamos.addAll(items)
+                            newLoanRespons.addAll(items)
                         }
-                        prestamoAdapter.setData(newPrestamos)
+                        prestamoAdapter.setData(newLoanRespons)
 
                     }catch (t:Throwable){
                         FirebaseCrashlytics.getInstance().recordException(t)
@@ -127,7 +134,6 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
 
             recyclerPrestamos.isVisible = true
-            //showMessage(" Lista de prestamos ${it.count()}")
         }
     }
 
@@ -141,7 +147,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         preferences.isActiveUser = it.activeUser
 
         if(it.activeUser) {
-            _viewModel.getPrestamos()
+            viewModel.getLoans()
         }
     }
 
@@ -149,44 +155,20 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         showMessageAboveMenuInferiorGlobal(message,binding.root)
     }
 
-    fun openDialogActualizarPago(prestamo: Prestamo, montoTotalAPagar: String, adapterPosition:Int) {
 
-    }
 
 
     companion object {
-
         var setOnClickedPrestamoHome:setOnClickedPrestamo? = null
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    //putString(ARG_PARAM1, param1)
-                    //putString(ARG_PARAM2, param2)
-                }
-            }
     }
 
-    override fun onDestroy() {
-
-        ViewModelRegister.destroyInstance()
-        ViewModelDashboard.destroyInstance()
-        super.onDestroy()
-    }
-
-    //->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Metodos override
-    override fun actualizarPagoPrestamo(prestamo: Prestamo, needUpdate:Boolean, montoTotalAPagar:Double, adapterPosition:Int, diasRestrasado:String) {
-
-        //println("Hizo click en Actualizar Pago Prestamos")
+    override fun actualizarPagoPrestamo(loanDomain: LoanDomain, needUpdate:Boolean, montoTotalAPagar:Double, adapterPosition:Int, diasRestrasado:String) {
         context.apply {
-            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(prestamo, montoTotalAPagar, diasRestrasado, adapterPosition, needUpdate)
+            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(loanDomain, montoTotalAPagar, diasRestrasado, adapterPosition, needUpdate)
         }
-
-
     }
 
-    override fun openDialogoActualizarPrestamo(prestamo: Prestamo, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int, isClosed:Boolean) {
+    override fun openDialogoActualizarPrestamo(loanDomain: LoanDomain, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int, isClosed:Boolean) {
 
         binding.cntCortina.isVisible = true
 
@@ -199,15 +181,12 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         val btnPositive   = bindingDialogSalir.btnAceptarSalir
         val btnNegative = bindingDialogSalir.btnCancelarSalir
 
-        if(isClosed)
-        {
+        if(isClosed) {
             title.text = "¿Estas seguro de cerrar el préstamo?"
-            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(prestamo.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos.toString())}").fromHtml()
-
-        }else
-        {
+            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos.toString())}").fromHtml()
+        }else {
             title.text = "¿Estas seguro de actualizar la deuda?"
-            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(prestamo.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(prestamo.apellidos.toString())} </b>" +
+            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos.toString())} </b>" +
                     ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${montoTotalAPagar}<b>").fromHtml()
         }
 
@@ -228,60 +207,65 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         }
 
 
-        btnPositive?.apply {
+        btnPositive.apply {
             visibility = View.VISIBLE
             setOnClickListener {
-
-
-                //(context as PrincipalActivity).showCortinaPrincipal(true)
-
                 dialog.dismiss()
-
-                if (isClosed)
-                {
-                    _viewModel.cerrarPrestamo(prestamo.id){
+                if (isClosed) {
+                    viewModel.cerrarPrestamo(loanDomain.id){
                             isCorrect, msj, result, isRefresh ->
-                        if(isCorrect)
-                        {
+                        if(isCorrect) {
                             prestamoAdapter.removeItem(adapterPosition)//remover item de  local recycler View
                             showMessage(msj)
-
-                        }else
-                        {
-                            //(context as PrincipalActivity).showCortinaPrincipal(false)
+                        }else {
                             showMessage(msj)
                         }
                     }
-                }else
-                {
-                    _viewModel.updateUltimoPago(prestamo.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
+                }else {
+
+                    viewModel.updateUltimoPago(
+                        loanDomain = loanDomain, loanDomain.id,
+                        getFechaActualNormalCalendar(),
+                        montoTotalAPagar,
+                        diasRestantesPorPagar,
+                        diasPagados){
                             isCorrect, msj, result, isRefresh ->
 
-                        if(isCorrect)
-                        {
-                            prestamo.fechaUltimoPago = getFechaActualNormalCalendar()
-                            prestamo.dias_restantes_por_pagar = diasRestantesPorPagar
-                            prestamo.diasPagados = diasPagados
-                            //(context as PrincipalActivity).showCortinaPrincipal(false)
-                            prestamoAdapter.updateItem(adapterPosition, prestamo)//Actualizar local recycler View
-                            showMessage(msj)
+                        if(isCorrect) {
+                            //Here you can update the item in the recycler view with the new data
+                            val loanType = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan ?: INT_DEFAULT)
+                            loanDomain.fechaUltimoPago = getFechaActualNormalCalendar()
+                            when(loanType) {
+                                PaymentScheduledEnum.DAILY -> {
+                                    loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar
+                                    loanDomain.diasPagados = diasPagados
+                                    prestamoAdapter.updateItem(adapterPosition, loanDomain)
+                                }
+                                else -> {
+                                    //calculateTheNewDaysPaid
+                                    val paidDaysBefore = loanDomain.diasPagados?:0
+                                    val quotesPaidBefore = loanDomain.quotasPaid?:0
+                                    val currentLoanDays = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT).days
+                                    val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(diasPagados))
 
-                        }else
-                        {
-                            //(context as PrincipalActivity).showCortinaPrincipal(false)
+                                    Log.d("", "Dias pagados antes: $paidDaysBefore")
+                                    loanDomain.quotasPending = diasRestantesPorPagar
+                                    loanDomain.quotasPaid = diasPagados
+                                    loanDomain.diasPagados = diasPagados.times(currentLoanDays)
+                                    loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar.times(currentLoanDays)
+                                    prestamoAdapter.updateItem(adapterPosition, loanDomain)
+                                }
+                            }
+                            showMessage(msj)
+                        }else {
                             showMessage(msj)
                         }
-
                     }
                 }
-
-
-
-
             }
         }
 
-        btnNegative?.apply {
+        btnNegative.apply {
             visibility = View.VISIBLE
             isAllCaps = false
             setOnClickListener {
@@ -289,8 +273,4 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
             }
         }
     }
-
-
-
-
 }

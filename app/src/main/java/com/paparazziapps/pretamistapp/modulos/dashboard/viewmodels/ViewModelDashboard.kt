@@ -1,118 +1,157 @@
 package com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
+import androidx.compose.ui.modifier.modifierLocalMapOf
+import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
+import com.paparazziapps.pretamistapp.domain.LoanType
+import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-class ViewModelDashboard private constructor(){
+class ViewModelDashboard private constructor() : ViewModel(){
 
-    var _message = MutableLiveData<String>()
-    var mPrestamoProvider = PrestamoProvider()
-    var mDetallePrestamoProvider = DetallePrestamoProvider()
-    var _prestamos = MutableLiveData<MutableList<Prestamo>>()
+    private val tag = ViewModelDashboard::class.java.simpleName
+    private val loanProvider = PrestamoProvider()
+    private var detailLoanProvider = DetallePrestamoProvider()
+    private var _loans = MutableStateFlow<MutableList<LoanDomain>>(mutableListOf())
+    val loans: StateFlow<MutableList<LoanDomain>> = _loans
 
-
-    fun receivePrestamos (): LiveData<MutableList<Prestamo>> = _prestamos
-
-    fun getPrestamos() {
+    fun getLoans() {
         try {
-            var listPrestamos = mutableListOf<Prestamo>()
-            mPrestamoProvider.getPrestamos().addOnSuccessListener { prestamosFirebase ->
-                if(prestamosFirebase.isEmpty) {
-                    println(" lista prestamos esta vacia")
+            val loans = mutableListOf<LoanDomain>()
+            loanProvider.getPrestamos().addOnSuccessListener { querySnapshot ->
+                if(querySnapshot.isEmpty) {
+                    Log.d(tag," lista prestamos esta vacia")
+                    return@addOnSuccessListener
                 }
-                prestamosFirebase.forEach { document->
-                    listPrestamos.add(document.toObject())
-                    println(" lista prestamos ${listPrestamos.size}")
+                querySnapshot.forEach { document->
+                    loans.add(document.toObject())
+                    Log.d(tag," lista prestamos ${loans.size}")
                 }
 
-                println("ViewModel --->_Prestamos: ${listPrestamos.size}")
-                _prestamos.value = listPrestamos
+                Log.d(tag,"ViewModel --->_Prestamos: ${loans.size}")
+                this._loans.value = loans
             }
 
-        }catch (t:Throwable)
-        {
-            println("Error: ${t.message}")
+        }catch (t:Throwable) {
+            Log.d(tag,"Error: ${t.message}")
         }
 
     }
 
-    fun updateUltimoPago(id:String?, fecha:String?, pagoTotal:Double,diasRestantesPorPagar:Int, diasPagadosNuevo:Int,onComplete: (Boolean, String, String?, Boolean) -> Unit)
-    {
+    fun updateUltimoPago(loanDomain: LoanDomain ,id:String?, fecha:String?, pagoTotal:Double,diasRestantesPorPagar:Int, diasPagadosNuevo:Int,onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect:Boolean
-
         try {
+            val typeLoan = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT)
+            when(typeLoan) {
+                PaymentScheduledEnum.DAILY -> {
+                    //use fun setLastPayment
+                    loanProvider.setLastPayment(id?:"",fecha?:"",diasRestantesPorPagar,diasPagadosNuevo).addOnCompleteListener {
+                        if(it.isSuccessful) {
+                            val detalle = DetallePrestamoSender(
+                                idPrestamo = id,
+                                fechaPago = fecha,
+                                pagoTotal = pagoTotal,
+                                unixtime = getFechaActualNormalInUnixtime())
 
-            mPrestamoProvider.setLastPayment(id?:"",fecha?:"",diasRestantesPorPagar,diasPagadosNuevo).addOnCompleteListener {
-                if(it.isSuccessful)
-                {
-                    var detalle = DetallePrestamoSender(
-                        idPrestamo = id,
-                        fechaPago = fecha,
-                        pagoTotal = pagoTotal,
-                        unixtime = getFechaActualNormalInUnixtime()
-                    )
-
-                    mDetallePrestamoProvider.createDetalle(detalle).addOnCompleteListener {
-                        if(it.isSuccessful)
-                        {
-                            //_message.value = "Se actualizo el pago"
-                            isCorrect = true
-                            onComplete(isCorrect, "Se actualizo el pago", null, false)
-                        }else
-                        {
-                            println("Error: ${it.exception?.message}")
+                            detailLoanProvider.createDetalle(detalle).addOnCompleteListener {
+                                if(it.isSuccessful) {
+                                    //_message.value = "Se actualizo el pago"
+                                    isCorrect = true
+                                    onComplete(isCorrect, "Se actualizo el pago", null, false)
+                                }else {
+                                    println("Error: ${it.exception?.message}")
+                                    isCorrect = false
+                                    onComplete(isCorrect, "No se pudo crear el ultimo pago, inténtelo otra vez", null, false)
+                                }
+                            }.addOnFailureListener {
+                                Log.d(tag,"Error: ${it.message}")
+                                isCorrect = false
+                                onComplete(isCorrect, "No se pudo crear el ultimo pago, porfavor comuníquese con soporte!", null, false)
+                            }
+                        }else {
+                            Log.d(tag,"ViewModelRegister --> : Error ${it.exception?.message}")
+                            //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
                             isCorrect = false
-                            onComplete(isCorrect, "No se pudo crear el ultimo pago, inténtelo otra vez", null, false)
+                            onComplete(isCorrect, "No se pudo actualizar el pago, inténtelo otra vez", null, false)
                         }
-                    }.addOnFailureListener {
-                        println("Error: ${it.message}")
-                        isCorrect = false
-                        onComplete(isCorrect, "No se pudo crear el ultimo pago, porfavor comuníquese con soporte!", null, false)
                     }
+                }
+                else ->{
+                    //diasPagados * the type loan days times the quotas
+                    val paidDaysBefore = loanDomain.diasPagados?:0
+                    val currentLoanDays = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT).days
+                    val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(diasPagadosNuevo))
 
-                }else
-                {
-                    println("ViewModelRegister --> : Error ${it.exception?.message}")
-                    //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
-                    isCorrect = false
-                    onComplete(isCorrect, "No se pudo actualizar el pago, inténtelo otra vez", null, false)
+                    loanProvider.setLastPaymentForQuota(
+                        id?:"",
+                        fecha?:"",
+                        diasRestantesPorPagar,
+                        diasPagados = newCurrentPaidDays,
+                        quotesPaid = diasPagadosNuevo
+                        ).addOnCompleteListener {
+                        if(it.isSuccessful) {
+                            val detalle = DetallePrestamoSender(
+                                idPrestamo = id,
+                                fechaPago = fecha,
+                                pagoTotal = pagoTotal,
+                                unixtime = getFechaActualNormalInUnixtime())
+
+                            detailLoanProvider.createDetalle(detalle).addOnCompleteListener {
+                                if(it.isSuccessful) {
+                                    //_message.value = "Se actualizo el pago"
+                                    isCorrect = true
+                                    onComplete(isCorrect, "Se actualizo el pago", null, false)
+                                }else {
+                                    println("Error: ${it.exception?.message}")
+                                    isCorrect = false
+                                    onComplete(isCorrect, "No se pudo crear el ultimo pago, inténtelo otra vez", null, false)
+                                }
+                            }.addOnFailureListener {
+                                Log.d(tag,"Error: ${it.message}")
+                                isCorrect = false
+                                onComplete(isCorrect, "No se pudo crear el ultimo pago, porfavor comuníquese con soporte!", null, false)
+                            }
+                        }else {
+                            Log.d(tag,"ViewModelRegister --> : Error ${it.exception?.message}")
+                            //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
+                            isCorrect = false
+                            onComplete(isCorrect, "No se pudo actualizar el pago, inténtelo otra vez", null, false)
+                        }
+                    }
                 }
             }
 
 
-        }catch (t:Throwable)
-        {
+        }catch (t:Throwable) {
             isCorrect = false
+            Log.d(tag,"Error throable model ----> ${t.message} -- ${t.cause}")
             onComplete(isCorrect, "No se pudo actualizar el pago, porfavor comuníquese con soporte!", null, false)
 
-            println("Error throable model ----> ${t.message}")
         }
     }
 
-    fun cerrarPrestamo(id:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit)
-    {
+
+    fun cerrarPrestamo(id:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect = false
 
         try {
 
-            mPrestamoProvider.cerrarPrestamo(id?:"").addOnCompleteListener {
-                if(it.isSuccessful)
-                {
+            loanProvider.cerrarPrestamo(id?:"").addOnCompleteListener {
+                if(it.isSuccessful) {
                     isCorrect = true
                     onComplete(isCorrect, "Se cerro el pago", null, false)
 
-                }else
-                {
-                    println("ViewModelRegister --> : Error ${it.exception?.message}")
+                }else {
+                    Log.d(tag,"ViewModelRegister --> : Error ${it.exception?.message}")
                     //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
                     isCorrect = false
                     onComplete(isCorrect, "No se pudo cerrar el pago, inténtelo otra vez", null, false)
@@ -120,27 +159,11 @@ class ViewModelDashboard private constructor(){
             }
 
 
-        }catch (t:Throwable)
-        {
+        }catch (t:Throwable) {
             isCorrect = false
             onComplete(isCorrect, "No se pudo cerrar el pago, porfavor comuníquese con soporte!", null, false)
 
-            println("Error throable model ----> ${t.message}")
-        }
-    }
-
-
-    //constructor
-    companion object Singleton{
-        private var instance: ViewModelDashboard? = null
-
-        fun getInstance(): ViewModelDashboard =
-            instance ?: ViewModelDashboard(
-                //local y remoto
-            ).also { instance = it }
-
-        fun destroyInstance(){
-            instance = null
+            Log.d(tag,"Error throable model ----> ${t.message}")
         }
     }
 }

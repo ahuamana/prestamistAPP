@@ -16,4 +16,10 @@
         android:title="Registro"
         android:icon="@drawable/ic_registrar"/>
 
+    <item
+        android:id="@+id/navigation_settings"
+        android:title="Configuración"
+        android:visible="false"
+        android:icon="@drawable/ic_settings"/>
+
 </menu>

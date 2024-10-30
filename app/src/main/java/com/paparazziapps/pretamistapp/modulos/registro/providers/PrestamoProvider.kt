@@ -5,7 +5,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.QuerySnapshot
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.application.MyPreferences
 
 class PrestamoProvider {
@@ -28,10 +28,10 @@ class PrestamoProvider {
     }
 
     //Super admin -- implemented
-    fun create(prestamo: Prestamo, idSucursal:Int): Task<Void> {
-        prestamo.sucursalId = if(preferences.isSuperAdmin) idSucursal else  preferences.sucursalId
-        prestamo.id = mCollectionPrestamo.document().id
-        return mCollectionPrestamo.document(prestamo.id!!).set(prestamo)
+    fun create(loanDomain: LoanDomain, idSucursal:Int): Task<Void> {
+        loanDomain.sucursalId = if(preferences.isSuperAdmin) idSucursal else  preferences.sucursalId
+        loanDomain.id = mCollectionPrestamo.document().id
+        return mCollectionPrestamo.document(loanDomain.id!!).set(loanDomain)
     }
 
     //Super admin -- implemented
@@ -56,6 +56,20 @@ class PrestamoProvider {
         val map = mutableMapOf<String,Any?>()
         map.put("fechaUltimoPago",fecha)
         map.put("dias_restantes_por_pagar",diasRestantesPorPagar)
+        map.put("diasPagados",diasPagados)
+        return mCollectionPrestamo.document(id).update(map)
+    }
+
+    fun setLastPaymentForQuota(
+        id:String,
+        fecha:String,
+        diasRestantesPorPagar:Int,
+        diasPagados:Int,
+        quotesPaid:Int): Task<Void> {
+        val map = mutableMapOf<String,Any?>()
+        map.put("fechaUltimoPago",fecha)
+        map.put("quotasPending",diasRestantesPorPagar)
+        map.put("quotasPaid",quotesPaid)
         map.put("diasPagados",diasPagados)
         return mCollectionPrestamo.document(id).update(map)
     }

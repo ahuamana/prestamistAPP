@@ -5,20 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ItemDetallePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.Prestamo
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 
 class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewHolder>() {
 
 
 
-    var prestamosDetalle: MutableList<Prestamo> = mutableListOf()
+    var prestamosDetalle: MutableList<LoanDomain> = mutableListOf()
 
-    fun setData(listPrestamos: MutableList<Prestamo>) {
-        prestamosDetalle = listPrestamos
+    fun setData(listLoanRespons: MutableList<LoanDomain>) {
+        prestamosDetalle = listLoanRespons
         notifyDataSetChanged()
     }
 
@@ -43,7 +41,7 @@ class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewH
 
         val binding = ItemDetallePrestamoBinding.bind(itemView)
 
-        fun bind(item: Prestamo){
+        fun bind(item: LoanDomain){
 
             var position = binding.circleCount
             var deuda = binding.btnDeuda
@@ -51,10 +49,10 @@ class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewH
             var plazo_vto = binding.tvDiasRestantes
 
             //
-            var plazo = getDiasRestantesFromStart(item.fecha?:"",item.plazo_vto?:0)
+            var plazo = getDiasRestantesFromStart(item.fecha_start_loan?:"",item.plazo_vto_in_days?:0)
 
             //Calcular deuda de dias no pagados
-            var deudaTotal = getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha?:"",item.diasPagados?:0).toInt().times(item.montoDiarioAPagar?:0.0)
+            var deudaTotal = getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan?:"",item.diasPagados?:0).toInt().times(item.montoDiarioAPagar?:0.0)
 
             itemView.apply {
                 position.text = adapterPosition.toString()
