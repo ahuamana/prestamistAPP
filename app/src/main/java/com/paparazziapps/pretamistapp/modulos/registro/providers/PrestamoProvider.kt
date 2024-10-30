@@ -60,6 +60,14 @@ class PrestamoProvider {
         return mCollectionPrestamo.document(id).update(map)
     }
 
+    fun setLastPaymentForQuota(id:String, fecha:String,diasRestantesPorPagar:Int, diasPagados:Int): Task<Void> {
+        val map = mutableMapOf<String,Any?>()
+        map.put("fechaUltimoPago",fecha)
+        map.put("quotasPending",diasRestantesPorPagar)
+        map.put("quotasPaid",diasPagados)
+        return mCollectionPrestamo.document(id).update(map)
+    }
+
     //No need superAdmin - or Adming to update
     fun cerrarPrestamo(id: String):Task<Void> {
         val map = mutableMapOf<String,Any?>()

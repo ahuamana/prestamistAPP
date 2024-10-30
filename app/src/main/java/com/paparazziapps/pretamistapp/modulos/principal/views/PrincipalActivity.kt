@@ -288,60 +288,7 @@ class PrincipalActivity : AppCompatActivity(){
 
         layout_detalle_prestamo.tvPlazoPrestamo.text = "${loanDomain.plazo_vto_in_days.toString()} días"
 
-        //Ocultar vistas si no tiene deudas
-        if(loanDomain.dias_restantes_por_pagar!! == 0)
-        {
-            println("Dias restantes por pagar es == a 0 *---> ${loanDomain.dias_restantes_por_pagar}")
-            //If dias restantes es cero
-            layout_detalle_prestamo.apply {
-                btnPagar.apply {
-                    text = "Cerrar préstamo"
-                    isVisible = true
-                    isEnabled = true
-                    standardSimpleButtonOutline()
-                }
-                contentDiasAPagar.isVisible = false
-                contentPagoTotal.isVisible = false
-            }
-        }else
-        {
-            layout_detalle_prestamo.btnPagar.apply {
-                this.standardSimpleButtonOutlineDisable()
-                isEnabled = false
-            }
-
-            if(isNullOrEmpty(montoTotalAPagar.toString()))
-            {
-                if(montoTotalAPagar.toString().contains("null"))
-                {
-                    layout_detalle_prestamo.apply {
-                        this.contentPagoTotal.isVisible = true
-                        this.btnPagar.isVisible = true
-                        this.contentLineaExtra.isVisible = true
-                        this.contentDiasAPagar.isVisible = true
-                    }
-
-                }else {
-                    layout_detalle_prestamo.apply {
-                        this.contentPagoTotal.isVisible = false
-                        this.tvCapitalPrestado.text = "${getString(R.string.tipo_moneda_defecto_cero)}"
-                        this.btnPagar.isVisible = false
-                        this.contentLineaExtra.isVisible = false
-                        this.contentDiasAPagar.isVisible = false
-                    }
-                }
-
-            }else
-            {
-                layout_detalle_prestamo.apply {
-                    this.contentPagoTotal.isVisible = true
-                    this.btnPagar.isVisible = true
-                    this.contentLineaExtra.isVisible = true
-                    this.contentDiasAPagar.isVisible = true
-                }
-
-            }
-        }
+        handledCloseLoan(loanDomain, montoTotalAPagar)
 
         val typeLoan = PaymentScheduled.getPaymentScheduledById( loanDomain.typeLoan?: INT_DEFAULT)
 
@@ -360,11 +307,13 @@ class PrincipalActivity : AppCompatActivity(){
         when(typeLoan){
             PaymentScheduledEnum.DAILY -> {
                 // set in days
+                layout_detalle_prestamo.contentLayoutDiasAPagar.hint = "Día(s) a pagar"
                 layout_detalle_prestamo.lblPaidDaysOrQuotas.text = getString(R.string.days_paid_title)
                 layout_detalle_prestamo.tvDiasPagados.text = "${loanDomain.diasPagados} días de ${loanDomain.plazo_vto_in_days} días"
             }
             else -> {
                 // set in quotes
+                layout_detalle_prestamo.contentLayoutDiasAPagar.hint = "Cuota(s) a pagar"
                 layout_detalle_prestamo.lblPaidDaysOrQuotas.text = getString(R.string.quotes_paid_title)
                 val quotes = loanDomain.quotas?:0
                 val displayQuotes = if(quotes == 1) "cuota" else "cuotas"
@@ -378,22 +327,59 @@ class PrincipalActivity : AppCompatActivity(){
 
         layout_detalle_prestamo.btnPagar.apply {
             setOnClickListener {
-                    //Actualizar en fragment
-                    isClosed = text.toString()=="Cerrar préstamo"
-                    if(isClosed) {
-                        binding.cortinaBottomSheet.isVisible = false
-                        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                        setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(loanDomain,0.0,adapterPosition, 0, 0, isClosed = isClosed)
-                    }else{
-                        val montoTotalAPagarNuevo = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt() * loanDomain.montoDiarioAPagar!!
-                        diasRestantesPorPagarNuevo = loanDomain.dias_restantes_por_pagar?.minus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
-                        val diasPagadosNuevo = loanDomain.diasPagados?.plus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
-                        binding.cortinaBottomSheet.isVisible = false
-                        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                        setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(loanDomain,montoTotalAPagarNuevo,adapterPosition, diasRestantesPorPagarNuevo?:-9999, diasPagados = diasPagadosNuevo!!, isClosed = isClosed)
+                //Actualizar en fragment
+                isClosed = text.toString()=="Cerrar préstamo"
+                if(isClosed) {
+                    binding.cortinaBottomSheet.isVisible = false
+                    bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
+                    setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(loanDomain,0.0,adapterPosition, 0, 0, isClosed = isClosed)
+                }else{
+
+                    //get type of loan
+                    when(typeLoan){
+                        PaymentScheduledEnum.DAILY -> {
+                            val montoTotalAPagarNuevo = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt() * (loanDomain.montoDiarioAPagar?:0.0)
+                            diasRestantesPorPagarNuevo = loanDomain.dias_restantes_por_pagar?.minus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
+                            val diasPagadosNuevo = loanDomain.diasPagados?.plus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
+                            binding.cortinaBottomSheet.isVisible = false
+                            bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
+                            setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(
+                                loanDomain,
+                                montoTotalAPagarNuevo,
+                                adapterPosition,
+                                diasRestantesPorPagarNuevo?:-9999,
+                                diasPagados = diasPagadosNuevo!!,
+                                isClosed = isClosed)
+                        }
+                        else -> {
+                            val quotesToPayNow = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt()
+                            val amountPay = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt() * (loanDomain.montoDiarioAPagar?:0.0)
+                            val quotesPaidBefore = loanDomain.quotasPaid?:0
+                            val currentQuotesPending = loanDomain.quotasPending?:loanDomain.quotas?:0
+                            val newQuotesPending = currentQuotesPending - quotesToPayNow
+                            val quotesPaidNowPlusQuotesPaidBefore = quotesPaidBefore.plus(quotesToPayNow)
+
+                            Log.d("QuotesPaidNowPlusQuotesPaidBefore", quotesPaidNowPlusQuotesPaidBefore.toString())
+                            Log.d("newQuotesPending", newQuotesPending.toString())
+                            Log.d("QuotesToPayNow", quotesToPayNow.toString())
+                            Log.d("AmountPay", amountPay.toString())
+                            Log.d("QuotesPaidBefore", quotesPaidBefore.toString())
+
+                            binding.cortinaBottomSheet.isVisible = false
+                            bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
+                            setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(
+                                loanDomain,
+                                amountPay,
+                                adapterPosition,
+                                diasRestantesPorPagar = newQuotesPending,
+                                diasPagados = quotesPaidNowPlusQuotesPaidBefore,
+                                isClosed = isClosed)
+
+                        }
                     }
                 }
             }
+        }
 
 
 
@@ -436,6 +422,56 @@ class PrincipalActivity : AppCompatActivity(){
         //Mostrar bottom sheet
        binding.cortinaBottomSheet.isVisible = true
        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun handledCloseLoan(loanDomain: LoanDomain, montoTotalAPagar:Double) {
+        //Ocultar vistas si no tiene deudas
+        if(loanDomain.dias_restantes_por_pagar == 0 || loanDomain.quotasPending == 0) {
+            Log.d("this","Dias restantes por pagar es == a 0 *---> ${loanDomain.dias_restantes_por_pagar}")
+            //If dias restantes es cero
+            layout_detalle_prestamo.apply {
+                btnPagar.apply {
+                    text = "Cerrar préstamo"
+                    isVisible = true
+                    isEnabled = true
+                    standardSimpleButtonOutline()
+                }
+                contentDiasAPagar.isVisible = false
+                contentPagoTotal.isVisible = false
+            }
+        }else {
+            layout_detalle_prestamo.btnPagar.apply {
+                this.standardSimpleButtonOutlineDisable()
+                isEnabled = false
+            }
+            if(isNullOrEmpty(montoTotalAPagar.toString())) {
+                if(montoTotalAPagar.toString().contains("null")) {
+                    layout_detalle_prestamo.apply {
+                        this.contentPagoTotal.isVisible = true
+                        this.btnPagar.isVisible = true
+                        this.contentLineaExtra.isVisible = true
+                        this.contentDiasAPagar.isVisible = true
+                    }
+
+                }else {
+                    layout_detalle_prestamo.apply {
+                        this.contentPagoTotal.isVisible = false
+                        this.tvCapitalPrestado.text = "${getString(R.string.tipo_moneda_defecto_cero)}"
+                        this.btnPagar.isVisible = false
+                        this.contentLineaExtra.isVisible = false
+                        this.contentDiasAPagar.isVisible = false
+                    }
+                }
+
+            }else {
+                layout_detalle_prestamo.apply {
+                    this.contentPagoTotal.isVisible = true
+                    this.btnPagar.isVisible = true
+                    this.contentLineaExtra.isVisible = true
+                    this.contentDiasAPagar.isVisible = true
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

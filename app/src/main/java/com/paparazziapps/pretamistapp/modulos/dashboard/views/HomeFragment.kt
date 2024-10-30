@@ -26,6 +26,8 @@ import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -40,7 +42,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
     private val binding get() = _binding!!
 
     private var preferences = MyPreferences()
-    private val prestamoAdapter = PrestamoAdapter(this)
+    private var prestamoAdapter = PrestamoAdapter(this)
 
     private lateinit var recyclerPrestamos: RecyclerView
 
@@ -131,7 +133,6 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
 
             recyclerPrestamos.isVisible = true
-            //showMessage(" Lista de prestamos ${it.count()}")
         }
     }
 
@@ -220,14 +221,26 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                         }
                     }
                 }else {
-                    viewModel.updateUltimoPago(loanDomain.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
+
+                    viewModel.updateUltimoPago(loanDomain = loanDomain, loanDomain.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
                             isCorrect, msj, result, isRefresh ->
 
                         if(isCorrect) {
+                            //Here you can update the item in the recycler view with the new data
+                            val loanType = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan ?: INT_DEFAULT)
                             loanDomain.fechaUltimoPago = getFechaActualNormalCalendar()
-                            loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar
-                            loanDomain.diasPagados = diasPagados
-                            prestamoAdapter.updateItem(adapterPosition, loanDomain)//Actualizar local recycler View
+                            when(loanType) {
+                                PaymentScheduledEnum.DAILY -> {
+                                    loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar
+                                    loanDomain.diasPagados = diasPagados
+                                    prestamoAdapter.updateItem(adapterPosition, loanDomain)
+                                }
+                                else -> {
+                                    loanDomain.quotasPending = diasRestantesPorPagar
+                                    loanDomain.quotasPaid = diasPagados
+                                    prestamoAdapter.updateItem(adapterPosition, loanDomain)
+                                }
+                            }
                             showMessage(msj)
                         }else {
                             showMessage(msj)

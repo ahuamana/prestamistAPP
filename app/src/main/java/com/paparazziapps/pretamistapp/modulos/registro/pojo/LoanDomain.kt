@@ -62,6 +62,8 @@ data class LoanDomain (
     var quotas:Int?=null,
     @SerialName("quotasPaid")
     var quotasPaid:Int?=null,
+    @SerialName("quotasPending")
+    var quotasPending:Int?=null,
 
     )
 

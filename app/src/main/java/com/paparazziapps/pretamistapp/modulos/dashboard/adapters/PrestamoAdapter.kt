@@ -14,8 +14,6 @@ import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
-import com.paparazziapps.pretamistapp.domain.MissingCalculator
-import com.paparazziapps.pretamistapp.domain.QuotaCalculator
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
@@ -123,7 +121,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
                 //set the missing days for the type of loan
                 val daysMissing = calculateTheMissingDaysToPayForTypeLoan(item)
-                updateMissingForLoanTypeInDaysOrQuotas(item, daysMissing)
+                updatePendingLoanTypeInDaysOrQuotas(item, daysMissing)
 
                 //setDiasRestantesPorPagar(item)
 
@@ -163,9 +161,8 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             }
         }
 
-        private fun updateMissingForLoanTypeInDaysOrQuotas(item: LoanDomain, daysMissing: Int) {
+        private fun updatePendingLoanTypeInDaysOrQuotas(item: LoanDomain, daysMissing: Int) {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
-            val quotaCalculator = QuotaCalculator()
             Log.d("MissingDays", "Missing days: $daysMissing")
 
             if (daysMissing < 0) {
@@ -183,16 +180,17 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                     binding.numeroDiasPorPagar.text = daysMissing.toString()
                 }
                 else -> {
-                    val quotas = if (daysMissing == 1) "cuota por pagar" else "cuotas por pagar"
-                    Log.d("Quotas", "Quotas: $quotas")
-                    binding.numeroDiasPorPagar.text = daysMissing.toString()
+                    val quotasPendingBefore = item.quotasPending?:item.quotas?:0
+                    val quotas = if (quotasPendingBefore == 1) "cuota por pagar" else "cuotas por pagar"
+                    Log.d("QuotasPending", "Quotas: $quotasPendingBefore")
+                    binding.numeroDiasPorPagar.text = quotasPendingBefore.toString()
                     binding.lblDiasPorPagar.text = quotas
                 }
             }
         }
 
         private fun updateUIForDelay(delay: Int) {
-            if (delay == 0) {
+            if (delay <= 0) {
                 binding.btnSendWhatsapp.isVisible = false
                 binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.colorPrimary)
             } else {
@@ -249,6 +247,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             val daysDelayed = if (item.fechaUltimoPago.isNullOrEmpty()) {
                 getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
             } else {
+                //TODO: Change diasPagados when use quotas
                 getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.diasPagados ?: 0).toIntOrNull() ?: 0
             }
 
