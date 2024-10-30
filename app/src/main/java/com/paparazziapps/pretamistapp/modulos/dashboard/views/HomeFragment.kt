@@ -222,7 +222,12 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                     }
                 }else {
 
-                    viewModel.updateUltimoPago(loanDomain = loanDomain, loanDomain.id, getFechaActualNormalCalendar(), montoTotalAPagar, diasRestantesPorPagar, diasPagados){
+                    viewModel.updateUltimoPago(
+                        loanDomain = loanDomain, loanDomain.id,
+                        getFechaActualNormalCalendar(),
+                        montoTotalAPagar,
+                        diasRestantesPorPagar,
+                        diasPagados){
                             isCorrect, msj, result, isRefresh ->
 
                         if(isCorrect) {
@@ -236,8 +241,14 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                                     prestamoAdapter.updateItem(adapterPosition, loanDomain)
                                 }
                                 else -> {
+                                    //calculateTheNewDaysPaid
+                                    val paidDaysBefore = loanDomain.diasPagados?:0
+                                    val currentLoanDays = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT).days
+                                    val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(diasPagados))
+
                                     loanDomain.quotasPending = diasRestantesPorPagar
                                     loanDomain.quotasPaid = diasPagados
+                                    loanDomain.dias_restantes_por_pagar = newCurrentPaidDays
                                     prestamoAdapter.updateItem(adapterPosition, loanDomain)
                                 }
                             }

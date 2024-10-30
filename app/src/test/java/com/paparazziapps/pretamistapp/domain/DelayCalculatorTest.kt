@@ -1,43 +1,35 @@
 package com.paparazziapps.pretamistapp.domain
 
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import org.junit.Assert.*
 import org.junit.Test
 
 class DelayCalculatorTest {
 
     @Test
-    fun `calculateWeeksDelayed should return 0 when daysDelayed is less than 7`() {
+    fun `calculate delay for daily payment`() {
         val delayCalculator = DelayCalculator()
-        val daysDelayed = 6
-        val expected = 0
-        val actual = delayCalculator.calculateWeeksDelayed(daysDelayed)
-        assertEquals(expected, actual)
+        val daysDelayed = 5
+        val expected = 5
+        val result = delayCalculator.calculateDelay(PaymentScheduledEnum.DAILY, daysDelayed)
+        assertEquals(expected, result)
     }
 
     @Test
-    fun `calculateWeeksDelayed should return 1 when daysDelayed is 7`() {
+    fun `calculate delay for weekly payment`() {
         val delayCalculator = DelayCalculator()
-        val daysDelayed = 7
-        val expected = 1
-        val actual = delayCalculator.calculateWeeksDelayed(daysDelayed)
-        assertEquals(expected, actual)
-    }
-
-    @Test
-    fun `calculateWeeksDelayed should return 2 when daysDelayed is 14`() {
-        val delayCalculator = DelayCalculator()
-        val daysDelayed = 14
-        val expected = 2
-        val actual = delayCalculator.calculateWeeksDelayed(daysDelayed)
-        assertEquals(expected, actual)
-    }
-
-    @Test
-    fun `calculateWeeksDelayed should return 3 when daysDelayed is between 21 and 27`() {
-        val delayCalculator = DelayCalculator()
-        val daysDelayed = 24
+        val daysDelayed = 10
         val expected = 3
-        val actual = delayCalculator.calculateWeeksDelayed(daysDelayed)
-        assertEquals(expected, actual)
+        val result = delayCalculator.calculateDelay(PaymentScheduledEnum.WEEKLY, daysDelayed)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `calculate delay for fortnightly payment`() {
+        val delayCalculator = DelayCalculator()
+        val daysDelayed = 20
+        val expected = 5
+        val result = delayCalculator.calculateDelay(PaymentScheduledEnum.FORTNIGHTLY, daysDelayed)
+        assertEquals(expected, result)
     }
 }

@@ -247,21 +247,10 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             val daysDelayed = if (item.fechaUltimoPago.isNullOrEmpty()) {
                 getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
             } else {
-                //TODO: Change diasPagados when use quotas
                 getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.diasPagados ?: 0).toIntOrNull() ?: 0
             }
 
-            return when (tyLoan) {
-                PaymentScheduledEnum.DAILY -> daysDelayed
-                PaymentScheduledEnum.WEEKLY -> calculatorDelay.calculateWeeksDelayed(daysDelayed)
-                PaymentScheduledEnum.FORTNIGHTLY -> calculatorDelay.calculateFortnightsDelayed(daysDelayed)
-                PaymentScheduledEnum.MONTHLY -> calculatorDelay.calculateMonthsDelayed(daysDelayed)
-                PaymentScheduledEnum.BIMONTHLY -> calculatorDelay.calculateBimonthsDelayed(daysDelayed)
-                PaymentScheduledEnum.QUARTERLY -> calculatorDelay.calculateQuartersDelayed(daysDelayed)
-                PaymentScheduledEnum.SEMIANNUAL -> calculatorDelay.calculateSemestersDelayed(daysDelayed)
-                PaymentScheduledEnum.ANNUAL -> calculatorDelay.calculateYearsDelayed(daysDelayed)
-                else -> 0
-            }
+            return calculatorDelay.calculateDelay(tyLoan, daysDelayed)
         }
 
         //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" else set "<WEEKS> semanas retrasadas" and so on

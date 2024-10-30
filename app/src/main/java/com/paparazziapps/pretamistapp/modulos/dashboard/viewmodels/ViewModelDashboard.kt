@@ -86,9 +86,18 @@ class ViewModelDashboard private constructor() : ViewModel(){
                     }
                 }
                 else ->{
-                    //use fun setLastPaymentForQuota
+                    //diasPagados * the type loan days times the quotas
+                    val paidDaysBefore = loanDomain.diasPagados?:0
+                    val currentLoanDays = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT).days
+                    val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(diasPagadosNuevo))
 
-                    loanProvider.setLastPaymentForQuota(id?:"",fecha?:"",diasRestantesPorPagar,diasPagadosNuevo).addOnCompleteListener {
+                    loanProvider.setLastPaymentForQuota(
+                        id?:"",
+                        fecha?:"",
+                        diasRestantesPorPagar,
+                        diasPagados = newCurrentPaidDays,
+                        quotesPaid = diasPagadosNuevo
+                        ).addOnCompleteListener {
                         if(it.isSuccessful) {
                             val detalle = DetallePrestamoSender(
                                 idPrestamo = id,
@@ -124,8 +133,9 @@ class ViewModelDashboard private constructor() : ViewModel(){
 
         }catch (t:Throwable) {
             isCorrect = false
+            Log.d(tag,"Error throable model ----> ${t.message} -- ${t.cause}")
             onComplete(isCorrect, "No se pudo actualizar el pago, porfavor comuníquese con soporte!", null, false)
-            Log.d(tag,"Error throable model ----> ${t.message}")
+
         }
     }
 

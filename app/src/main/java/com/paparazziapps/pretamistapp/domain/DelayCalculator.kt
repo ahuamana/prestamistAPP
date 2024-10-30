@@ -1,58 +1,73 @@
 package com.paparazziapps.pretamistapp.domain
 
+import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
+
 class DelayCalculator {
 
-    fun calculateWeeksDelayed(daysDelayed: Int): Int {
-        return if (daysDelayed >= 7) {
-            daysDelayed / 7
+    fun calculateDelay(tyLoan: PaymentScheduledEnum, daysDelayed: Int): Int {
+        return when (tyLoan) {
+            PaymentScheduledEnum.DAILY -> daysDelayed
+            PaymentScheduledEnum.WEEKLY -> calculateWeeksDelayedInDays(daysDelayed)
+            PaymentScheduledEnum.FORTNIGHTLY -> calculateFortnightsDelayedInDays(daysDelayed)
+            PaymentScheduledEnum.MONTHLY -> calculateMonthsDelayedInDays(daysDelayed)
+            PaymentScheduledEnum.BIMONTHLY -> calculateBimonthsDelayedInDays(daysDelayed)
+            PaymentScheduledEnum.QUARTERLY -> calculateQuartersDelayedInDays(daysDelayed)
+            PaymentScheduledEnum.SEMIANNUAL -> calculateSemestersDelayedInDays(daysDelayed)
+            PaymentScheduledEnum.ANNUAL -> calculateYearsDelayedInDays(daysDelayed)
+        }
+    }
+
+    private fun calculateWeeksDelayedInDays(daysDelayed: Int): Int {
+        return if (daysDelayed > 7) {
+            (daysDelayed - 7)
         } else {
             0
         }
     }
 
-    fun calculateFortnightsDelayed(daysDelayed: Int): Int {
-        return if (daysDelayed >= 15) {
-            daysDelayed / 15
+    private fun calculateFortnightsDelayedInDays(daysDelayed: Int): Int {
+        return if (daysDelayed > 15) {
+            (daysDelayed - 15)
         } else {
             0
         }
     }
 
-    fun calculateMonthsDelayed(daysDelayed: Int): Int {
-        return if (daysDelayed >= 30) {
-            daysDelayed / 30
+    private fun calculateMonthsDelayedInDays(daysDelayed: Int): Int {
+        return if (daysDelayed > 30) {
+            (daysDelayed - 30)
         } else {
             0
         }
     }
 
-    fun calculateBimonthsDelayed(daysDelayed: Int): Int {
-        return if (daysDelayed >= 60) {
-            daysDelayed / 60
+    private fun calculateBimonthsDelayedInDays(daysDelayed: Int): Int {
+        return if (daysDelayed > 60) {
+            (daysDelayed - 60)
         } else {
             0
         }
     }
 
-    fun calculateQuartersDelayed(daysDelayed: Int): Int {
-        return if (daysDelayed >= 90) {
-            daysDelayed / 90
+    private fun calculateQuartersDelayedInDays(daysDelayed: Int): Int {
+        return if (daysDelayed > 90) {
+            (daysDelayed - 90)
         } else {
             0
         }
     }
 
-    fun calculateSemestersDelayed(daysDelayed: Int): Int {
-        return if (daysDelayed >= 180) {
-            daysDelayed / 180
+    private fun calculateSemestersDelayedInDays(daysDelayed: Int): Int {
+        return if (daysDelayed > 180) {
+            (daysDelayed - 180)
         } else {
             0
         }
     }
 
-    fun calculateYearsDelayed(daysDelayed: Int): Int {
-        return if (daysDelayed >= 365) {
-            daysDelayed / 365
+    private fun calculateYearsDelayedInDays(daysDelayed: Int): Int {
+        return if (daysDelayed > 365) {
+            (daysDelayed - 365)
         } else {
             0
         }
