@@ -1,7 +1,8 @@
 
 # Loan Manager App
 
-[Prestamist - app - background.pdf](https://github.com/user-attachments/files/17579502/Prestamist.-.app.-.background.pdf)
+![Prestamist - app - background](https://github.com/user-attachments/assets/d44a9765-b7ee-4a0e-848e-b95ccb9d2639)
+
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.8.0-blue.svg)](https://kotlinlang.org)
 [![Android Studio](https://img.shields.io/badge/Android%20Studio-2023.1.1-green.svg)](https://developer.android.com/studio)
@@ -19,7 +20,7 @@ Además, los usuarios pueden generar informes de caja personalizados por fechas,
 En resumen, Loan Manager App es una herramienta útil para cualquier empresa de préstamos que busque optimizar sus operaciones y mejorar la eficiencia de su proceso de cobro.
 
 
-## Features
+## 🚀 Features
 
 - Menus (Dashboard / Finanzas / Registro)
 - Géstion de todos los préstamos (días retrasados - días faltantes por pagar)
@@ -34,12 +35,27 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - Redondeo de préstamos
 - Admob
 
+## 🛠 Tech Stack & Open-source libraries
 
-## Screenshots
+- Minimum SDK level 24
+- [Kotlin](https://kotlinlang.org/) - First class and official programming language for Android development.
+- [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - For asynchronous programming
+- [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/) - A cold asynchronous data stream
+- [JetPack](https://developer.android.com/jetpack)
+    - Lifecycle - Observe Android lifecycles and handle UI states
+    - ViewModel - UI related data holder, lifecycle aware
+    - Room - Construct database
+    - Navigation Component - Handle everything needed for in-app navigation
+- [Dagger Hilt](https://dagger.dev/hilt/) - Dependency Injection framework
+- [Firebase](https://firebase.google.com/) - Backend platform for authentication and realtime database
+- [Material-Components](https://github.com/material-components/material-components-android) - Material design components
 
-![Cover](https://user-images.githubusercontent.com/60039961/218292137-abf70b8b-3a3c-4e3c-b609-c6aa3f4671a9.jpg)
-
-
+## 🏗️ Architecture
+- Clean Architecture
+- MVVM Architecture (View - ViewModel - Model)
+- Repository pattern
+- SOLID Principles
+- 
 ## Installation
 
 1. Reemplazar el archivo Google Services de Firebase
@@ -95,4 +111,19 @@ Cashier credentials
 ## Authors
 
 - [@ahuamana](https://www.github.com/ahuamana)
+
+## Licence
+Copyright 2024 Antony Huaman
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
