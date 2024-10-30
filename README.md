@@ -1,6 +1,13 @@
 
 # Loan Manager App
 
+[Prestamist - app - background.pdf](https://github.com/user-attachments/files/17579502/Prestamist.-.app.-.background.pdf)
+
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.8.0-blue.svg)](https://kotlinlang.org)
+[![Android Studio](https://img.shields.io/badge/Android%20Studio-2023.1.1-green.svg)](https://developer.android.com/studio)
+[![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg)](https://android-arsenal.com/api?level=24)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 Loan Manager App es una aplicación diseñada para ayudar a las empresas de préstamos a gestionar sus operaciones diarias de manera eficiente. Con un panel de administrador y una interfaz de cajero, la aplicación permite la gestión de todos los préstamos, incluyendo el seguimiento de los días retrasados y los días restantes por pagar.
 
 Además, la aplicación admite múltiples sucursales, lo que permite una gestión centralizada de todos los préstamos en diferentes locaciones. Los usuarios pueden actualizar los pagos diarios, semanales o personalizados y cerrar los préstamos de manera eficiente.
