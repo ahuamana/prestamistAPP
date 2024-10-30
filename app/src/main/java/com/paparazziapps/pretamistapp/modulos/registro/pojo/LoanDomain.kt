@@ -60,6 +60,8 @@ data class LoanDomain (
     var typeLoanDays:Int?=null,
     @SerialName("quotas")
     var quotas:Int?=null,
+    @SerialName("quotasPaid")
+    var quotasPaid:Int?=null,
 
     )
 

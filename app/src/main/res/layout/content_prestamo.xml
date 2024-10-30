@@ -136,11 +136,13 @@
             android:id="@+id/cardview_dias_retrasados_v2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:backgroundTint="#F44336"
             app:cardCornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_send_whatsapp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/nombre_completo"
-            app:layout_constraintTop_toTopOf="@+id/btn_send_whatsapp">
+            app:layout_constraintTop_toBottomOf="@+id/nombre_completo">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -177,7 +179,6 @@
             android:id="@+id/btn_send_whatsapp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
             android:backgroundTint="@color/facebook_color_like"
             android:drawableStart="@drawable/ic_whatsapp"
             android:letterSpacing="0.01"
@@ -190,9 +191,8 @@
             app:cornerRadius="16dp"
             app:icon="@drawable/ic_whatsapp"
             app:iconTintMode="multiply"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nombre_completo" />
+            app:layout_constraintTop_toTopOf="@+id/type_of_loan_label" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

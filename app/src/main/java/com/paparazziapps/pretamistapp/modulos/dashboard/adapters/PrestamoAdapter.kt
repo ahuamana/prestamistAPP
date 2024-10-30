@@ -5,7 +5,6 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +15,7 @@ import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
 import com.paparazziapps.pretamistapp.domain.MissingCalculator
+import com.paparazziapps.pretamistapp.domain.QuotaCalculator
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
@@ -24,7 +24,6 @@ import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.ceil
 
 class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -123,7 +122,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
                 updateUIForDelay(delay)
 
                 //set the missing days for the type of loan
-                val daysMissing = calculateTheMissingDaysForTypeLoan(item)
+                val daysMissing = calculateTheMissingDaysToPayForTypeLoan(item)
                 updateMissingForLoanTypeInDaysOrQuotas(item, daysMissing)
 
                 //setDiasRestantesPorPagar(item)
@@ -166,49 +165,30 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
         private fun updateMissingForLoanTypeInDaysOrQuotas(item: LoanDomain, daysMissing: Int) {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
+            val quotaCalculator = QuotaCalculator()
             Log.d("MissingDays", "Missing days: $daysMissing")
-            //validate if less than 0 then set 0
-            if(daysMissing < 0) {
-                //Prestamo vencido - completado
+
+            if (daysMissing < 0) {
                 binding.numeroDiasPorPagar.text = ""
-                binding.lblDiasPorPagar.apply {
-                    text = "Préstamo vencido"
-                }
+                binding.lblDiasPorPagar.text = "Préstamo vencido"
                 binding.numeroDiasPorPagar.isVisible = false
                 binding.cardviewDiasPorPagar.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.color_red_trasparente)
-
-                return //return to avoid the next code
+                return
             }
 
-            when(tyLoan){
+            when (tyLoan) {
                 PaymentScheduledEnum.DAILY -> {
                     val missingText = if (daysMissing == 1) "día por pagar" else "días por pagar"
                     binding.lblDiasPorPagar.text = missingText
                     binding.numeroDiasPorPagar.text = daysMissing.toString()
                 }
-                else ->{
-                    val quotas = if(daysMissing == 1) "cuota por pagar" else "cuotas por pagar"
+                else -> {
+                    val quotas = if (daysMissing == 1) "cuota por pagar" else "cuotas por pagar"
                     Log.d("Quotas", "Quotas: $quotas")
-                    //get the id of the type of loan to calculate the missing quotas depending on the days missing divided by the days of the type of loan
-                    val getDividedQuotas:Int = when(tyLoan){
-                        PaymentScheduledEnum.DAILY -> daysMissing
-                        PaymentScheduledEnum.WEEKLY -> ceil(daysMissing / 7.0).toInt()
-                        PaymentScheduledEnum.FORTNIGHTLY -> ceil(daysMissing / 15.0).toInt()
-                        PaymentScheduledEnum.MONTHLY -> ceil(daysMissing / 30.0).toInt()
-                        PaymentScheduledEnum.BIMONTHLY -> ceil(daysMissing / 60.0).toInt()
-                        PaymentScheduledEnum.QUARTERLY -> ceil(daysMissing / 90.0).toInt()
-                        PaymentScheduledEnum.SEMIANNUAL -> ceil(daysMissing / 180.0).toInt()
-                        PaymentScheduledEnum.ANNUAL -> ceil(daysMissing / 365.0).toInt()
-                    }
-                    Log.d("Quotas", "Quotas getDividedQuotas: $getDividedQuotas")
-
-                    //set the missing quotas in the textview
-                    binding.numeroDiasPorPagar.text = getDividedQuotas.toString()
+                    binding.numeroDiasPorPagar.text = daysMissing.toString()
                     binding.lblDiasPorPagar.text = quotas
                 }
             }
-
-
         }
 
         private fun updateUIForDelay(delay: Int) {
@@ -240,14 +220,13 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
             }
         }
 
-        private fun calculateTheMissingDaysForTypeLoan(loan: LoanDomain) : Int {
-            val missingCalculator = MissingCalculator()
+        private fun calculateTheMissingDaysToPayForTypeLoan(loan: LoanDomain): Int {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(loan.typeLoan ?: INT_DEFAULT)
-            val daysWhenFinished = getDiasRestantesFromStart(loan.fecha_start_loan ?: "", loan.plazo_vto_in_days ?: 0)
-            val missingDays = missingCalculator.calculateDaysMissing(daysWhenFinished)
-            Log.d("MissingDays", "Missing days: $missingDays")
-            binding.numeroDiasPorPagar.text = missingDays.toString()
-            return missingDays
+            val result = when (tyLoan) {
+                PaymentScheduledEnum.DAILY -> (loan.plazo_vto_in_days ?: 0) - (loan.diasPagados ?: 0)
+                else -> (loan.quotas ?: 0) - (loan.quotasPaid ?: 0)
+            }
+            return result
         }
 
         private fun openWhatsapp(celular: String?, msj: String) {
