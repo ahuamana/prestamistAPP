@@ -62,8 +62,10 @@ class MyPreferences {
         prefs.remove("branchId")
     }
 
-    fun saveEmail(email: String){
+    fun setEmail(email: String){
         emailUser = email
     }
+
+
 
 }

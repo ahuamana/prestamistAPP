@@ -3,12 +3,18 @@ package com.paparazziapps.pretamistapp.modulos.login.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.data.providers.RegisterProvider
 import com.paparazziapps.pretamistapp.data.providers.UserProvider
+import kotlinx.coroutines.launch
 
-class ViewModelRegisterUser : ViewModel() {
+class ViewModelRegisterUser(
+    private val preferences: MyPreferences
+) : ViewModel() {
 
     var user: FirebaseUser? = null
     var mUserProvider = UserProvider()
@@ -38,33 +44,32 @@ class ViewModelRegisterUser : ViewModel() {
         return _user
     }
 
-    fun createUser(email: String, pass: String) {
+    fun createUser(email: String, pass: String, userInfo:User) = viewModelScope.launch {
         _isLoading.value = true
 
-        try {
-            mRegisterProvider.createUser(email,pass).addOnCompleteListener{ task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    user = task.result.user
-                    _user.setValue(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    _message.setValue("Ah ocurrido un error al intentar crear un usuario nuevo")
-                    _isLoading.setValue(false)
-                }
+        val result = mRegisterProvider.createUser(email,pass)
 
-                }.addOnFailureListener { e ->
-                _message.setValue(e.message)
+        when(result) {
+            is PAResult.Error -> {
+                // If sign in fails, display a message to the user.
+                _message.setValue("Ah ocurrido un error al intentar crear un usuario nuevo")
                 _isLoading.setValue(false)
             }
-        } catch (e: Exception) {
-            _message.setValue(e.message)
+            is PAResult.Success -> {
+                // Sign in success, update UI with the signed-in user's information
+                //get the email and save it on the preferences and then on firebase
+                preferences.setEmail(email)
+                //TODO: Save the rest of the user data on preferences
+
+                saveFirebaseUser(userInfo)
+
+            }
         }
     }
 
-    fun saveFirebaseUser(usernew: User) {
+    fun saveFirebaseUser(userInfo: User) {
         try {
-            mUserProvider.create(usernew).addOnCompleteListener { task ->
+            mUserProvider.create(userInfo).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _isLoading.setValue(false)
                     _isSavedFirebase.setValue(true)

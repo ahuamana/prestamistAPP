@@ -232,9 +232,11 @@ class RegisterActivity : AppCompatActivity() {
                 if(it.name?.equals(sucursalesTextView.text.toString().trim()) == true)  userNew.sucursalId = it.id
             }
             //Register
-            _viewModelRegistro.createUser(
-                edtEmail!!.text.toString().trim(),
-                edtPass!!.text.toString().trim())
+
+            val email = binding.email.text.toString().trim()
+            val pass = binding.password.text.toString().trim()
+
+            _viewModelRegistro.createUser(email, pass, userNew)
         }
     }
 

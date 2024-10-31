@@ -1,9 +1,7 @@
 package com.paparazziapps.pretamistapp.modulos.login.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paparazziapps.pretamistapp.application.MyPreferences
@@ -40,7 +38,7 @@ class ViewModelLogin (
             }
             is PAResult.Success -> {
                 //TODO: Save user data
-                preferences.saveEmail(email)
+                preferences.setEmail(email)
                 _message.value = "Bienvenido"
                 _isLoginEmail.value = true
                 _isLoading.value = false
