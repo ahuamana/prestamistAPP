@@ -9,7 +9,7 @@ import com.paparazziapps.pretamistapp.databinding.ItemDetallePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 
-class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewHolder>() {
+class LoanDetailAdapter : RecyclerView.Adapter<LoanDetailAdapter.ViewHolder>() {
 
 
 
@@ -20,14 +20,14 @@ class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewH
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrestamoDetalleAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoanDetailAdapter.ViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_detalle_prestamo, parent, false)
 
-        return PrestamoDetalleAdapter.ViewHolder(itemView)
+        return LoanDetailAdapter.ViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: PrestamoDetalleAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LoanDetailAdapter.ViewHolder, position: Int) {
 
         val currentItem = prestamosDetalle[position]
         holder.bind(currentItem)

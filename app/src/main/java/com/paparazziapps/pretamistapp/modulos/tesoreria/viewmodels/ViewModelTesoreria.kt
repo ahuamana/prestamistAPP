@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
-import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
+import com.paparazziapps.pretamistapp.modulos.registro.providers.DetailLoanProvider
+import com.paparazziapps.pretamistapp.modulos.registro.providers.LoanProvider
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 
 class ViewModelTesoreria private constructor() : ViewModel() {
 
     var  _message = MutableLiveData<String>()
-    val mPrestamoProvider = PrestamoProvider()
-    val mDetallePrestamo = DetallePrestamoProvider()
+    val mLoanProvider = LoanProvider()
+    val mDetallePrestamo = DetailLoanProvider()
 
     var _prestamos = MutableLiveData<MutableList<LoanDomain>>()
     var _pagosTotalesByTime = MutableLiveData<Double>()
@@ -30,7 +30,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
         try {
 
-            mPrestamoProvider.getPrestamos().addOnSuccessListener {
+            mLoanProvider.getPrestamos().addOnSuccessListener {
 
 
                 isCorrect = true

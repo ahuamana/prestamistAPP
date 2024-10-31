@@ -30,7 +30,7 @@ import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
-import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedPrestamoHome
+import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedLoanHome
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.modulos.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
@@ -332,7 +332,7 @@ class PrincipalActivity : AppCompatActivity(){
                 if(isClosed) {
                     binding.cortinaBottomSheet.isVisible = false
                     bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                    setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(loanDomain,0.0,adapterPosition, 0, 0, isClosed = isClosed)
+                    setOnClickedLoanHome?.openDialogUpdateLoan(loanDomain,0.0,adapterPosition, 0, 0, isClosed = isClosed)
                 }else{
 
                     //get type of loan
@@ -343,12 +343,12 @@ class PrincipalActivity : AppCompatActivity(){
                             val diasPagadosNuevo = loanDomain.diasPagados?.plus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
                             binding.cortinaBottomSheet.isVisible = false
                             bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                            setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(
+                            setOnClickedLoanHome?.openDialogUpdateLoan(
                                 loanDomain,
                                 montoTotalAPagarNuevo,
                                 adapterPosition,
                                 diasRestantesPorPagarNuevo?:-9999,
-                                diasPagados = diasPagadosNuevo!!,
+                                paidDays = diasPagadosNuevo!!,
                                 isClosed = isClosed)
                         }
                         else -> {
@@ -367,12 +367,12 @@ class PrincipalActivity : AppCompatActivity(){
 
                             binding.cortinaBottomSheet.isVisible = false
                             bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                            setOnClickedPrestamoHome?.openDialogoActualizarPrestamo(
+                            setOnClickedLoanHome?.openDialogUpdateLoan(
                                 loanDomain,
                                 amountPay,
                                 adapterPosition,
-                                diasRestantesPorPagar = newQuotesPending,
-                                diasPagados = quotesPaidNowPlusQuotesPaidBefore,
+                                daysMissingToPay = newQuotesPending,
+                                paidDays = quotesPaidNowPlusQuotesPaidBefore,
                                 isClosed = isClosed)
 
                         }

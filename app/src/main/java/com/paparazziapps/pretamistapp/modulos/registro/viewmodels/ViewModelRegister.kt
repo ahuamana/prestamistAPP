@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.paparazziapps.pretamistapp.domain.LoanType
 import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
+import com.paparazziapps.pretamistapp.modulos.registro.providers.LoanProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +19,7 @@ class ViewModelRegister private constructor() : ViewModel(){
 
     var _message = MutableLiveData<String>()
     var _montoDiario = MutableLiveData<Double>()
-    var mPrestamoProvider = PrestamoProvider()
+    var mLoanProvider = LoanProvider()
 
     private val _dailyStringMode : MutableStateFlow<String> = MutableStateFlow(LoanType.DAILY.description)
     val dailyStringMode : StateFlow<String> = _dailyStringMode.asStateFlow()
@@ -55,7 +55,7 @@ class ViewModelRegister private constructor() : ViewModel(){
     fun createPrestamo(loanDomain: LoanDomain, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect = false
         try {
-        mPrestamoProvider.create(loanDomain, idSucursal = idSucursal).addOnCompleteListener {
+        mLoanProvider.create(loanDomain, idSucursal = idSucursal).addOnCompleteListener {
                 if(it.isSuccessful)
                 {
                     _message.value = "El prestamo se registro correctamente"

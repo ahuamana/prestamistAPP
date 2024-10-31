@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.paparazziapps.pretamistapp.helper.application
 
-class CacheData constructor(name: String? = "Yaku_lab_preferences_common") {
+class CacheData constructor(name: String? = "loan_preferences_common") {
 
     private val sharedPreferences: SharedPreferences = application.getSharedPreferences(name, Context.MODE_PRIVATE)
 

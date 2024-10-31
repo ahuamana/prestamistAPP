@@ -18,7 +18,7 @@ import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
-import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
+import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.SetOnClickedLoan
 import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.User
@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment(),setOnClickedPrestamo {
+class HomeFragment : Fragment(),SetOnClickedLoan {
 
     private val viewModel by viewModels<ViewModelDashboard>()
     private val tag = HomeFragment::class.java.simpleName
@@ -55,7 +55,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        setOnClickedPrestamoHome = this
+        setOnClickedLoanHome = this
 
         //Link items with layout
         recyclerPrestamos = binding.recyclerPrestamos
@@ -159,16 +159,16 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
 
 
     companion object {
-        var setOnClickedPrestamoHome:setOnClickedPrestamo? = null
+        var setOnClickedLoanHome:SetOnClickedLoan? = null
     }
 
-    override fun actualizarPagoPrestamo(loanDomain: LoanDomain, needUpdate:Boolean, montoTotalAPagar:Double, adapterPosition:Int, diasRestrasado:String) {
+    override fun updateLoanPaid(loanDomain: LoanDomain, needUpdate:Boolean, totalAmountToPay:Double, adapterPosition:Int, daysDelayed:String) {
         context.apply {
-            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(loanDomain, montoTotalAPagar, diasRestrasado, adapterPosition, needUpdate)
+            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(loanDomain, totalAmountToPay, daysDelayed, adapterPosition, needUpdate)
         }
     }
 
-    override fun openDialogoActualizarPrestamo(loanDomain: LoanDomain, montoTotalAPagar: Double, adapterPosition: Int, diasRestantesPorPagar:Int, diasPagados:Int, isClosed:Boolean) {
+    override fun openDialogUpdateLoan(loanDomain: LoanDomain, totalAmountToPay: Double, adapterPosition: Int, daysMissingToPay:Int, paidDays:Int, isClosed:Boolean) {
 
         binding.cntCortina.isVisible = true
 
@@ -187,7 +187,7 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
         }else {
             title.text = "¿Estas seguro de actualizar la deuda?"
             desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos.toString())} </b>" +
-                    ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${montoTotalAPagar}<b>").fromHtml()
+                    ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${totalAmountToPay}<b>").fromHtml()
         }
 
         dialogBuilder.apply {
@@ -226,9 +226,9 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                     viewModel.updateUltimoPago(
                         loanDomain = loanDomain, loanDomain.id,
                         getFechaActualNormalCalendar(),
-                        montoTotalAPagar,
-                        diasRestantesPorPagar,
-                        diasPagados){
+                        totalAmountToPay,
+                        daysMissingToPay,
+                        paidDays){
                             isCorrect, msj, result, isRefresh ->
 
                         if(isCorrect) {
@@ -237,8 +237,8 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                             loanDomain.fechaUltimoPago = getFechaActualNormalCalendar()
                             when(loanType) {
                                 PaymentScheduledEnum.DAILY -> {
-                                    loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar
-                                    loanDomain.diasPagados = diasPagados
+                                    loanDomain.dias_restantes_por_pagar = daysMissingToPay
+                                    loanDomain.diasPagados = paidDays
                                     prestamoAdapter.updateItem(adapterPosition, loanDomain)
                                 }
                                 else -> {
@@ -246,13 +246,13 @@ class HomeFragment : Fragment(),setOnClickedPrestamo {
                                     val paidDaysBefore = loanDomain.diasPagados?:0
                                     val quotesPaidBefore = loanDomain.quotasPaid?:0
                                     val currentLoanDays = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT).days
-                                    val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(diasPagados))
+                                    val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(paidDays))
 
                                     Log.d("", "Dias pagados antes: $paidDaysBefore")
-                                    loanDomain.quotasPending = diasRestantesPorPagar
-                                    loanDomain.quotasPaid = diasPagados
-                                    loanDomain.diasPagados = diasPagados.times(currentLoanDays)
-                                    loanDomain.dias_restantes_por_pagar = diasRestantesPorPagar.times(currentLoanDays)
+                                    loanDomain.quotasPending = daysMissingToPay
+                                    loanDomain.quotasPaid = paidDays
+                                    loanDomain.diasPagados = paidDays.times(currentLoanDays)
+                                    loanDomain.dias_restantes_por_pagar = daysMissingToPay.times(currentLoanDays)
                                     prestamoAdapter.updateItem(adapterPosition, loanDomain)
                                 }
                             }

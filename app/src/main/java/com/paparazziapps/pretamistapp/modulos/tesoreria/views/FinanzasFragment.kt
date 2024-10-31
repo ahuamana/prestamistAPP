@@ -23,7 +23,7 @@ import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
-import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.PrestamoDetalleAdapter
+import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.LoanDetailAdapter
 import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelTesoreria
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import java.text.SimpleDateFormat
@@ -39,7 +39,7 @@ class FinanzasFragment : Fragment() {
     var _binding:FragmentFinanzasBinding?= null
     private val binding get() = _binding!!
 
-    val prestamoDetalleAdapter = PrestamoDetalleAdapter()
+    val loanDetailAdapter = LoanDetailAdapter()
 
 
     //Components LAyout
@@ -98,7 +98,7 @@ class FinanzasFragment : Fragment() {
 
         binding.recyclerDetalle.apply {
             layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false)
-            adapter = prestamoDetalleAdapter
+            adapter = loanDetailAdapter
         }
 
 
@@ -213,7 +213,7 @@ class FinanzasFragment : Fragment() {
                     lblEmptyDeuda.isVisible = false
                     recyclerDetalle.isVisible = true
                 }
-                prestamoDetalleAdapter.setData(it)
+                loanDetailAdapter.setData(it)
                 //showMessage(" Lista de prestamos ${it.count()}")
             }
         }

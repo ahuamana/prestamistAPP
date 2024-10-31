@@ -8,7 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.application.MyPreferences
 
-class PrestamoProvider {
+class LoanProvider {
 
     var preferences = MyPreferences()
 

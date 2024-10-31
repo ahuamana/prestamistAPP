@@ -8,8 +8,8 @@ import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
-import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
-import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
+import com.paparazziapps.pretamistapp.modulos.registro.providers.DetailLoanProvider
+import com.paparazziapps.pretamistapp.modulos.registro.providers.LoanProvider
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 class ViewModelDashboard private constructor() : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
-    private val loanProvider = PrestamoProvider()
-    private var detailLoanProvider = DetallePrestamoProvider()
+    private val loanProvider = LoanProvider()
+    private var detailLoanProvider = DetailLoanProvider()
     private var _loans = MutableStateFlow<MutableList<LoanDomain>>(mutableListOf())
     val loans: StateFlow<MutableList<LoanDomain>> = _loans
 
