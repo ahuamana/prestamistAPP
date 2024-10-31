@@ -13,12 +13,10 @@ import com.paparazziapps.pretamistapp.data.providers.UserProvider
 import kotlinx.coroutines.launch
 
 class ViewModelRegisterUser(
-    private val preferences: MyPreferences
+    private val preferences: MyPreferences,
+    private val userProvider: UserProvider,
+    private val registerProvider: RegisterProvider
 ) : ViewModel() {
-
-    var user: FirebaseUser? = null
-    var mUserProvider = UserProvider()
-    var mRegisterProvider = RegisterProvider()
 
     private val _message = MutableLiveData<String>()
 
@@ -47,7 +45,7 @@ class ViewModelRegisterUser(
     fun createUser(email: String, pass: String, userInfo:User) = viewModelScope.launch {
         _isLoading.value = true
 
-        val result = mRegisterProvider.createUser(email,pass)
+        val result = registerProvider.createUser(email,pass)
 
         when(result) {
             is PAResult.Error -> {
@@ -60,33 +58,26 @@ class ViewModelRegisterUser(
                 //get the email and save it on the preferences and then on firebase
                 preferences.setEmail(email)
                 //TODO: Save the rest of the user data on preferences
-
                 saveFirebaseUser(userInfo)
-
             }
         }
     }
 
-    fun saveFirebaseUser(userInfo: User) {
-        try {
-            mUserProvider.create(userInfo).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _isLoading.setValue(false)
-                    _isSavedFirebase.setValue(true)
-                } else {
-                    _isLoading.setValue(false)
-                    _isSavedFirebase.setValue(false)
-                }
-            }.addOnFailureListener{ e ->
-                _isLoading.setValue(false)
-                _message.setValue(e.message)
-                _isSavedFirebase.setValue(false)
-            }
+    fun saveFirebaseUser(userInfo: User) = viewModelScope.launch {
 
-        } catch (e: java.lang.Exception) {
-            _isLoading.setValue(false)
-            _message.setValue(e.message)
-            _isSavedFirebase.setValue(false)
+        val result = userProvider.create(userInfo)
+
+        when(result){
+            is PAResult.Error -> {
+                with(_isLoading) { setValue(false) }
+                with(_message) { setValue("Ah ocurrido un error al intentar guardar los datos del usuario") }
+                _isSavedFirebase.setValue(false)
+
+            }
+            is PAResult.Success -> {
+                with(_isLoading) { setValue(false) }
+                with(_isSavedFirebase) { setValue(true) }
+            }
         }
     }
 }
