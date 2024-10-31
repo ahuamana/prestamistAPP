@@ -29,12 +29,13 @@ import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegister
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityRegisterBinding
-    val _viewModel:ViewModelBranches by viewModels()
-    val _viewModelRegistro: ViewModelRegisterUser by viewModels()
+    val _viewModel:ViewModelBranches by viewModel()
+    val _viewModelRegistro: ViewModelRegisterUser by viewModel()
 
     var edtFullname: TextInputEditText? = null
     var edtLastname:TextInputEditText? = null

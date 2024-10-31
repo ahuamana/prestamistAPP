@@ -38,6 +38,7 @@ import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrin
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class PrincipalActivity : AppCompatActivity(){
@@ -50,8 +51,8 @@ class PrincipalActivity : AppCompatActivity(){
 
     private var isEnabledCheck = true
 
-    val _viewModelPrincipal by viewModels<ViewModelPrincipal>()
-    val _viewModelBranches:ViewModelBranches by viewModels()
+    val _viewModelPrincipal by viewModel<ViewModelPrincipal>()
+    val _viewModelBranches:ViewModelBranches by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

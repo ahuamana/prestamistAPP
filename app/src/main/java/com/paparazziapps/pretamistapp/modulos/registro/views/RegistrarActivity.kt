@@ -33,12 +33,13 @@ import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class RegistrarActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<ViewModelRegister>()
-    val _viewModelBranches: ViewModelBranches  by viewModels()
+    private val viewModel by viewModel<ViewModelRegister>()
+    val _viewModelBranches: ViewModelBranches  by viewModel()
 
     lateinit var binding: ActivityRegistrarBinding
     var loanDomainReceived = LoanDomain()

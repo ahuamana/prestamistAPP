@@ -28,14 +28,15 @@ import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.LoanDetailAdapter
 import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelFinance
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class FinanzasFragment : Fragment() {
 
-    val _viewModel by viewModels<ViewModelFinance>()
-    val _viewModelBranches:ViewModelBranches  by viewModels()
+    val _viewModel by viewModel<ViewModelFinance>()
+    val _viewModelBranches:ViewModelBranches  by viewModel()
     val preferences = MyPreferences()
 
     var _binding:FragmentFinanzasBinding?= null

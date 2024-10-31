@@ -10,19 +10,7 @@ import com.paparazziapps.pretamistapp.domain.User
 
 class UserProvider {
 
-    companion object{
-        private lateinit var mCollection: CollectionReference
-    }
-
-    init {
-        mCollection = FirebaseFirestore.getInstance().collection(PADataConstants.USERS_COLLECTION)
-
-        val settings = FirebaseFirestoreSettings.Builder()
-            .setPersistenceEnabled(true)
-            .build()
-
-        FirebaseFirestore.getInstance().firestoreSettings = settings
-    }
+    private val mCollection: CollectionReference by lazy { FirebaseFirestore.getInstance().collection(PADataConstants.USERS_COLLECTION) }
 
     fun create(user: User): Task<Void> {
         return mCollection.document(user.email?:"").set(user)

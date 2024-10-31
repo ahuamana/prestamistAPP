@@ -19,6 +19,7 @@ import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelLogin
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -28,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
     var btnLoginEmail: MaterialButton? = null
     var isValidEmail = false
     var isValidPass:Boolean = false
-    val _viewModelLogin  by viewModels<ViewModelLogin>()
+    val _viewModelLogin:ViewModelLogin  by viewModel()
     var TAG = "LoginActivity"
 
 
@@ -60,19 +61,19 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showObservables() {
-        _viewModelLogin.showMessage().observe(this) { message ->
+        _viewModelLogin.showMessage.observe(this) { message ->
             if (message != null) {
                 _showMessageMainThread(message)
             }
         }
-        _viewModelLogin.getIsLoginAnonymous().observe(this) { isLoginAnonymous ->
+        _viewModelLogin.isLoginAnonymous.observe(this) { isLoginAnonymous ->
             if (isLoginAnonymous) {
                 startActivity(Intent(this, LoginActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
             }
         }
 
         //Login with email
-        _viewModelLogin.getIsLoginEmail().observe(this) { isLoginEmail ->
+        _viewModelLogin.isLoginEmail.observe(this) { isLoginEmail ->
             println("isLoginEmail: $isLoginEmail")
             if (isLoginEmail) {
                 Log.e(TAG, "EMAIL ENVIADO: " + binding.email.text.toString().lowercase())
@@ -83,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
         }
-        _viewModelLogin.getIsLoading().observe(this) { isLoading ->
+        _viewModelLogin.isLoading.observe(this) { isLoading ->
             Log.e("ISLOADING", "ISLOADING:$isLoading")
             if (isLoading) {
                 binding.cortinaLayout.visibility = View.VISIBLE

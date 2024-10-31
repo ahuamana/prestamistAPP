@@ -31,13 +31,13 @@ import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class HomeFragment : Fragment(),SetOnClickedLoan {
 
-    private val viewModel by viewModels<ViewModelDashboard>()
-    private val tag = HomeFragment::class.java.simpleName
-    val _viewModelPrincipal by viewModels<ViewModelPrincipal>()
+    private val viewModel by viewModel<ViewModelDashboard>()
+    val _viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
     private var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!

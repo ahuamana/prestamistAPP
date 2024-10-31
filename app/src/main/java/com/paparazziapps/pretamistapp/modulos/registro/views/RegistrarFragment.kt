@@ -33,13 +33,14 @@ import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegistrarFragment : Fragment() {
 
     private var _binding: FragmentRegistrarBinding ?= null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<ViewModelRegister>()
+    private val viewModel by viewModel<ViewModelRegister>()
 
     //Variables
     lateinit var modos: AppCompatAutoCompleteTextView

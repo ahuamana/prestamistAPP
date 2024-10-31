@@ -10,56 +10,25 @@ import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import kotlinx.coroutines.launch
 
 
-class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
+class ViewModelLogin (
+    private val loginProvider: LoginProvider
+    ): ViewModel() {
 
-    private var mLoginProvider = LoginProvider()
-
+    private val tag = ViewModelLogin::class.java.simpleName
     private val _message = MutableLiveData<String>()
-
     private val _isLoginEmail = MutableLiveData<Boolean>()
-
     private val _isLoginAnonymous = MutableLiveData<Boolean>()
-
     private val _isLoading = MutableLiveData<Boolean>()
 
-    fun getIsLoading(): LiveData<Boolean> {
-        return _isLoading
-    }
-
-    fun showMessage(): LiveData<String> {
-        return _message
-    }
-
-    fun getIsLoginEmail(): LiveData<Boolean> {
-        return _isLoginEmail
-    }
-
-    fun getIsLoginAnonymous(): LiveData<Boolean> {
-        return _isLoginAnonymous
-    }
-
-    fun logout() {
-        mLoginProvider.signOut()
-    }
-
-    fun isAlreadyLogging(): LiveData<String?> {
-
-        if(mLoginProvider.getIsLogin())
-        {
-            _message.setValue("Ya tienes un inicio de session")
-        }else
-        {
-            _message.setValue("No haz ingresado")
-        }
-
-        return _message
-
-    }
+    val isLoading: LiveData<Boolean> = _isLoading
+    val showMessage: LiveData<String> = _message
+    val isLoginEmail: LiveData<Boolean> = _isLoginEmail
+    val isLoginAnonymous: LiveData<Boolean> = _isLoginAnonymous
 
     fun loginWithEmail(email: String?, pass: String?) = viewModelScope.launch {
         _isLoading.setValue(true)
         try {
-            val task = mLoginProvider.loginEmail(email?:"", pass?:"")
+            val task = loginProvider.loginEmail(email?:"", pass?:"")
 
             if(task == null) {
                 _message.value = "Usuario y/o contraseña incorrectos"
@@ -75,34 +44,8 @@ class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
 
 
         } catch (e: Exception) {
+            Log.d(tag, "Error: " + e.message)
             _message.setValue(e.message)
-        }
-    }
-
-
-    fun loginAnonymous() = viewModelScope.launch {
-        _isLoading.setValue(true)
-        try {
-            val task = mLoginProvider.loginAnonymously()
-
-            if(task == null) {
-                _message.setValue("No es posible ingresar. Porfavor contacta con soporte")
-                _isLoginAnonymous.setValue(false)
-                _isLoading.setValue(false)
-                return@launch
-            }
-
-            _message.setValue("Bienvenido anónimo")
-            try {
-                Thread.sleep(2000)
-            } catch (e: java.lang.Exception) {
-                Log.e("TAG", "Error esperando")
-            }
-            _isLoginAnonymous.setValue(true)
-            _isLoading.setValue(false)
-
-        } catch (e: java.lang.Exception) {
-            Log.e("VM_LOGIN", "Error:" + e.message)
         }
     }
 
