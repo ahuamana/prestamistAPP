@@ -66,6 +66,10 @@ class MyPreferences {
         emailUser = email
     }
 
+    fun getEmail(): String{
+        return emailUser
+    }
+
 
 
 }

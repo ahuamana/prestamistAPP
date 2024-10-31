@@ -51,9 +51,9 @@ class AppApplication : MultiDexApplication() {
         viewModel { ViewModelFinance(get(), get()) }
         viewModel { ViewModelLogin(get(), get()) }
         viewModel { ViewModelDashboard(get(),get()) }
-        viewModel { ViewModelRegisterUser() }
+        viewModel { ViewModelRegisterUser(get(), get(), get()) }
         viewModel { ViewModelBranches() }
-        viewModel { ViewModelPrincipal() }
+        viewModel { ViewModelPrincipal(get(),get()) }
         viewModel { ViewModelRegister(get()) }
         //viewModelOf(::ViewModelLogin)// viewModel { ViewModelLogin(get()) }
     }

@@ -21,7 +21,9 @@ class UserProvider {
         }
     }
 
-    fun searchUserByEmail(email: String?): Task<DocumentSnapshot> {
-        return mCollection.document(email!!).get()
+    suspend fun searchUserByEmail(email: String): PAResult<DocumentSnapshot> {
+        return NetworkOperation.safeApiCall {
+            mCollection.document(email).get().await()
+        }
     }
 }

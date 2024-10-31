@@ -3,16 +3,18 @@ package com.paparazziapps.pretamistapp.modulos.principal.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import com.paparazziapps.pretamistapp.data.providers.UserProvider
+import kotlinx.coroutines.launch
 
-class ViewModelPrincipal : ViewModel(){
-
-
-    var mUserProvider = UserProvider()
-    var user = User()
-    var mAuth = LoginProvider()
+class ViewModelPrincipal(
+    private val preferences: MyPreferences,
+    private val userProvider: UserProvider,
+) : ViewModel(){
 
     private val _user = MutableLiveData<User>()
 
@@ -26,27 +28,28 @@ class ViewModelPrincipal : ViewModel(){
         return _user
     }
 
-    fun searchUserByEmail() {
-        //_isLoading.value = true
-        try {
-            mUserProvider.searchUserByEmail(mAuth.getEmail()).addOnSuccessListener { task ->
+    fun searchUserByEmail() = viewModelScope.launch {
+        val email = preferences.getEmail()
 
-                if(task.exists())
-                {
-                    user = task.toObject(User::class.java)!!
-                    _user.value = user
-                } else {
-                    // If sign in fails, display a message to the user.
-                    _message.setValue("Ah ocurrido un error al traer los datos del usurio")
-                    //_isLoading.setValue(false)
-                }
+        if(email.isEmpty()) {
+            _message.setValue("El email del usuario se encuentra vacio")
+            return@launch
+        }
 
-            }.addOnFailureListener { e ->
-                _message.setValue(e.message)
-               // _isLoading.setValue(false)
+        when(val result = userProvider.searchUserByEmail(email)){
+            is PAResult.Error -> {
+                _message.setValue("Ah ocurrido un error al traer los datos del usurio")
             }
-        } catch (e: Exception) {
-            _message.setValue(e.message)
+            is PAResult.Success -> {
+                val user = result.data.toObject(User::class.java)
+                if(user == null){
+                    _message.setValue("No se encontro el usuario")
+                    return@launch
+                }
+                user.let {
+                    _user.value = it
+                }
+            }
         }
     }
 }
