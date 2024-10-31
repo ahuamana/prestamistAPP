@@ -116,4 +116,8 @@ dependencies {
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
+    def koin_version = "4.0.0"
+    //Koin dependency injection
+    implementation("io.insert-koin:koin-android:$koin_version")
+
 }
