@@ -2,11 +2,12 @@ package com.paparazziapps.pretamistapp.modulos.principal.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import com.paparazziapps.pretamistapp.data.providers.UserProvider
 
-class ViewModelPrincipal private constructor(){
+class ViewModelPrincipal : ViewModel(){
 
 
     var mUserProvider = UserProvider()
@@ -46,22 +47,6 @@ class ViewModelPrincipal private constructor(){
             }
         } catch (e: Exception) {
             _message.setValue(e.message)
-        }
-    }
-
-
-    companion object Singleton{
-        private var instance: ViewModelPrincipal? = null
-
-        fun getInstance(): ViewModelPrincipal =
-            instance ?: ViewModelPrincipal(
-                //local y remoto
-            ).also {
-                instance = it
-            }
-
-        fun destroyInstance(){
-            instance = null
         }
     }
 }

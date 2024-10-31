@@ -3,6 +3,7 @@ package com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
+import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 import com.paparazziapps.pretamistapp.domain.LoanDomain
@@ -14,11 +15,12 @@ import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class ViewModelDashboard private constructor() : ViewModel(){
+class ViewModelDashboard (
+    private val loanProvider: LoanProvider,
+    private val detailLoanProvider: DetailLoanProvider
+) : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
-    private val loanProvider = LoanProvider()
-    private var detailLoanProvider = DetailLoanProvider()
     private var _loans = MutableStateFlow<MutableList<LoanDomain>>(mutableListOf())
     val loans: StateFlow<MutableList<LoanDomain>> = _loans
 

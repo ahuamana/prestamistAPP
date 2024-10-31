@@ -10,11 +10,12 @@ import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
 import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 
-class ViewModelTesoreria private constructor() : ViewModel() {
+class ViewModelFinance (
+    private val loanProvider: LoanProvider,
+    private val detailLoanProvider: DetailLoanProvider
+) : ViewModel() {
 
     var  _message = MutableLiveData<String>()
-    val mLoanProvider = LoanProvider()
-    val mDetallePrestamo = DetailLoanProvider()
 
     var _prestamos = MutableLiveData<MutableList<LoanDomain>>()
     var _pagosTotalesByTime = MutableLiveData<Double>()
@@ -30,7 +31,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
         try {
 
-            mLoanProvider.getLoans().addOnSuccessListener {
+            loanProvider.getLoans().addOnSuccessListener {
 
 
                 isCorrect = true
@@ -66,7 +67,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
         var pagosTotalesXfecha = 0.0
 
         try {
-            mDetallePrestamo.getLoanByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal).addOnSuccessListener {
+            detailLoanProvider.getLoanByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal).addOnSuccessListener {
                 if(it.isEmpty)
                 {
                     println("Fechas Vacias")
@@ -100,7 +101,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
         try {
 
-            mDetallePrestamo.getDetailLoanByDate(getFechaActualNormalCalendar()).addOnSuccessListener {
+            detailLoanProvider.getDetailLoanByDate(getFechaActualNormalCalendar()).addOnSuccessListener {
 
                 it.forEach { document ->
                     //println("Documento Pagos MVVM--> $document")
@@ -143,7 +144,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
         try {
 
-            mDetallePrestamo.getDetailLoanByDate(getYesterdayFechaNormal()).addOnSuccessListener {
+            detailLoanProvider.getDetailLoanByDate(getYesterdayFechaNormal()).addOnSuccessListener {
 
                 it.forEach { document ->
                     println("Documento Pagos MVVM--> $document")
@@ -176,19 +177,4 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
 
     }
-
-    companion object Singleton{
-        private var instance:ViewModelTesoreria? = null
-
-        fun getInstance():ViewModelTesoreria =
-            instance ?: ViewModelTesoreria(
-
-            ).also { instance = it }
-
-        fun destroyInstance(){
-            instance = null
-        }
-    }
-
-
 }

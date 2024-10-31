@@ -27,7 +27,7 @@ import androidx.activity.viewModels
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
-import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
@@ -38,7 +38,7 @@ import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 class RegistrarActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<ViewModelRegister>()
-    var _viewModelSucursales = ViewModelSucursales.getInstance()
+    val _viewModelBranches: ViewModelBranches  by viewModels()
 
     lateinit var binding: ActivityRegistrarBinding
     var loanDomainReceived = LoanDomain()
@@ -115,14 +115,14 @@ class RegistrarActivity : AppCompatActivity() {
         if(preferences.isSuperAdmin){
             sucursalTxtLayout.beVisible()
             viewProgressSucursal.beVisible()
-            _viewModelSucursales.getSucursales()
+            _viewModelBranches.getSucursales()
         }
     }
 
     private fun startObservers() {
         viewModel.getMessage().observe(this){ message ->  showMessage(message)}
 
-        _viewModelSucursales.sucursales.observe(this){
+        _viewModelBranches.sucursales.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()

@@ -37,7 +37,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
 
     private val viewModel by viewModels<ViewModelDashboard>()
     private val tag = HomeFragment::class.java.simpleName
-    var _viewModelPrincipal = ViewModelPrincipal.getInstance()
+    val _viewModelPrincipal by viewModels<ViewModelPrincipal>()
 
     private var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!

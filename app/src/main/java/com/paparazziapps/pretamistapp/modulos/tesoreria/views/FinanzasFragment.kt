@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
@@ -22,9 +24,9 @@ import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
-import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.LoanDetailAdapter
-import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelTesoreria
+import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelFinance
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,8 +34,8 @@ import java.util.*
 
 class FinanzasFragment : Fragment() {
 
-    val _viewModel = ViewModelTesoreria.getInstance()
-    var _viewModelSucursales = ViewModelSucursales.getInstance()
+    val _viewModel by viewModels<ViewModelFinance>()
+    val _viewModelBranches:ViewModelBranches  by viewModels()
     val preferences = MyPreferences()
 
     var _binding:FragmentFinanzasBinding?= null
@@ -113,7 +115,7 @@ class FinanzasFragment : Fragment() {
             cardViewCajaAdmin.beVisible()
             sucursalTxtLayout.beVisible()
             viewProgressSucursal.beVisible()
-            _viewModelSucursales.getSucursales()
+            _viewModelBranches.getSucursales()
 
         }else{
             if(preferences.isAdmin){
@@ -219,7 +221,7 @@ class FinanzasFragment : Fragment() {
         }
 
         //Observers SuperAdmin
-        _viewModelSucursales.sucursalesFinanzas.observe(viewLifecycleOwner){
+        _viewModelBranches.sucursalesFinanzas.observe(viewLifecycleOwner){
 
             println("Sucursales Finanzas: $it")
 
@@ -288,10 +290,5 @@ class FinanzasFragment : Fragment() {
                 arguments = Bundle().apply {
                 }
             }
-    }
-
-    override fun onDestroy() {
-        ViewModelTesoreria.destroyInstance()
-        super.onDestroy()
     }
 }

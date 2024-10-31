@@ -5,7 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
+import kotlinx.coroutines.launch
+
 
 class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
 
@@ -53,22 +56,23 @@ class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
 
     }
 
-    fun loginWithEmail(email: String?, pass: String?) {
+    fun loginWithEmail(email: String?, pass: String?) = viewModelScope.launch {
         _isLoading.setValue(true)
         try {
-            mLoginProvider.loginEmail(email?:"", pass?:"").addOnCompleteListener {
+            val task = mLoginProvider.loginEmail(email?:"", pass?:"")
 
-                if (it.isSuccessful) {
-                    _message.value = "Bienvenido"
-                    _isLoginEmail.value = true
-                    _isLoading.setValue(false)
-                } else {
-                    _message.value = "Usuario y/o contraseña incorrectos"
-                    _isLoginEmail.value = false
-                    _isLoading.setValue(false)
-                }
-
+            if(task == null) {
+                _message.value = "Usuario y/o contraseña incorrectos"
+                _isLoginEmail.value = false
+                _isLoading.setValue(false)
+                return@launch
             }
+
+            // Si el usuario se loguea correctamente
+            _message.value = "Bienvenido"
+            _isLoginEmail.value = true
+            _isLoading.setValue(false)
+
 
         } catch (e: Exception) {
             _message.setValue(e.message)
@@ -76,27 +80,27 @@ class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
     }
 
 
-    fun loginAnonymous() {
+    fun loginAnonymous() = viewModelScope.launch {
         _isLoading.setValue(true)
         try {
-            mLoginProvider.loginAnonymously().addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        _message.setValue("Bienvenido anónimo")
-                        try {
-                            Thread.sleep(2000)
-                        } catch (e: java.lang.Exception) {
-                            Log.e("TAG", "Error esperando")
-                        }
-                        _isLoginAnonymous.setValue(true)
-                        _isLoading.setValue(false)
-                    } else {
-                        _message.setValue("No es posible ingresar. Porfavor contacta con soporte")
-                        _isLoginAnonymous.setValue(false)
-                        _isLoading.setValue(false)
-                    }
-                }.addOnFailureListener{
-                    e -> _message.setValue("" + e.message)
-                }
+            val task = mLoginProvider.loginAnonymously()
+
+            if(task == null) {
+                _message.setValue("No es posible ingresar. Porfavor contacta con soporte")
+                _isLoginAnonymous.setValue(false)
+                _isLoading.setValue(false)
+                return@launch
+            }
+
+            _message.setValue("Bienvenido anónimo")
+            try {
+                Thread.sleep(2000)
+            } catch (e: java.lang.Exception) {
+                Log.e("TAG", "Error esperando")
+            }
+            _isLoginAnonymous.setValue(true)
+            _isLoading.setValue(false)
+
         } catch (e: java.lang.Exception) {
             Log.e("VM_LOGIN", "Error:" + e.message)
         }

@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.Toolbar
@@ -24,15 +25,16 @@ import com.paparazziapps.pretamistapp.helper.isValidEmail
 import com.paparazziapps.pretamistapp.helper.setColorToStatusBar
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.User
-import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegistroUsuario
-import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegisterUser
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
+import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 
 class RegisterActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityRegisterBinding
-    var _viewModel = ViewModelSucursales.getInstance()
-    var _viewModelRegistro = ViewModelRegistroUsuario.getInstance()
+    val _viewModel:ViewModelBranches by viewModels()
+    val _viewModelRegistro: ViewModelRegisterUser by viewModels()
 
     var edtFullname: TextInputEditText? = null
     var edtLastname:TextInputEditText? = null
@@ -310,11 +312,5 @@ class RegisterActivity : AppCompatActivity() {
             title = "Registrar"
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-    }
-
-    override fun onDestroy() {
-        ViewModelSucursales.destroyInstance()
-        ViewModelRegistroUsuario.destroyInstance()
-        super.onDestroy()
     }
 }

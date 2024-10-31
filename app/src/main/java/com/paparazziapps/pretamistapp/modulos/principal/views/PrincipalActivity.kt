@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +32,7 @@ import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment.Companion.setOnClickedLoanHome
-import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.application.MyPreferences
@@ -49,8 +50,8 @@ class PrincipalActivity : AppCompatActivity(){
 
     private var isEnabledCheck = true
 
-    var _viewModelPrincipal = ViewModelPrincipal.getInstance()
-    var _viewModelSucursales = ViewModelSucursales.getInstance()
+    val _viewModelPrincipal by viewModels<ViewModelPrincipal>()
+    val _viewModelBranches:ViewModelBranches by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,7 @@ class PrincipalActivity : AppCompatActivity(){
         isFreeTrial()
         setUpInicialToolbar()
         //testCrashlytics()
-        _viewModelSucursales.getSucursales()
+        _viewModelBranches.getSucursales()
         observers()
 
         /*val disappearView = DisappearView.attach(this)
@@ -98,7 +99,7 @@ class PrincipalActivity : AppCompatActivity(){
             }
         }
 
-        _viewModelSucursales.sucursales.observe(this){
+        _viewModelBranches.sucursales.observe(this){
             //save info sucursales
             if(it.isNotEmpty()){
                 MyPreferences().sucusales = toJson(it)
@@ -472,10 +473,5 @@ class PrincipalActivity : AppCompatActivity(){
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        ViewModelPrincipal.destroyInstance()
-        super.onDestroy()
     }
 }

@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
-class ViewModelSucursales private constructor() : ViewModel(){
+class ViewModelBranches  : ViewModel(){
 
     private var mProviderSucursal = BranchesProvider()
 
@@ -44,21 +44,6 @@ class ViewModelSucursales private constructor() : ViewModel(){
         }
         _sucursales.postValue(sucursales)
         _sucursalesFinanzas.postValue(sucursales)
-    }
-
-    companion object Singleton{
-        private var instance: ViewModelSucursales? = null
-
-        fun getInstance(): ViewModelSucursales =
-            instance ?: ViewModelSucursales(
-                //local y remoto
-            ).also {
-                instance = it
-            }
-
-        fun destroyInstance(){
-            instance = null
-        }
     }
 }
 

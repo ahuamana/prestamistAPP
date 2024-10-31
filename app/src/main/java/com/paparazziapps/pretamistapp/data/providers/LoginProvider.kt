@@ -16,11 +16,11 @@ class LoginProvider {
         return if(mAuth.currentUser != null) { mAuth.currentUser!!.email } else ""
     }
 
-    suspend fun loginEmail(email:String, pass:String): AuthResult {
+    suspend fun loginEmail(email:String, pass:String): AuthResult? {
        return mAuth.signInWithEmailAndPassword(email, pass).await()
     }
 
-    suspend fun loginAnonymously(): AuthResult {
+    suspend fun loginAnonymously(): AuthResult? {
         return  mAuth.signInAnonymously().await()
     }
 

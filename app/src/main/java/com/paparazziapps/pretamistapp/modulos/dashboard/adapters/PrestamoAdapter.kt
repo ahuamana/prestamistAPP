@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.R
+import com.paparazziapps.pretamistapp.application.ctx
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
@@ -169,7 +170,8 @@ class PrestamoAdapter(var setOnClickedLoan: SetOnClickedLoan) : RecyclerView.Ada
                 binding.numeroDiasPorPagar.text = ""
                 binding.lblDiasPorPagar.text = "Préstamo vencido"
                 binding.numeroDiasPorPagar.isVisible = false
-                binding.cardviewDiasPorPagar.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.color_red_trasparente)
+                binding.cardviewDiasPorPagar.backgroundTintList = ContextCompat.getColorStateList(
+                    ctx, R.color.color_red_trasparente)
                 return
             }
 
@@ -198,10 +200,12 @@ class PrestamoAdapter(var setOnClickedLoan: SetOnClickedLoan) : RecyclerView.Ada
         private fun updateUIForDelay(delay: Int) {
             if (delay <= 0) {
                 binding.btnSendWhatsapp.isVisible = false
-                binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.colorPrimary)
+                binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
+                    ctx, R.color.colorPrimary)
             } else {
                 binding.btnSendWhatsapp.isVisible = true
-                binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(ctx, R.color.red)
+                binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
+                    ctx, R.color.red)
             }
         }
 

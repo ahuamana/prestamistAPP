@@ -2,12 +2,13 @@ package com.paparazziapps.pretamistapp.modulos.login.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.data.providers.RegisterProvider
 import com.paparazziapps.pretamistapp.data.providers.UserProvider
 
-class ViewModelRegistroUsuario private constructor() {
+class ViewModelRegisterUser : ViewModel() {
 
     var user: FirebaseUser? = null
     var mUserProvider = UserProvider()
@@ -81,22 +82,6 @@ class ViewModelRegistroUsuario private constructor() {
             _isLoading.setValue(false)
             _message.setValue(e.message)
             _isSavedFirebase.setValue(false)
-        }
-    }
-
-
-    companion object Singleton{
-        private var instance: ViewModelRegistroUsuario? = null
-
-        fun getInstance(): ViewModelRegistroUsuario =
-            instance ?: ViewModelRegistroUsuario(
-                //local y remoto
-            ).also {
-                instance = it
-            }
-
-        fun destroyInstance(){
-            instance = null
         }
     }
 }

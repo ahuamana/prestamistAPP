@@ -13,13 +13,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.lang.Exception
 
-class ViewModelRegister private constructor() : ViewModel(){
+class ViewModelRegister (
+    private val mLoanProvider: LoanProvider
+) : ViewModel(){
 
     private val tag = ViewModelRegister::class.java.simpleName
 
     var _message = MutableLiveData<String>()
     var _montoDiario = MutableLiveData<Double>()
-    var mLoanProvider = LoanProvider()
 
     private val _dailyStringMode : MutableStateFlow<String> = MutableStateFlow(LoanType.DAILY.description)
     val dailyStringMode : StateFlow<String> = _dailyStringMode.asStateFlow()

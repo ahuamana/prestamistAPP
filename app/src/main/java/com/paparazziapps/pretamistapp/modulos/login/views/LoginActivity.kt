@@ -97,10 +97,9 @@ class LoginActivity : AppCompatActivity() {
         btnLoginEmail!!.setOnClickListener {
             hideKeyboardActivity(this@LoginActivity)
             if (isConnected(applicationContext)) {
-                _viewModelLogin.loginWithEmail(
-                    binding.email.text.toString().trim(),
-                    binding.pass.text.toString().trim()
-                )
+                val email = binding.email.text.toString().trim()
+                val pass = binding.pass.text.toString().trim()
+                _viewModelLogin.loginWithEmail(email, pass)
             } else _showMessageMainThread("Sin conexion a internet")
         }
         /*
