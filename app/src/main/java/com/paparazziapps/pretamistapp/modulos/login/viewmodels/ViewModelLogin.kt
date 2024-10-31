@@ -6,14 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import kotlinx.coroutines.launch
 
 
 class ViewModelLogin (
-    private val loginProvider: LoginProvider
+    private val loginProvider: LoginProvider,
+    private val preferences: MyPreferences,
     ): ViewModel() {
-
     private val tag = ViewModelLogin::class.java.simpleName
     private val _message = MutableLiveData<String>()
     private val _isLoginEmail = MutableLiveData<Boolean>()
@@ -25,27 +27,24 @@ class ViewModelLogin (
     val isLoginEmail: LiveData<Boolean> = _isLoginEmail
     val isLoginAnonymous: LiveData<Boolean> = _isLoginAnonymous
 
-    fun loginWithEmail(email: String?, pass: String?) = viewModelScope.launch {
-        _isLoading.setValue(true)
-        try {
-            val task = loginProvider.loginEmail(email?:"", pass?:"")
+    fun loginWithEmail(email: String, pass: String) = viewModelScope.launch {
+        _isLoading.value = true
+        val result = loginProvider.loginEmail(email, pass)
 
-            if(task == null) {
+        when(result) {
+            is PAResult.Error -> {
                 _message.value = "Usuario y/o contraseña incorrectos"
                 _isLoginEmail.value = false
-                _isLoading.setValue(false)
+                _isLoading.value = false
                 return@launch
             }
-
-            // Si el usuario se loguea correctamente
-            _message.value = "Bienvenido"
-            _isLoginEmail.value = true
-            _isLoading.setValue(false)
-
-
-        } catch (e: Exception) {
-            Log.d(tag, "Error: " + e.message)
-            _message.setValue(e.message)
+            is PAResult.Success -> {
+                //TODO: Save user data
+                preferences.saveEmail(email)
+                _message.value = "Bienvenido"
+                _isLoginEmail.value = true
+                _isLoading.value = false
+            }
         }
     }
 

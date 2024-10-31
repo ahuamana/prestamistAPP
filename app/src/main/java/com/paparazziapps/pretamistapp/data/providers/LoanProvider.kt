@@ -16,7 +16,7 @@ class LoanProvider(private val preferences: MyPreferences) {
 
     //Super admin -- implemented
     fun create(loanDomain: LoanDomain, idSucursal:Int): Task<Void> {
-        loanDomain.sucursalId = if(preferences.isSuperAdmin) idSucursal else  preferences.sucursalId
+        loanDomain.sucursalId = if(preferences.isSuperAdmin) idSucursal else  preferences.branchId
         loanDomain.id = mCollectionLoan.document().id
         return mCollectionLoan.document(loanDomain.id!!).set(loanDomain)
     }
@@ -32,7 +32,7 @@ class LoanProvider(private val preferences: MyPreferences) {
             Log.d(tag,"Sucursal -- getPrestamos")
             return  mCollectionLoan
                 .whereEqualTo("state", "ABIERTO")
-                .whereEqualTo("sucursalId",preferences.sucursalId)
+                .whereEqualTo("sucursalId",preferences.branchId)
                 .get()
         }
 

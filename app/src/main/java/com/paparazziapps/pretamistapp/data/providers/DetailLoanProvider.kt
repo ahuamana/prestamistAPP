@@ -15,7 +15,7 @@ class DetailLoanProvider(private val preferences: MyPreferences) {
     // No need to implemented when is super admin
     fun createDetail(detallePrestamo: DetallePrestamoSender): Task<Void> {
         detallePrestamo.id = mCollectionDetallePrestamo.document().id
-        detallePrestamo.sucursalId = preferences.sucursalId
+        detallePrestamo.sucursalId = preferences.branchId
         return mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo)
     }
 
@@ -23,7 +23,7 @@ class DetailLoanProvider(private val preferences: MyPreferences) {
     fun getDetailLoanByDate(fecha:String):Task<QuerySnapshot> {
         return mCollectionDetallePrestamo
             .whereEqualTo("fechaPago",fecha)
-            .whereEqualTo("sucursalId",preferences.sucursalId)
+            .whereEqualTo("sucursalId",preferences.branchId)
             .get()
     }
 
@@ -32,7 +32,7 @@ class DetailLoanProvider(private val preferences: MyPreferences) {
         return  mCollectionDetallePrestamo
             .whereGreaterThanOrEqualTo("unixtime", timeStart)
             .whereLessThanOrEqualTo("unixtime",timeEnd)
-            .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idSucursal else  preferences.sucursalId)
+            .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idSucursal else  preferences.branchId)
             .get()
     }
 }

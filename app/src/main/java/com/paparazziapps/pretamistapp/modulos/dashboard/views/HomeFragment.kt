@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -103,7 +102,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
             binding.emptyPrestamo.isVisible = false
 
             if(MyPreferences().isSuperAdmin){
-                val branches = MyPreferences().sucusales
+                val branches = MyPreferences().branches
                 if(branches.isEmpty()){
                     prestamoAdapter.setData(prestamosAll)
                 }else{
@@ -141,9 +140,9 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
         println("Info usuario: ${it.superAdmin}")
         preferences.isAdmin = it.admin
         preferences.isSuperAdmin = it.superAdmin
-        preferences.sucursalId = it.sucursalId?: INT_DEFAULT
-        preferences.sucursalName = it.sucursal?:""
-        preferences.email_login = it.email?:""
+        preferences.branchId = it.sucursalId?: INT_DEFAULT
+        preferences.branchName = it.sucursal?:""
+        preferences.emailUser = it.email?:""
         preferences.isActiveUser = it.activeUser
 
         if(it.activeUser) {

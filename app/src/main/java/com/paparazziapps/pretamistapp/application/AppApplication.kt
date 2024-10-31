@@ -14,6 +14,7 @@ import com.paparazziapps.pretamistapp.data.remote.RemoteDataSourceImpl
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.data.repository.PARepositoryImpl
 import com.paparazziapps.pretamistapp.helper.turnOffDarkModeInAllApp
+import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelLogin
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegisterUser
@@ -48,7 +49,8 @@ class AppApplication : MultiDexApplication() {
 
     private val uiModule = module {
         viewModel { ViewModelFinance(get(), get()) }
-        viewModel { ViewModelLogin(get()) }
+        viewModel { ViewModelLogin(get(), get()) }
+        viewModel { ViewModelDashboard(get(),get()) }
         viewModel { ViewModelRegisterUser() }
         viewModel { ViewModelBranches() }
         viewModel { ViewModelPrincipal() }

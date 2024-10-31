@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -83,9 +82,9 @@ class PrincipalActivity : AppCompatActivity(){
             println("Info usuario: ${it.superAdmin}")
             preferences.isAdmin = it.admin
             preferences.isSuperAdmin = it.superAdmin
-            preferences.sucursalId = it.sucursalId?: INT_DEFAULT
-            preferences.sucursalName = it.sucursal?:""
-            preferences.email_login = it.email?:""
+            preferences.branchId = it.sucursalId?: INT_DEFAULT
+            preferences.branchName = it.sucursal?:""
+            preferences.emailUser = it.email?:""
             preferences.isActiveUser = it.activeUser
 
             if(it.activeUser) {
@@ -103,7 +102,7 @@ class PrincipalActivity : AppCompatActivity(){
         _viewModelBranches.sucursales.observe(this){
             //save info sucursales
             if(it.isNotEmpty()){
-                MyPreferences().sucusales = toJson(it)
+                MyPreferences().branches = toJson(it)
             }
             //Get Info user
             _viewModelPrincipal.searchUserByEmail()

@@ -1,26 +1,26 @@
 package com.paparazziapps.pretamistapp.application
 
 import android.graphics.Color
-import com.paparazziapps.pretamistapp.application.CacheData
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 
 class MyPreferences {
 
-    val prefs = CacheData()
+    private val prefs = CacheData()
 
     //PREFERENCES STRING
-    var email_login: String
-        get()      = prefs.getString("email_login", "")
-        set(value) = prefs.setString("email_login", value)
+    var emailUser: String
+        get()      = prefs.getString("emailUser", "")
+        set(value) = prefs.setString("emailUser", value)
 
-    var sucursalName: String
-        get()      = prefs.getString("sucursalName", "")
-        set(value) = prefs.setString("sucursalName", value)
+
+    var branchName: String
+        get()      = prefs.getString("branchName", "")
+        set(value) = prefs.setString("branchName", value)
 
     //Sucursales All
-    var sucusales: String
-    get()      = prefs.getString("sucusales", "")
-    set(value) = prefs.setString("sucusales", value)
+    var branches: String
+    get()      = prefs.getString("branches", "")
+    set(value) = prefs.setString("branches", value)
 
 
     //PREFERENCES BOOLEAN
@@ -47,18 +47,23 @@ class MyPreferences {
         get() = prefs.getInt("color",  Color.parseColor("#ff0066"))
         set(value) = prefs.setInt("color", value)
 
-    var sucursalId: Int
-        get()      = prefs.getInt("sucursalId", INT_DEFAULT)
-        set(value) = prefs.setInt("sucursalId", value)
+    var branchId: Int
+        get()      = prefs.getInt("branchId", INT_DEFAULT)
+        set(value) = prefs.setInt("branchId", value)
 
 
     fun removeLoginData(){
         prefs.remove("isLogin")
-        prefs.remove("email_login")
-        prefs.remove("sucursalName")
+        prefs.remove("emailUser")
+        prefs.remove("branchName")
         prefs.remove("isAdmin")
         prefs.remove("isSuperAdmin")
         prefs.remove("isActiveUser")
-        prefs.remove("sucursalId")
+        prefs.remove("branchId")
     }
+
+    fun saveEmail(email: String){
+        emailUser = email
+    }
+
 }
