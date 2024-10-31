@@ -4,6 +4,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'kotlinx-serialization'
+    id("com.google.devtools.ksp")
 }
 
 android {

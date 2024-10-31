@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
@@ -27,8 +28,9 @@ class LoginActivity : AppCompatActivity() {
     var btnLoginEmail: MaterialButton? = null
     var isValidEmail = false
     var isValidPass:Boolean = false
-    var _viewModelLogin = ViewModelLogin.getInstance()
+    val _viewModelLogin  by viewModels<ViewModelLogin>()
     var TAG = "LoginActivity"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,10 +185,5 @@ class LoginActivity : AppCompatActivity() {
 
     private fun _showMessageMainThread(message: String) {
         Snackbar.make(findViewById(android.R.id.content), "" + message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroy() {
-    ViewModelLogin.destroyInstance()
-        super.onDestroy()
     }
 }

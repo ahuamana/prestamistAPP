@@ -3,10 +3,11 @@ package com.paparazziapps.pretamistapp.helper
 import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelLogin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 lateinit var ctx      : Context
@@ -14,7 +15,7 @@ lateinit var ctx      : Context
 class AppApplication : MultiDexApplication() {
 
     private val appModule = module {
-        //TODO: Add your modules here
+        viewModelOf(::ViewModelLogin)
     }
 
     override fun onCreate() {

@@ -3,10 +3,12 @@ package com.paparazziapps.pretamistapp.modulos.login.viewmodels
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DatabaseReference
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 
-class ViewModelLogin private constructor() {
+class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
 
     private var mLoginProvider = LoginProvider()
 
@@ -99,23 +101,6 @@ class ViewModelLogin private constructor() {
         } catch (e: java.lang.Exception) {
             Log.e("VM_LOGIN", "Error:" + e.message)
         }
-    }
-
-
-    companion object Singleton{
-            private var instance: ViewModelLogin? = null
-            private lateinit var database: DatabaseReference
-
-            fun getInstance(): ViewModelLogin =
-                instance ?: ViewModelLogin(
-                    //local y remoto
-                ).also {
-                    instance = it
-                }
-
-            fun destroyInstance(){
-                instance = null
-            }
     }
 
 }
