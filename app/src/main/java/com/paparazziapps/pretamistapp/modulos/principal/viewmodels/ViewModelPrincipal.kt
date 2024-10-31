@@ -3,8 +3,8 @@ package com.paparazziapps.pretamistapp.modulos.principal.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.paparazziapps.pretamistapp.domain.User
-import com.paparazziapps.pretamistapp.modulos.login.providers.LoginProvider
-import com.paparazziapps.pretamistapp.modulos.login.providers.UserProvider
+import com.paparazziapps.pretamistapp.data.providers.LoginProvider
+import com.paparazziapps.pretamistapp.data.providers.UserProvider
 
 class ViewModelPrincipal private constructor(){
 

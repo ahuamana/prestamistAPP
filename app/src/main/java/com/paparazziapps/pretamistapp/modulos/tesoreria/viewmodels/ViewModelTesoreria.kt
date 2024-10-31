@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.paparazziapps.pretamistapp.modulos.registro.providers.DetailLoanProvider
-import com.paparazziapps.pretamistapp.modulos.registro.providers.LoanProvider
+import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
+import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 
 class ViewModelTesoreria private constructor() : ViewModel() {

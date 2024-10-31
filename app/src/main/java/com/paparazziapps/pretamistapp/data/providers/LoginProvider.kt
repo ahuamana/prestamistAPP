@@ -1,11 +1,8 @@
-package com.paparazziapps.pretamistapp.modulos.login.providers
+package com.paparazziapps.pretamistapp.data.providers
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 class LoginProvider {
 
@@ -17,18 +14,14 @@ class LoginProvider {
         mAuth = FirebaseAuth.getInstance()
     }
 
-    fun getIsLogin(): Boolean
-    {
+    fun getIsLogin(): Boolean {
         return mAuth.currentUser != null
     }
 
-    fun getEmail(): String?
-    {
-        if(mAuth.currentUser != null)
-        {
+    fun getEmail(): String? {
+        if(mAuth.currentUser != null) {
             return mAuth.currentUser!!.email
-        }else
-        {
+        }else {
             return ""
         }
 

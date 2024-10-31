@@ -1,10 +1,11 @@
-package com.paparazziapps.pretamistapp.modulos.login.providers
+package com.paparazziapps.pretamistapp.data.providers
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.paparazziapps.pretamistapp.data.PADataConstants
 
 class BranchesProvider {
 
@@ -13,7 +14,7 @@ class BranchesProvider {
     }
 
     init {
-        database = Firebase.database.reference.child("sucusales")
+        database = Firebase.database.reference.child(PADataConstants.BRANCHES)
     }
 
     fun getSucursalesRepo(): Task<DataSnapshot> {

@@ -8,8 +8,8 @@ import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
-import com.paparazziapps.pretamistapp.modulos.registro.providers.DetailLoanProvider
-import com.paparazziapps.pretamistapp.modulos.registro.providers.LoanProvider
+import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
+import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

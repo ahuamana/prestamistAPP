@@ -1,4 +1,4 @@
-package com.paparazziapps.pretamistapp.modulos.registro.providers
+package com.paparazziapps.pretamistapp.data.providers
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.data.PADataConstants
 
 class DetailLoanProvider {
 
@@ -17,7 +18,7 @@ class DetailLoanProvider {
 
     //Constructor
     init {
-        mCollectionDetallePrestamo = FirebaseFirestore.getInstance().collection("DetallePrestamo")
+        mCollectionDetallePrestamo = FirebaseFirestore.getInstance().collection(PADataConstants.DETAIL_LOAN_COLLECTION)
     }
 
     // No need to implemented when is super admin

@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paparazziapps.pretamistapp.domain.Sucursales
-import com.paparazziapps.pretamistapp.modulos.login.providers.BranchesProvider
+import com.paparazziapps.pretamistapp.data.providers.BranchesProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

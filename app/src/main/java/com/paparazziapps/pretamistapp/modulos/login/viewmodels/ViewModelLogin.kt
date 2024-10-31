@@ -3,11 +3,8 @@ package com.paparazziapps.pretamistapp.modulos.login.viewmodels
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DatabaseReference
-import com.paparazziapps.pretamistapp.modulos.login.providers.LoginProvider
+import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 
 class ViewModelLogin private constructor() {
 
