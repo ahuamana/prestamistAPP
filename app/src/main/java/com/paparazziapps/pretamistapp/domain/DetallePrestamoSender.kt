@@ -1,4 +1,4 @@
-package com.paparazziapps.pretamistapp.modulos.tesoreria.pojo
+package com.paparazziapps.pretamistapp.domain
 
 data class DetallePrestamoSender (
     var id:String?= null,

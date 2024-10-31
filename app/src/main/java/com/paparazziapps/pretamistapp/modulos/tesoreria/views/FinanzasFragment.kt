@@ -21,7 +21,7 @@ import com.paparazziapps.pretamistapp.databinding.FragmentFinanzasBinding
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
-import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
+import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.modulos.tesoreria.adapter.PrestamoDetalleAdapter
 import com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels.ViewModelTesoreria

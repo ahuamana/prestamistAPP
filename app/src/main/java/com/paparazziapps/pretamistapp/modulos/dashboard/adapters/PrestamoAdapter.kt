@@ -16,10 +16,10 @@ import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
+import com.paparazziapps.pretamistapp.domain.LoanDomain
+import com.paparazziapps.pretamistapp.domain.PaymentScheduled
+import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -63,7 +63,7 @@ class PrestamoAdapter(var setOnClickedPrestamo: setOnClickedPrestamo) : Recycler
 
     override fun getItemViewType(position: Int): Int {
         return when(prestamosList[position].type){
-            0->TypePrestamo.TITLE.value
+            0-> TypePrestamo.TITLE.value
             else-> TypePrestamo.CARD.value
         }
     }

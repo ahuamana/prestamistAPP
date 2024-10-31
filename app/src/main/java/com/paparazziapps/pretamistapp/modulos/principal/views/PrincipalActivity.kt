@@ -26,7 +26,7 @@ import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityPrincipalBinding
 import com.paparazziapps.pretamistapp.databinding.BottomsheetDetallePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
+import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
@@ -35,8 +35,8 @@ import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursal
 import com.paparazziapps.pretamistapp.modulos.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.application.MyPreferences
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.PaymentScheduled
+import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 
 
 class PrincipalActivity : AppCompatActivity(){

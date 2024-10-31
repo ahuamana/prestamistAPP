@@ -27,9 +27,9 @@ import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
+import com.paparazziapps.pretamistapp.domain.PaymentScheduled
+import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

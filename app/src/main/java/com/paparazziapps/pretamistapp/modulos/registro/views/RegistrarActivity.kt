@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
+import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,13 +26,13 @@ import android.widget.AutoCompleteTextView
 import androidx.activity.viewModels
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
-import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
+import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.PaymentScheduled
+import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 
 
 class RegistrarActivity : AppCompatActivity() {

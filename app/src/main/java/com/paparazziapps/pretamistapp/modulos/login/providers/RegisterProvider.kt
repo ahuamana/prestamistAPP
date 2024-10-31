@@ -3,10 +3,6 @@ package com.paparazziapps.pretamistapp.modulos.login.providers
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.paparazziapps.pretamistapp.modulos.login.pojo.User
 
 class RegisterProvider {
 

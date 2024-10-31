@@ -1,18 +1,16 @@
 package com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels
 
 import android.util.Log
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.toObject
-import com.paparazziapps.pretamistapp.domain.LoanType
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.LoanDomain
+import com.paparazziapps.pretamistapp.domain.PaymentScheduled
+import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.modulos.registro.providers.DetallePrestamoProvider
 import com.paparazziapps.pretamistapp.modulos.registro.providers.PrestamoProvider
-import com.paparazziapps.pretamistapp.modulos.tesoreria.pojo.DetallePrestamoSender
+import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -47,7 +45,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
 
     }
 
-    fun updateUltimoPago(loanDomain: LoanDomain ,id:String?, fecha:String?, pagoTotal:Double,diasRestantesPorPagar:Int, diasPagadosNuevo:Int,onComplete: (Boolean, String, String?, Boolean) -> Unit) {
+    fun updateUltimoPago(loanDomain: LoanDomain, id:String?, fecha:String?, pagoTotal:Double, diasRestantesPorPagar:Int, diasPagadosNuevo:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
         var isCorrect:Boolean
         try {
             val typeLoan = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT)

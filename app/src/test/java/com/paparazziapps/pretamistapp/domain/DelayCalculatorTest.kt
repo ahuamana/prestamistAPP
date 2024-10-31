@@ -1,6 +1,5 @@
 package com.paparazziapps.pretamistapp.domain
 
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import org.junit.Assert.*
 import org.junit.Test
 

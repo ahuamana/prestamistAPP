@@ -6,16 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursal
-import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
+import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.modulos.login.providers.SucursalesProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 
 class ViewModelSucursales private constructor() : ViewModel(){

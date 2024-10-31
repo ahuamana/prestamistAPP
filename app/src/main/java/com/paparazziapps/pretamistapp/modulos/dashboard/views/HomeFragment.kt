@@ -20,15 +20,15 @@ import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.modulos.dashboard.adapters.PrestamoAdapter
 import com.paparazziapps.pretamistapp.modulos.dashboard.interfaces.setOnClickedPrestamo
 import com.paparazziapps.pretamistapp.modulos.dashboard.viewmodels.ViewModelDashboard
-import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
-import com.paparazziapps.pretamistapp.modulos.login.pojo.User
+import com.paparazziapps.pretamistapp.domain.Sucursales
+import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.modulos.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.TypePrestamo
+import com.paparazziapps.pretamistapp.domain.LoanDomain
+import com.paparazziapps.pretamistapp.domain.TypePrestamo
 import com.paparazziapps.pretamistapp.application.MyPreferences
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduled
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.PaymentScheduled
+import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

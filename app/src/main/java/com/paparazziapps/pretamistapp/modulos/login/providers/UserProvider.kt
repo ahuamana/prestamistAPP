@@ -5,7 +5,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.paparazziapps.pretamistapp.modulos.login.pojo.User
+import com.paparazziapps.pretamistapp.domain.User
 
 class UserProvider {
 

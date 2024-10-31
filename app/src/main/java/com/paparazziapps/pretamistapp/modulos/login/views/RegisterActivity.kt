@@ -22,8 +22,8 @@ import com.paparazziapps.pretamistapp.databinding.ActivityRegisterBinding
 import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
 import com.paparazziapps.pretamistapp.helper.isValidEmail
 import com.paparazziapps.pretamistapp.helper.setColorToStatusBar
-import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
-import com.paparazziapps.pretamistapp.modulos.login.pojo.User
+import com.paparazziapps.pretamistapp.domain.Sucursales
+import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegistroUsuario
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelSucursales
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity

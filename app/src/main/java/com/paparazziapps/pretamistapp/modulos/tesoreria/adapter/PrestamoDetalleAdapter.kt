@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ItemDetallePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.LoanDomain
+import com.paparazziapps.pretamistapp.domain.LoanDomain
 
 class PrestamoDetalleAdapter : RecyclerView.Adapter<PrestamoDetalleAdapter.ViewHolder>() {
 

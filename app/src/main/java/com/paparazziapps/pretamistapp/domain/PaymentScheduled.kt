@@ -1,4 +1,4 @@
-package com.paparazziapps.pretamistapp.modulos.registro.pojo
+package com.paparazziapps.pretamistapp.domain
 
 data class PaymentScheduled(
     val id: Int,

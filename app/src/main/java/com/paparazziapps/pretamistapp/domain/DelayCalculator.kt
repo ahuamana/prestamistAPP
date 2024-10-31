@@ -1,7 +1,5 @@
 package com.paparazziapps.pretamistapp.domain
 
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
-
 class DelayCalculator {
 
     fun calculateDelay(tyLoan: PaymentScheduledEnum, daysDelayed: Int): Int {

@@ -2,11 +2,9 @@ package com.paparazziapps.pretamistapp.modulos.principal.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseUser
-import com.paparazziapps.pretamistapp.modulos.login.pojo.User
+import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.modulos.login.providers.LoginProvider
 import com.paparazziapps.pretamistapp.modulos.login.providers.UserProvider
-import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegistroUsuario
 
 class ViewModelPrincipal private constructor(){
 
