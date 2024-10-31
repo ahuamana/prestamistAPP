@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.google.firebase.database.DatabaseReference
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 
 class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
@@ -37,7 +36,7 @@ class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
     }
 
     fun logout() {
-        mLoginProvider.signout()
+        mLoginProvider.signOut()
     }
 
     fun isAlreadyLogging(): LiveData<String?> {
@@ -80,7 +79,7 @@ class ViewModelLogin (val handle: SavedStateHandle): ViewModel() {
     fun loginAnonymous() {
         _isLoading.setValue(true)
         try {
-            mLoginProvider.loginAnonimously().addOnCompleteListener { task ->
+            mLoginProvider.loginAnonymously().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _message.setValue("Bienvenido anónimo")
                         try {

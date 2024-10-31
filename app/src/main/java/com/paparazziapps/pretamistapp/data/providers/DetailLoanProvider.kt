@@ -8,28 +8,19 @@ import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.PADataConstants
 
-class DetailLoanProvider {
+class DetailLoanProvider(private val preferences: MyPreferences) {
 
-    var preferences = MyPreferences()
-
-    companion object {
-        private lateinit var mCollectionDetallePrestamo:CollectionReference
-    }
-
-    //Constructor
-    init {
-        mCollectionDetallePrestamo = FirebaseFirestore.getInstance().collection(PADataConstants.DETAIL_LOAN_COLLECTION)
-    }
+    private val mCollectionDetallePrestamo: CollectionReference by lazy { FirebaseFirestore.getInstance().collection(PADataConstants.DETAIL_LOAN_COLLECTION) }
 
     // No need to implemented when is super admin
-    fun createDetalle(detallePrestamo: DetallePrestamoSender): Task<Void> {
+    fun createDetail(detallePrestamo: DetallePrestamoSender): Task<Void> {
         detallePrestamo.id = mCollectionDetallePrestamo.document().id
         detallePrestamo.sucursalId = preferences.sucursalId
         return mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo)
     }
 
     // No need to implemented when is super admin
-    fun getDetallePrestamosByFecha(fecha:String):Task<QuerySnapshot> {
+    fun getDetailLoanByDate(fecha:String):Task<QuerySnapshot> {
         return mCollectionDetallePrestamo
             .whereEqualTo("fechaPago",fecha)
             .whereEqualTo("sucursalId",preferences.sucursalId)
@@ -37,7 +28,7 @@ class DetailLoanProvider {
     }
 
     // Completed - Super Admin Implemented
-    fun getPrestamosByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): Task<QuerySnapshot> {
+    fun getLoanByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): Task<QuerySnapshot> {
         return  mCollectionDetallePrestamo
             .whereGreaterThanOrEqualTo("unixtime", timeStart)
             .whereLessThanOrEqualTo("unixtime",timeEnd)

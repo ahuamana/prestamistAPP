@@ -30,7 +30,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
         try {
 
-            mLoanProvider.getPrestamos().addOnSuccessListener {
+            mLoanProvider.getLoans().addOnSuccessListener {
 
 
                 isCorrect = true
@@ -66,7 +66,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
         var pagosTotalesXfecha = 0.0
 
         try {
-            mDetallePrestamo.getPrestamosByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal).addOnSuccessListener {
+            mDetallePrestamo.getLoanByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal).addOnSuccessListener {
                 if(it.isEmpty)
                 {
                     println("Fechas Vacias")
@@ -100,7 +100,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
         try {
 
-            mDetallePrestamo.getDetallePrestamosByFecha(getFechaActualNormalCalendar()).addOnSuccessListener {
+            mDetallePrestamo.getDetailLoanByDate(getFechaActualNormalCalendar()).addOnSuccessListener {
 
                 it.forEach { document ->
                     //println("Documento Pagos MVVM--> $document")
@@ -143,7 +143,7 @@ class ViewModelTesoreria private constructor() : ViewModel() {
 
         try {
 
-            mDetallePrestamo.getDetallePrestamosByFecha(getYesterdayFechaNormal()).addOnSuccessListener {
+            mDetallePrestamo.getDetailLoanByDate(getYesterdayFechaNormal()).addOnSuccessListener {
 
                 it.forEach { document ->
                     println("Documento Pagos MVVM--> $document")

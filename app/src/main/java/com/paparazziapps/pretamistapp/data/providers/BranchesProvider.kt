@@ -9,15 +9,9 @@ import com.paparazziapps.pretamistapp.data.PADataConstants
 
 class BranchesProvider {
 
-    companion object{
-        private lateinit var database: DatabaseReference
-    }
+    private val database: DatabaseReference by lazy { Firebase.database.reference.child(PADataConstants.BRANCHES) }
 
-    init {
-        database = Firebase.database.reference.child(PADataConstants.BRANCHES)
-    }
-
-    fun getSucursalesRepo(): Task<DataSnapshot> {
+    fun geBranchesRepo(): Task<DataSnapshot> {
         return database.get()
     }
 }

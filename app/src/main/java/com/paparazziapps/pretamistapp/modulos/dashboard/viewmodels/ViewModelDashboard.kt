@@ -25,7 +25,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
     fun getLoans() {
         try {
             val loans = mutableListOf<LoanDomain>()
-            loanProvider.getPrestamos().addOnSuccessListener { querySnapshot ->
+            loanProvider.getLoans().addOnSuccessListener { querySnapshot ->
                 if(querySnapshot.isEmpty) {
                     Log.d(tag," lista prestamos esta vacia")
                     return@addOnSuccessListener
@@ -60,7 +60,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
                                 pagoTotal = pagoTotal,
                                 unixtime = getFechaActualNormalInUnixtime())
 
-                            detailLoanProvider.createDetalle(detalle).addOnCompleteListener {
+                            detailLoanProvider.createDetail(detalle).addOnCompleteListener {
                                 if(it.isSuccessful) {
                                     //_message.value = "Se actualizo el pago"
                                     isCorrect = true
@@ -103,7 +103,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
                                 pagoTotal = pagoTotal,
                                 unixtime = getFechaActualNormalInUnixtime())
 
-                            detailLoanProvider.createDetalle(detalle).addOnCompleteListener {
+                            detailLoanProvider.createDetail(detalle).addOnCompleteListener {
                                 if(it.isSuccessful) {
                                     //_message.value = "Se actualizo el pago"
                                     isCorrect = true
@@ -143,7 +143,7 @@ class ViewModelDashboard private constructor() : ViewModel(){
 
         try {
 
-            loanProvider.cerrarPrestamo(id?:"").addOnCompleteListener {
+            loanProvider.closeLoan(id?:"").addOnCompleteListener {
                 if(it.isSuccessful) {
                     isCorrect = true
                     onComplete(isCorrect, "Se cerro el pago", null, false)

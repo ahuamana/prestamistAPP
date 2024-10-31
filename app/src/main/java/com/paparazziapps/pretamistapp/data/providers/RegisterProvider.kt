@@ -6,13 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class RegisterProvider {
 
-    companion object{
-        private lateinit var mAuth: FirebaseAuth
-    }
-
-    init {
-        mAuth = FirebaseAuth.getInstance();
-    }
+    private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     fun createUser(email:String,pass:String): Task<AuthResult> {
         return mAuth.createUserWithEmailAndPassword(email, pass)

@@ -34,7 +34,7 @@ class ViewModelSucursales private constructor() : ViewModel(){
 
     fun getSucursales() = viewModelScope.launch(Dispatchers.IO + exceptionHandler){
         val sucursales = ArrayList<Sucursales>()
-        val result = mProviderSucursal.getSucursalesRepo().await()
+        val result = mProviderSucursal.geBranchesRepo().await()
 
         for (snapshot in result.children) {
             val sucursal = snapshot.getValue(Sucursales::class.java)
