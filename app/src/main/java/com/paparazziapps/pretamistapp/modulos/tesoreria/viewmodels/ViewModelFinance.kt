@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,8 @@ class ViewModelFinance (
 
     var _prestamos = MutableLiveData<MutableList<LoanDomain>>()
     var _pagosTotalesByTime = MutableLiveData<Double>()
+
+    private val tag = ViewModelFinance::class.java.simpleName
 
     fun getMessage() : LiveData<String> =  _message
     fun receivePrestamos (): LiveData<MutableList<LoanDomain>> =_prestamos
@@ -54,114 +57,90 @@ class ViewModelFinance (
 
     fun getPrestamosByTime(timeStart:Long, timeEnd:Long, idSucursal:Int) = viewModelScope.launch {
         var pagosTotalesXfecha = 0.0
+        val result = detailLoanProvider.getLoanByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal)
 
-        try {
-            detailLoanProvider.getLoanByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal).addOnSuccessListener {
-                if(it.isEmpty)
-                {
-                    println("Fechas Vacias")
+        when(result) {
+            is PAResult.Error -> {
+                _pagosTotalesByTime.value = 0.0
+            }
+            is PAResult.Success -> {
+                if(result.data.isEmpty) {
                     _pagosTotalesByTime.value = 0.0
-                }else
-                {
-                    it.forEach { document->
-                        var dps = document.toObject<DetallePrestamoSender>()
-                        println("Pago total de item: ${dps.pagoTotal}")
+                }else {
+                    result.data.forEach { document->
+                        val dps = document.toObject<DetallePrestamoSender>()
                         pagosTotalesXfecha += dps.pagoTotal?:0.0
                     }
-                    println("Total caja: $pagosTotalesXfecha")
                     pagosTotalesXfecha = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesXfecha)?:0.0
                     _pagosTotalesByTime.value = pagosTotalesXfecha
                 }
-
-            }.addOnFailureListener {
-                println("Error FailureListener: ${it.message}")
             }
-
-        }catch (t:Throwable) {
-            println("Error throwable: ${t.message}")
         }
     }
 
 
-    fun getPagosHoy(onComplete: (Boolean, String, Double?, Boolean) -> Unit)
-    {
+    fun getPagosHoy(onComplete: (Boolean, String, Double?, Boolean) -> Unit) = viewModelScope.launch {
         var isCorrect = false
         var pagosTotalesHoy = 0.0
+        val result = detailLoanProvider.getDetailLoanByDate(getFechaActualNormalCalendar())
 
-        try {
-
-            detailLoanProvider.getDetailLoanByDate(getFechaActualNormalCalendar()).addOnSuccessListener {
-
-                it.forEach { document ->
-                    //println("Documento Pagos MVVM--> $document")
-                    var dps =document.toObject<DetallePrestamoSender>()
-                    pagosTotalesHoy += dps.pagoTotal?:0.0
-                    //println("Pago total hoy: $pagosTotalesHoy")
-                }
-
-                isCorrect = true
-                pagosTotalesHoy= getDoubleWithTwoDecimalsReturnDouble(pagosTotalesHoy)!!
-                onComplete(isCorrect,"",pagosTotalesHoy,false)
-
-            }.addOnFailureListener {
-
-                println("Error: ${it.message}")
+        when (result) {
+            is PAResult.Error -> {
+                Log.d(tag, "Error: ${result.exception.message}")
                 isCorrect = false
-                onComplete(isCorrect, "No se pudo obtener los pagos de hoy, porfavor comuníquese con soporte!", null, false)
-
-        }
-
-
-
-        }catch (t:Throwable)
-        {
-
-            println("Error throwable: ${t.message}")
-            isCorrect = false
-            onComplete(isCorrect, "No se pudo obtener los pagos de hoy, porfavor comuníquese con soporte!", null, false)
-        }
-
-
-    }
-
-
-
-    fun getPagosAyer(onComplete: (Boolean, String, Double?, Boolean) -> Unit)
-    {
-        var isCorrect = false
-        var pagosTotalesAyer = 0.0
-
-        try {
-            detailLoanProvider.getDetailLoanByDate(getYesterdayFechaNormal()).addOnSuccessListener {
-                it.forEach { document ->
-                    println("Documento Pagos MVVM--> $document")
-                    var dps =document.toObject<DetallePrestamoSender>()
-                    pagosTotalesAyer += dps.pagoTotal?:0.0
-                    println("Pago total ayer: $pagosTotalesAyer")
-                }
-
-                isCorrect = true
-                pagosTotalesAyer= getDoubleWithTwoDecimalsReturnDouble(pagosTotalesAyer)!!
-                onComplete(isCorrect,"",pagosTotalesAyer,false)
-
-            }.addOnFailureListener {
-
-                println("Error: ${it.message}")
-                isCorrect = false
-                onComplete(isCorrect, "No se pudo obtener los pagos de ayer, porfavor comuníquese con soporte!", null, false)
-
+                onComplete(
+                    isCorrect,
+                    "No se pudo obtener los pagos de hoy, porfavor comuníquese con soporte!",
+                    null,
+                    false
+                )
             }
 
-
-
-        }catch (t:Throwable)
-        {
-
-            println("Error throwable: ${t.message}")
-            isCorrect = false
-            onComplete(isCorrect, "No se pudo obtener los pagos de ayer, porfavor comuníquese con soporte!", null, false)
+            is PAResult.Success -> {
+                if (result.data.isEmpty) {
+                    isCorrect = true
+                    onComplete(isCorrect, "", 0.0, false)
+                } else {
+                    result.data.forEach { document ->
+                        val dps = document.toObject<DetallePrestamoSender>()
+                        pagosTotalesHoy += dps.pagoTotal ?: 0.0
+                    }
+                    pagosTotalesHoy = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesHoy) ?: 0.0
+                    onComplete(isCorrect, "", pagosTotalesHoy, false)
+                }
+            }
         }
-
-
     }
+
+
+
+    fun getPagosAyer(onComplete: (Boolean, String, Double?, Boolean) -> Unit) = viewModelScope.launch {
+        var isCorrect = false
+        var pagosTotalesAyer = 0.0
+        val details = detailLoanProvider.getDetailLoanByDate(getYesterdayFechaNormal())
+
+        when(details){
+            is PAResult.Error -> {
+                Log.d(tag, "Error: ${details.exception.message}")
+                isCorrect = false
+                onComplete(isCorrect,
+                    "No se pudo obtener los pagos de ayer, porfavor comuníquese con soporte!",
+                    null, false)
+            }
+            is PAResult.Success -> {
+                if (details.data.isEmpty) {
+                    isCorrect = true
+                    onComplete(isCorrect, "", 0.0, false)
+                } else {
+                    details.data.forEach { document ->
+                        val dps = document.toObject<DetallePrestamoSender>()
+                        pagosTotalesAyer += dps.pagoTotal ?: 0.0
+                    }
+                    pagosTotalesAyer = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesAyer) ?: 0.0
+                    onComplete(isCorrect, "", pagosTotalesAyer, false)
+                }
+            }
+        }
+    }
+
 }

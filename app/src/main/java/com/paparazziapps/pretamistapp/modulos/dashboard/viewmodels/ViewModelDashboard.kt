@@ -105,20 +105,21 @@ class ViewModelDashboard (
                                 pagoTotal = pagoTotal,
                                 unixtime = getFechaActualNormalInUnixtime())
 
-                            detailLoanProvider.createDetail(detalle).addOnCompleteListener {
-                                if(it.isSuccessful) {
-                                    //_message.value = "Se actualizo el pago"
-                                    isCorrect = true
-                                    onComplete(isCorrect, "Se actualizo el pago", null, false)
-                                }else {
-                                    println("Error: ${it.exception?.message}")
+                            val resultDetail = detailLoanProvider.createDetail(detalle)
+
+                            when(resultDetail){
+                                is PAResult.Error -> {
+                                    Log.d(tag,"ViewModelRegister --> : Error ${resultDetail.exception.message}")
+                                    //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
                                     isCorrect = false
                                     onComplete(isCorrect, "No se pudo crear el ultimo pago, inténtelo otra vez", null, false)
                                 }
-                            }.addOnFailureListener {
-                                Log.d(tag,"Error: ${it.message}")
-                                isCorrect = false
-                                onComplete(isCorrect, "No se pudo crear el ultimo pago, porfavor comuníquese con soporte!", null, false)
+                                is PAResult.Success -> {
+                                    //_message.value = "Se actualizo el pago"
+                                    Log.d(tag,"ViewModelRegister --> : Success ${resultDetail.data}")
+                                    isCorrect = true
+                                    onComplete(isCorrect, "Se actualizo el pago", null, false)
+                                }
                             }
                         }
                     }
@@ -133,6 +134,8 @@ class ViewModelDashboard (
 
         }
     }
+
+
 
 
     fun cerrarPrestamo(id:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit) = viewModelScope.launch {
