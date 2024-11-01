@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -27,6 +28,7 @@ import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegisterUser
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
@@ -249,17 +251,15 @@ class RegisterActivity : AppCompatActivity() {
 
 
     private fun observers() {
-        _viewModel.getBranches.observe(this){
 
-            if(it.isNotEmpty())
-            {
+        lifecycleScope.launch {
+            _viewModel.sucursales.observe(this@RegisterActivity) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()
                 it.forEach {
                     scrsales.add(it.name?:"")
                 }
-
-                val adapterSucursales= ArrayAdapter(this,R.layout.select_items, scrsales)
+                val adapterSucursales= ArrayAdapter(this@RegisterActivity,R.layout.select_items, scrsales)
                 sucursalesTextView.setAdapter(adapterSucursales)
                 sucursalesTextView.setOnClickListener { sucursalesTextView.showDropDown() }
                 sucursalesLayout.setEndIconOnClickListener { sucursalesTextView.showDropDown() }
@@ -267,9 +267,7 @@ class RegisterActivity : AppCompatActivity() {
                 viewProgressSucursal.isVisible = false
                 viewDotsSucursal.isVisible = false
                 viewCurtainSucursal.isVisible = false
-
             }
-
         }
 
         _viewModelRegistro.showMessage().observe(this) { message ->

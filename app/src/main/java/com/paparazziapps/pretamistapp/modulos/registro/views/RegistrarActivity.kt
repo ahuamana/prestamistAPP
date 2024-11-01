@@ -122,7 +122,7 @@ class RegistrarActivity : AppCompatActivity() {
     private fun startObservers() {
         viewModel.getMessage().observe(this){ message ->  showMessage(message)}
 
-        _viewModelBranches.getBranches.observe(this){
+        _viewModelBranches.sucursales.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()

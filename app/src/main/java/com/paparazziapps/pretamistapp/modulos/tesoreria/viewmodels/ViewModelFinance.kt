@@ -3,12 +3,15 @@ package com.paparazziapps.pretamistapp.modulos.tesoreria.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.toObject
+import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
 import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
+import kotlinx.coroutines.launch
 
 class ViewModelFinance (
     private val loanProvider: LoanProvider,
@@ -24,46 +27,32 @@ class ViewModelFinance (
     fun receivePrestamos (): LiveData<MutableList<LoanDomain>> =_prestamos
     fun getPagosTotalesByTime():LiveData<Double> = _pagosTotalesByTime
 
-    fun getPrestamosSize(onComplete: (Boolean, String, Int?, Boolean) -> Unit)
-    {
+    fun getPrestamosSize(onComplete: (Boolean, String, Int?, Boolean) -> Unit) = viewModelScope.launch {
         var isCorrect = false
-        var listLoanRespons = mutableListOf<LoanDomain>()
+        val listLoanRespons = mutableListOf<LoanDomain>()
+        val result = loanProvider.getLoans()
 
-        try {
-
-            loanProvider.getLoans().addOnSuccessListener {
-
-
-                isCorrect = true
-                if(it.isEmpty)
-                {
-                    onComplete(isCorrect,"",0,false)
-                }else
-                {
-                    it.forEach { document->
-                        listLoanRespons.add(document.toObject<LoanDomain>())
-                    }
-                    _prestamos.value = listLoanRespons
-                    onComplete(isCorrect,"",it.size(),false)
-                }
-
-
-            }.addOnFailureListener {
-                println("Error: ${it.message}")
+        when(result){
+            is PAResult.Error -> {
                 isCorrect = false
                 onComplete(isCorrect, "No se pudo obtener los prestamos, porfavor comuníquese con soporte!", null, false)
             }
-
-        }catch (t:Throwable)
-        {
-            println("Error throwable: ${t.message}")
-            isCorrect = false
-            onComplete(isCorrect, "No se pudo obtener los pagos de hoy, porfavor comuníquese con soporte!", null, false)
+            is PAResult.Success -> {
+                if(result.data.isEmpty) {
+                    isCorrect = true
+                    onComplete(isCorrect,"",0,false)
+                }else {
+                    result.data.forEach { document->
+                        listLoanRespons.add(document.toObject<LoanDomain>())
+                    }
+                    _prestamos.value = listLoanRespons
+                    onComplete(isCorrect,"",result.data.size(),false)
+                }
+            }
         }
     }
 
-    fun getPrestamosByTime(timeStart:Long, timeEnd:Long, idSucursal:Int)
-    {
+    fun getPrestamosByTime(timeStart:Long, timeEnd:Long, idSucursal:Int) = viewModelScope.launch {
         var pagosTotalesXfecha = 0.0
 
         try {
@@ -143,9 +132,7 @@ class ViewModelFinance (
         var pagosTotalesAyer = 0.0
 
         try {
-
             detailLoanProvider.getDetailLoanByDate(getYesterdayFechaNormal()).addOnSuccessListener {
-
                 it.forEach { document ->
                     println("Documento Pagos MVVM--> $document")
                     var dps =document.toObject<DetallePrestamoSender>()

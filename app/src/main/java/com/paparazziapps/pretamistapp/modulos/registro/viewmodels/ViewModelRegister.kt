@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.domain.LoanType
 import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
 import com.paparazziapps.pretamistapp.domain.LoanDomain
@@ -11,6 +13,7 @@ import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class ViewModelRegister (
@@ -53,44 +56,26 @@ class ViewModelRegister (
         }
     }
 
-    fun createPrestamo(loanDomain: LoanDomain, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit) {
+    fun createPrestamo(loanDomain: LoanDomain, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit)  = viewModelScope.launch {
         var isCorrect = false
-        try {
-        mLoanProvider.create(loanDomain, idSucursal = idSucursal).addOnCompleteListener {
-                if(it.isSuccessful)
-                {
-                    _message.value = "El prestamo se registro correctamente"
-                    isCorrect = true
-                    onComplete(isCorrect, "El prestamo se registro correctamente", "", false)
-                }
+        val result = mLoanProvider.create(loanDomain, idSucursal = idSucursal)
 
-                if (it.isCanceled)
-                {
-                    isCorrect = false
-                    _message.value = "La solicitud de registro se canceló"
-                    onComplete(isCorrect, "La solicitud de registro se canceló", "", false)
-                }
+        when (result) {
+            is PAResult.Error -> {
+                isCorrect = false
+                _message.value = "La solicitud no se pudo procesar, intentalo otra vez"
+                onComplete(
+                    isCorrect,
+                    "La solicitud no se pudo procesar, intentalo otra vez",
+                    "",
+                    false)
+            }
 
-        }.addOnFailureListener {
-
-            var errorMessage = it.message.toString()
-
-            _message.value = errorMessage
-
-            isCorrect = false
-            _message.value = "La solicitud no se pudo procesar, intentalo otra vez"
-            onComplete(isCorrect, "La solicitud no se pudo procesar, intentalo otra vez", "", false)
-        }
-
-        }catch (t:Throwable) {
-           var errorMessage = t.message.toString()
-            println("Error : $errorMessage")
-
-            _message.value = errorMessage
-
-            isCorrect = false
-            _message.value = "La solicitud no se proceso, contacte con soporte!"
-            onComplete(isCorrect, "La solicitud no se proceso, contacte con soporte!", "", false)
+            is PAResult.Success -> {
+                _message.value = "El prestamo se registro correctamente"
+                isCorrect = true
+                onComplete(isCorrect, "El prestamo se registro correctamente", "", false)
+            }
         }
     }
 

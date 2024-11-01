@@ -52,7 +52,7 @@ class AppApplication : MultiDexApplication() {
         viewModel { ViewModelLogin(get(), get()) }
         viewModel { ViewModelDashboard(get(),get()) }
         viewModel { ViewModelRegisterUser(get(), get(), get()) }
-        viewModel { ViewModelBranches() }
+        viewModel { ViewModelBranches(get()) }
         viewModel { ViewModelPrincipal(get(),get()) }
         viewModel { ViewModelRegister(get()) }
         //viewModelOf(::ViewModelLogin)// viewModel { ViewModelLogin(get()) }

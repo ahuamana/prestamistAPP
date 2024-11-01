@@ -99,7 +99,7 @@ class PrincipalActivity : AppCompatActivity(){
             }
         }
 
-        _viewModelBranches.getBranches.observe(this){
+        _viewModelBranches.sucursales.observe(this){
             //save info sucursales
             if(it.isNotEmpty()){
                 MyPreferences().branches = toJson(it)
