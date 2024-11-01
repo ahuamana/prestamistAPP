@@ -7,32 +7,43 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.PADataConstants
+import com.paparazziapps.pretamistapp.data.network.NetworkOperation
+import com.paparazziapps.pretamistapp.data.network.PAResult
+import kotlinx.coroutines.tasks.await
 
 class DetailLoanProvider(private val preferences: MyPreferences) {
 
     private val mCollectionDetallePrestamo: CollectionReference by lazy { FirebaseFirestore.getInstance().collection(PADataConstants.DETAIL_LOAN_COLLECTION) }
 
     // No need to implemented when is super admin
-    fun createDetail(detallePrestamo: DetallePrestamoSender): Task<Void> {
+    suspend fun createDetail(detallePrestamo: DetallePrestamoSender): PAResult<Void> {
         detallePrestamo.id = mCollectionDetallePrestamo.document().id
         detallePrestamo.sucursalId = preferences.branchId
-        return mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo)
+
+
+        return NetworkOperation.safeApiCall {
+            mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo).await()
+        }
     }
 
     // No need to implemented when is super admin
-    fun getDetailLoanByDate(fecha:String):Task<QuerySnapshot> {
-        return mCollectionDetallePrestamo
-            .whereEqualTo("fechaPago",fecha)
-            .whereEqualTo("sucursalId",preferences.branchId)
-            .get()
+    suspend fun getDetailLoanByDate(fecha:String):PAResult<QuerySnapshot> {
+        return NetworkOperation.safeApiCall {
+            mCollectionDetallePrestamo
+                .whereEqualTo("fechaPago",fecha)
+                .whereEqualTo("sucursalId",preferences.branchId)
+                .get().await()
+        }
     }
 
     // Completed - Super Admin Implemented
-    fun getLoanByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): Task<QuerySnapshot> {
-        return  mCollectionDetallePrestamo
-            .whereGreaterThanOrEqualTo("unixtime", timeStart)
-            .whereLessThanOrEqualTo("unixtime",timeEnd)
-            .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idSucursal else  preferences.branchId)
-            .get()
+    suspend fun getLoanByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): PAResult<QuerySnapshot> {
+        return  NetworkOperation.safeApiCall {
+            mCollectionDetallePrestamo
+                .whereGreaterThanOrEqualTo("unixtime", timeStart)
+                .whereLessThanOrEqualTo("unixtime",timeEnd)
+                .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idSucursal else  preferences.branchId)
+                .get().await()
+        }
     }
 }
