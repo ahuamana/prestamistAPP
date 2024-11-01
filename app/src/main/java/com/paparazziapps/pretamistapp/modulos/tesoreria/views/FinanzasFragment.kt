@@ -8,11 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
@@ -116,7 +114,7 @@ class FinanzasFragment : Fragment() {
             cardViewCajaAdmin.beVisible()
             sucursalTxtLayout.beVisible()
             viewProgressSucursal.beVisible()
-            _viewModelBranches.getSucursales()
+            _viewModelBranches.getBranches()
 
         }else{
             if(preferences.isAdmin){

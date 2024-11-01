@@ -6,12 +6,17 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.data.PADataConstants
+import com.paparazziapps.pretamistapp.data.network.NetworkOperation
+import com.paparazziapps.pretamistapp.data.network.PAResult
+import kotlinx.coroutines.tasks.await
 
 class BranchesProvider {
 
     private val database: DatabaseReference by lazy { Firebase.database.reference.child(PADataConstants.BRANCHES) }
 
-    fun geBranchesRepo(): Task<DataSnapshot> {
-        return database.get()
+    suspend fun geBranchesRepo(): PAResult<DataSnapshot> {
+        return NetworkOperation.safeApiCall {
+            database.get().await()
+        }
     }
 }

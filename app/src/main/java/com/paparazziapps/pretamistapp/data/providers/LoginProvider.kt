@@ -11,10 +11,6 @@ class LoginProvider {
 
     private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
-    fun getEmail(): String? {
-        return if(mAuth.currentUser != null) { mAuth.currentUser!!.email } else ""
-    }
-
     suspend fun loginEmail(email: String, pass: String): PAResult<AuthResult> {
         return NetworkOperation.safeApiCall {
             mAuth.signInWithEmailAndPassword(email, pass).await()

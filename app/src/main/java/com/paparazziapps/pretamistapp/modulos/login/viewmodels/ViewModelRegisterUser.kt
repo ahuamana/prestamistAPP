@@ -19,11 +19,8 @@ class ViewModelRegisterUser(
 ) : ViewModel() {
 
     private val _message = MutableLiveData<String>()
-
     private val _user = MutableLiveData<FirebaseUser>()
-
     private val _isLoading = MutableLiveData<Boolean>()
-
     private val _isSavedFirebase = MutableLiveData<Boolean>()
 
     fun getIsSavedFirebase(): LiveData<Boolean> {

@@ -66,7 +66,7 @@ class PrincipalActivity : AppCompatActivity(){
         isFreeTrial()
         setUpInicialToolbar()
         //testCrashlytics()
-        _viewModelBranches.getSucursales()
+        _viewModelBranches.getBranches()
         observers()
 
         /*val disappearView = DisappearView.attach(this)
@@ -99,7 +99,7 @@ class PrincipalActivity : AppCompatActivity(){
             }
         }
 
-        _viewModelBranches.sucursales.observe(this){
+        _viewModelBranches.getBranches.observe(this){
             //save info sucursales
             if(it.isNotEmpty()){
                 MyPreferences().branches = toJson(it)

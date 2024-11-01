@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.Toolbar
@@ -28,7 +27,6 @@ import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelRegisterUser
 import com.paparazziapps.pretamistapp.modulos.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.modulos.principal.views.PrincipalActivity
-import com.paparazziapps.pretamistapp.modulos.registro.viewmodels.ViewModelRegister
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity() {
@@ -96,7 +94,7 @@ class RegisterActivity : AppCompatActivity() {
         hideKeyboardActivity(this)
         validateFields()
 
-        _viewModel.getSucursales()
+        _viewModel.getBranches()
 
         setupToolbar()
         observers()
@@ -251,7 +249,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
     private fun observers() {
-        _viewModel.sucursales.observe(this){
+        _viewModel.getBranches.observe(this){
 
             if(it.isNotEmpty())
             {

@@ -23,7 +23,6 @@ import java.util.*
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import androidx.activity.viewModels
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
@@ -116,14 +115,14 @@ class RegistrarActivity : AppCompatActivity() {
         if(preferences.isSuperAdmin){
             sucursalTxtLayout.beVisible()
             viewProgressSucursal.beVisible()
-            _viewModelBranches.getSucursales()
+            _viewModelBranches.getBranches()
         }
     }
 
     private fun startObservers() {
         viewModel.getMessage().observe(this){ message ->  showMessage(message)}
 
-        _viewModelBranches.sucursales.observe(this){
+        _viewModelBranches.getBranches.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()
