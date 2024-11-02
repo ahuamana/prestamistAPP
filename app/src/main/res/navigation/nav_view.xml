@@ -6,17 +6,17 @@
     app:startDestination="@id/navigation_home">
     <fragment
         android:id="@+id/navigation_registrar"
-        android:name="com.paparazziapps.pretamistapp.modulos.registro.views.RegistrarFragment"
+        android:name="com.paparazziapps.pretamistapp.presentation.registro.views.RegistrarFragment"
         android:label="fragment_registrar"
         tools:layout="@layout/fragment_registrar" />
     <fragment
         android:id="@+id/navigation_finanzas"
-        android:name="com.paparazziapps.pretamistapp.modulos.tesoreria.views.FinanzasFragment"
+        android:name="com.paparazziapps.pretamistapp.presentation.tesoreria.views.FinanzasFragment"
         android:label="fragment_finanzas"
         tools:layout="@layout/fragment_finanzas" />
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.paparazziapps.pretamistapp.modulos.dashboard.views.HomeFragment"
+        android:name="com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment"
         android:label="fragment_home2"
         tools:layout="@layout/fragment_home" />
 </navigation>

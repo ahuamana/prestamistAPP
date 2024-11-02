@@ -1,6 +1,5 @@
 package com.paparazziapps.pretamistapp.helper
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -26,7 +25,6 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatButton
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.graphics.drawable.DrawableCompat
@@ -34,7 +32,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.modulos.login.pojo.Sucursales
+import com.paparazziapps.pretamistapp.domain.Sucursales
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -44,19 +42,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
-//Shared Preferences
-private var appContext: Context? = null
-
-val application: Context
-    get() = appContext ?: initAndGetAppCtxWithReflection()
-
-@SuppressLint("PrivateApi")
-private fun initAndGetAppCtxWithReflection(): Context {
-    val activityThread = Class.forName("android.app.ActivityThread")
-    val ctx = activityThread.getDeclaredMethod("currentApplication").invoke(null) as Context
-    appContext = ctx
-    return ctx
-}
 
 fun turnOffDarkModeInAllApp(resources: Resources){
     val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
@@ -179,16 +164,21 @@ fun String?.fromHtml() : Spanned? {
 }
 
 
-fun getValidateColorHex(color: Int = ctx.resources.getColor(R.color.colorPrimary)): Int{
+fun getValidateColorHex(
+    context: Context,
+    color: Int = getColor(context, R.color.colorPrimary)
+): Int{
     val hexColor = "#"+Integer.toHexString(color).substring(2)
     val validateColor = Color.parseColor(hexColor)
     return validateColor
 }
 
-fun AppCompatButton.standardSimpleButtonOutline(color: Int = resources.getColor(R.color.colorPrimary)){
+fun AppCompatButton.standardSimpleButtonOutline(
+    context: Context,
+    color: Int = getColor(context, R.color.colorPrimary)){
     this.apply {
-        background = getRippleDrawable(BUTTON_OUTLINE)
-        setTextColor(getValidateColorHex(color))
+        background = getRippleDrawable(BUTTON_OUTLINE, context)
+        setTextColor(getValidateColorHex(context,color))
     }
 }
 
@@ -199,34 +189,36 @@ fun AppCompatButton.standardSimpleButtonOutlineDisable(){
     }
 }
 
-fun AppCompatButton.standardSimpleButton(){
+fun AppCompatButton.standardSimpleButton(
+    context: Context
+){
     this.apply {
-        background = getRippleDrawable(BUTTON)
-        setTextColor(getValidateColorHex())
+        background = getRippleDrawable(BUTTON, context)
+        setTextColor(getValidateColorHex(context))
     }
 }
 
-fun getRippleDrawable(type: String): RippleDrawable {
+fun getRippleDrawable(type: String, context: Context): RippleDrawable {
     val drawable =
-        if (type == BUTTON_OUTLINE) ContextCompat.getDrawable(ctx, R.drawable.button_corner) as Drawable
-        else ContextCompat.getDrawable(ctx, R.drawable.button_corner_without_stroke) as Drawable
+        if (type == BUTTON_OUTLINE) ContextCompat.getDrawable(context, R.drawable.button_corner) as Drawable
+        else ContextCompat.getDrawable(context, R.drawable.button_corner_without_stroke) as Drawable
 
-    val customDrawable = tintDrawable(drawable)
-    val mask = ContextCompat.getDrawable(ctx, R.drawable.border_mask) as Drawable
+    val customDrawable = tintDrawable(context,drawable)
+    val mask = ContextCompat.getDrawable(context, R.drawable.border_mask) as Drawable
 
-    return RippleDrawable(getPressedColorSelector2(), customDrawable, mask) //getRippleMask() try this
+    return RippleDrawable(getPressedColorSelector2(context), customDrawable, mask) //getRippleMask() try this
 }
 
-fun tintDrawable(drawable: Drawable, @ColorInt color: Int = ctx.resources.getColor(R.color.colorPrimary)): Drawable {
+fun tintDrawable(context:Context,
+                 drawable: Drawable,
+                 @ColorInt color: Int = getColor(context,R.color.colorPrimary)): Drawable {
     (drawable as? VectorDrawableCompat)
         ?.apply { setTintList(ColorStateList.valueOf(color)) }
         ?.let { return it }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        (drawable as? VectorDrawable)
-            ?.apply { setTintList(ColorStateList.valueOf(color)) }
-            ?.let { return it }
-    }
+    (drawable as? VectorDrawable)
+        ?.apply { setTintList(ColorStateList.valueOf(color)) }
+        ?.let { return it }
 
     val wrappedDrawable = DrawableCompat.wrap(drawable)
     DrawableCompat.setTint(wrappedDrawable, color)
@@ -234,8 +226,9 @@ fun tintDrawable(drawable: Drawable, @ColorInt color: Int = ctx.resources.getCol
 }
 
 fun getPressedColorSelector2(
-    pressedColor : Int      = getColorWithAlpha(ctx.resources.getColor(R.color.colorPrimary), 0.3f),
-    normalColor  : Int      = getColorWithAlpha(ctx.resources.getColor(R.color.colorPrimary), 0.3f),
+    context: Context,
+    pressedColor : Int      = getColorWithAlpha(getColor(context,R.color.colorPrimary), 0.3f),
+    normalColor  : Int      = getColorWithAlpha(getColor(context,R.color.colorPrimary), 0.3f),
     isSelect     : Boolean  = false,
 ): ColorStateList {
     return ColorStateList(
@@ -295,7 +288,8 @@ fun View.hideKeyboardFrom(){
     inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
-fun setColorToStatusBar(activity: Activity, color: Int = getColor(ctx,R.color.colorPrimary)) {
+fun setColorToStatusBar(
+    activity: Activity, color: Int = getColor(activity.applicationContext,R.color.colorPrimary)) {
     val window = activity.window
     val hsv = FloatArray(3)
     var darkColor: Int = color
@@ -304,11 +298,9 @@ fun setColorToStatusBar(activity: Activity, color: Int = getColor(ctx,R.color.co
     hsv[2] *= 0.8f // value component
     darkColor = Color.HSVToColor(hsv)
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.statusBarColor = darkColor //Define color
-    }
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+    window.statusBarColor = darkColor //Define color
 }
 
 inline fun <reified T> toJson(value : T) = Json{

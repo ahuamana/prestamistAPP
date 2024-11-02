@@ -1,6 +1,5 @@
 package com.paparazziapps.pretamistapp.domain
 
-import com.paparazziapps.pretamistapp.modulos.registro.pojo.PaymentScheduledEnum
 import kotlin.math.ceil
 
 class QuotaCalculator {
