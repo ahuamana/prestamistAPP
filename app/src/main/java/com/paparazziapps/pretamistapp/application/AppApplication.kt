@@ -3,6 +3,8 @@ package com.paparazziapps.pretamistapp.application
 import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.firestore.FirebaseFirestore
+import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.providers.BranchesProvider
 import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
 import com.paparazziapps.pretamistapp.data.providers.LoanProvider
@@ -35,13 +37,14 @@ lateinit var ctx      : Context
 class AppApplication : MultiDexApplication() {
 
     private val dataModule = module {
-        single { LoanProvider(get()) } // Provide LoanProvider
+        single { FirebaseService() } // Provide FirebaseFirestore
+        single { LoanProvider(get(), get()) } // Provide LoanProvider
         single { BranchesProvider() } // Provide BranchesProvider
-        single { DetailLoanProvider(get()) } // Provide DetailLoanProvider
-        single { LoanProvider(get())} // Provide LoanProvider
-        single { LoginProvider()} // Provide LoginProvider
-        single { RegisterProvider() } // Provide RegisterProvider
-        single { UserProvider() } // Provide UserProvider
+        single { DetailLoanProvider(get(), get()) } // Provide DetailLoanProvider
+        single { LoanProvider(get(),get())} // Provide LoanProvider
+        single { LoginProvider(get())} // Provide LoginProvider
+        single { RegisterProvider(get()) } // Provide RegisterProvider
+        single { UserProvider(get()) } // Provide UserProvider
         singleOf(::MyPreferences) { bind() } // single<MyPreferences> { MyPreferences() }
         singleOf(::RemoteDataSourceImpl) { bind<RemoteDataSource>() } // single<RemoteDataSource> { RemoteDataSourceImpl() }
         singleOf(::PARepositoryImpl) { bind<PARepository>() } // single<PARepository> { PARepositoryImpl() }

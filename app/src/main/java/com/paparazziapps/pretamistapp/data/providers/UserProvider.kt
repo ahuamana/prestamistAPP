@@ -6,14 +6,17 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.paparazziapps.pretamistapp.data.PADataConstants
+import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.domain.User
 import kotlinx.coroutines.tasks.await
 
-class UserProvider {
+class UserProvider(
+    private val firebaseService: FirebaseService
+) {
 
-    private val mCollection: CollectionReference by lazy { FirebaseFirestore.getInstance().collection(PADataConstants.USERS_COLLECTION) }
+    private val mCollection: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.USERS_COLLECTION) }
 
     suspend fun create(user: User): PAResult<Void> {
         return NetworkOperation.safeApiCall {

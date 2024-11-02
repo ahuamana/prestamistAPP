@@ -7,13 +7,17 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.PADataConstants
+import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import kotlinx.coroutines.tasks.await
 
-class DetailLoanProvider(private val preferences: MyPreferences) {
+class DetailLoanProvider(
+    private val preferences: MyPreferences,
+    private val firebaseService: FirebaseService
+) {
 
-    private val mCollectionDetallePrestamo: CollectionReference by lazy { FirebaseFirestore.getInstance().collection(PADataConstants.DETAIL_LOAN_COLLECTION) }
+    private val mCollectionDetallePrestamo: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.DETAIL_LOAN_COLLECTION) }
 
     // No need to implemented when is super admin
     suspend fun createDetail(detallePrestamo: DetallePrestamoSender): PAResult<Void> {

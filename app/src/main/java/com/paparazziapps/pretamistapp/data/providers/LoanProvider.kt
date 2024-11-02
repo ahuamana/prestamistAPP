@@ -8,15 +8,17 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.PADataConstants
+import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import kotlinx.coroutines.tasks.await
 
 class LoanProvider(
-    private val preferences: MyPreferences
+    private val preferences: MyPreferences,
+    private val firebaseService: FirebaseService
 ) {
 
-    private val mCollectionLoan: CollectionReference by lazy { FirebaseFirestore.getInstance().collection(PADataConstants.LOAN_COLLECTION) }
+    private val mCollectionLoan: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.LOAN_COLLECTION) }
     private val tag = LoginProvider::class.java.simpleName
 
     //Super admin -- implemented
