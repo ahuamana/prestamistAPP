@@ -30,6 +30,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 lateinit var ctx      : Context
@@ -57,8 +58,8 @@ class AppApplication : MultiDexApplication() {
         viewModel { ViewModelRegisterUser(get(), get(), get()) }
         viewModel { ViewModelBranches(get()) }
         viewModel { ViewModelPrincipal(get(),get()) }
-        viewModel { ViewModelRegister(get()) }
-        //viewModelOf(::ViewModelLogin)// viewModel { ViewModelLogin(get()) }
+        viewModelOf(::ViewModelRegister)// viewModel { ViewModelRegister(get(), get()) } -> new version dsl
+        viewModelOf(::ViewModelLogin)// viewModel { ViewModelLogin(get()) }
     }
 
     override fun onCreate() {
