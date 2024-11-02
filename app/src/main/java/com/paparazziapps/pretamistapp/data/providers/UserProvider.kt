@@ -1,10 +1,7 @@
 package com.paparazziapps.pretamistapp.data.providers
 
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
@@ -18,7 +15,7 @@ class UserProvider(
 
     private val mCollection: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.USERS_COLLECTION) }
 
-    suspend fun create(user: User): PAResult<Void> {
+    suspend fun createUser(user: User): PAResult<Void> {
         return NetworkOperation.safeApiCall {
             mCollection.document(user.email?:"").set(user).await()
         }

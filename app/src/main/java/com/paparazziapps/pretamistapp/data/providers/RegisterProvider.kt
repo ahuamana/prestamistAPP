@@ -12,11 +12,9 @@ class RegisterProvider(
     private val firebaseService: FirebaseService
 ) {
 
-    private val mAuth: FirebaseAuth by lazy { firebaseService.auth }
-
     suspend fun createUser(email:String, pass:String): PAResult<AuthResult> {
         return NetworkOperation.safeApiCall {
-            mAuth.createUserWithEmailAndPassword(email, pass).await()
+            firebaseService.auth.createUserWithEmailAndPassword(email, pass).await()
         }
     }
 

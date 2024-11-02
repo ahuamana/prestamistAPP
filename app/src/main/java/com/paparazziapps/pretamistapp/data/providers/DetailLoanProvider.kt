@@ -1,8 +1,6 @@
 package com.paparazziapps.pretamistapp.data.providers
 
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import com.paparazziapps.pretamistapp.application.MyPreferences
@@ -20,33 +18,33 @@ class DetailLoanProvider(
     private val mCollectionDetallePrestamo: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.DETAIL_LOAN_COLLECTION) }
 
     // No need to implemented when is super admin
-    suspend fun createDetail(detallePrestamo: DetallePrestamoSender): PAResult<Void> {
-        detallePrestamo.id = mCollectionDetallePrestamo.document().id
-        detallePrestamo.sucursalId = preferences.branchId
+    suspend fun createDetail(detailLoan: DetallePrestamoSender): PAResult<Void> {
+        detailLoan.id = mCollectionDetallePrestamo.document().id
+        detailLoan.sucursalId = preferences.branchId
 
 
         return NetworkOperation.safeApiCall {
-            mCollectionDetallePrestamo.document(detallePrestamo.id!!).set(detallePrestamo).await()
+            mCollectionDetallePrestamo.document(detailLoan.id!!).set(detailLoan).await()
         }
     }
 
     // No need to implemented when is super admin
-    suspend fun getDetailLoanByDate(fecha:String):PAResult<QuerySnapshot> {
+    suspend fun getDetailLoanByDate(date:String):PAResult<QuerySnapshot> {
         return NetworkOperation.safeApiCall {
             mCollectionDetallePrestamo
-                .whereEqualTo("fechaPago",fecha)
+                .whereEqualTo("fechaPago",date)
                 .whereEqualTo("sucursalId",preferences.branchId)
                 .get().await()
         }
     }
 
     // Completed - Super Admin Implemented
-    suspend fun getLoanByDate(timeStart:Long, timeEnd:Long, idSucursal:Int): PAResult<QuerySnapshot> {
+    suspend fun getLoanByDate(timeStart:Long, timeEnd:Long, idBranch:Int): PAResult<QuerySnapshot> {
         return  NetworkOperation.safeApiCall {
             mCollectionDetallePrestamo
                 .whereGreaterThanOrEqualTo("unixtime", timeStart)
                 .whereLessThanOrEqualTo("unixtime",timeEnd)
-                .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idSucursal else  preferences.branchId)
+                .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idBranch else  preferences.branchId)
                 .get().await()
         }
     }

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.toObject
-import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
@@ -87,7 +86,7 @@ class ViewModelDashboard (
                     id?:"",
                     fecha?:"",
                     diasRestantesPorPagar,
-                    diasPagados = newCurrentPaidDays,
+                    paidDays = newCurrentPaidDays,
                     quotesPaid = diasPagadosNuevo
                     )
 

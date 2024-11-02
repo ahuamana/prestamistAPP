@@ -58,7 +58,7 @@ class ViewModelRegister (
 
     fun createPrestamo(loanDomain: LoanDomain, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit)  = viewModelScope.launch {
         var isCorrect = false
-        val result = mLoanProvider.create(loanDomain, idSucursal = idSucursal)
+        val result = mLoanProvider.createLoan(loanDomain, idBranch = idSucursal)
 
         when (result) {
             is PAResult.Error -> {

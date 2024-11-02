@@ -1,9 +1,7 @@
 package com.paparazziapps.pretamistapp.data.providers
 
 import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.application.MyPreferences
@@ -22,8 +20,8 @@ class LoanProvider(
     private val tag = LoginProvider::class.java.simpleName
 
     //Super admin -- implemented
-    suspend fun create(loanDomain: LoanDomain, idSucursal:Int): PAResult<Void> {
-        loanDomain.sucursalId = if(preferences.isSuperAdmin) idSucursal else  preferences.branchId
+    suspend fun createLoan(loanDomain: LoanDomain, idBranch:Int): PAResult<Void> {
+        loanDomain.sucursalId = if(preferences.isSuperAdmin) idBranch else  preferences.branchId
         loanDomain.id = mCollectionLoan.document().id
 
         return NetworkOperation.safeApiCall {
@@ -51,11 +49,11 @@ class LoanProvider(
     }
 
     //No need superAdmin - or Adming to update
-    suspend fun setLastPayment(id:String, fecha:String,diasRestantesPorPagar:Int, diasPagados:Int): PAResult<Void> {
+    suspend fun setLastPayment(id:String, date:String, daysMissingToPay:Int, paidDays:Int): PAResult<Void> {
         val map = mutableMapOf<String,Any?>()
-        map.put("fechaUltimoPago",fecha)
-        map.put("dias_restantes_por_pagar",diasRestantesPorPagar)
-        map.put("diasPagados",diasPagados)
+        map.put("fechaUltimoPago",date)
+        map.put("dias_restantes_por_pagar",daysMissingToPay)
+        map.put("diasPagados",paidDays)
 
         return NetworkOperation.safeApiCall {
             mCollectionLoan.document(id).update(map).await()
@@ -64,16 +62,16 @@ class LoanProvider(
 
     suspend fun setLastPaymentForQuota(
         id:String,
-        fecha:String,
-        diasRestantesPorPagar:Int,
-        diasPagados:Int,
+        date:String,
+        daysMissingToPay:Int,
+        paidDays:Int,
         quotesPaid:Int): PAResult<Void> {
 
         val map = mutableMapOf<String,Any?>()
-        map.put("fechaUltimoPago",fecha)
-        map.put("quotasPending",diasRestantesPorPagar)
+        map.put("fechaUltimoPago",date)
+        map.put("quotasPending",daysMissingToPay)
         map.put("quotasPaid",quotesPaid)
-        map.put("diasPagados",diasPagados)
+        map.put("diasPagados",paidDays)
 
 
         return NetworkOperation.safeApiCall {

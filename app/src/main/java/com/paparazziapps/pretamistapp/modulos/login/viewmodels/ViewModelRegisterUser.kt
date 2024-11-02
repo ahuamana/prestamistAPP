@@ -62,7 +62,7 @@ class ViewModelRegisterUser(
 
     fun saveFirebaseUser(userInfo: User) = viewModelScope.launch {
 
-        val result = userProvider.create(userInfo)
+        val result = userProvider.createUser(userInfo)
 
         when(result){
             is PAResult.Error -> {

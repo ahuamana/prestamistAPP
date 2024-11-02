@@ -12,22 +12,20 @@ class LoginProvider(
     private val firebaseService: FirebaseService
 ) {
 
-    private val mAuth: FirebaseAuth by lazy { firebaseService.auth }
-
     suspend fun loginEmail(email: String, pass: String): PAResult<AuthResult> {
         return NetworkOperation.safeApiCall {
-            mAuth.signInWithEmailAndPassword(email, pass).await()
+            firebaseService.auth.signInWithEmailAndPassword(email, pass).await()
         }
     }
 
     suspend fun loginAnonymously(): PAResult<AuthResult> {
         return  NetworkOperation.safeApiCall {
-            mAuth.signInAnonymously().await()
+            firebaseService.auth.signInAnonymously().await()
         }
     }
 
     fun signOut() {
-        return mAuth.signOut()
+        return firebaseService.auth.signOut()
     }
 
 }
