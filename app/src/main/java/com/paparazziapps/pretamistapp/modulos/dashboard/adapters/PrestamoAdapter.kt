@@ -178,9 +178,11 @@ class PrestamoAdapter(var setOnClickedLoan: SetOnClickedLoan) : RecyclerView.Ada
             when (tyLoan) {
                 PaymentScheduledEnum.DAILY -> {
                     val daysPaid = item.diasPagados ?: 0
-                    val missingText = if (daysPaid == 1) "día pagado" else "días pagados"
+                    val daysTotal = item.plazo_vto_in_days ?: 0
+                    val pendingDays = daysTotal - daysPaid
+                    val missingText = if (pendingDays == 1) "día pagado" else "días pagados"
                     binding.lblDiasPorPagar.text = missingText
-                    binding.numeroDiasPorPagar.text = daysMissing.toString()
+                    binding.numeroDiasPorPagar.text = formatPaidDaysRange(daysPaid, daysTotal)
                 }
                 else -> {
                     val quotesPaid = item.quotasPaid?:0
@@ -191,6 +193,10 @@ class PrestamoAdapter(var setOnClickedLoan: SetOnClickedLoan) : RecyclerView.Ada
                     binding.lblDiasPorPagar.text = quotas
                 }
             }
+        }
+
+        private fun formatPaidDaysRange(currentDays: Int, totalDays: Int): String {
+            return "$currentDays/$totalDays"
         }
 
         private fun formatQuotasRange(currentQuota: Int, totalQuotas: Int): String {
