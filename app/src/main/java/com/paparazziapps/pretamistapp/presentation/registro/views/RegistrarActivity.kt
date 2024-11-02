@@ -32,6 +32,7 @@ import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -57,7 +58,7 @@ class RegistrarActivity : AppCompatActivity() {
     lateinit var toolbar: Toolbar
     var fechaSelectedUnixtime:Long? = null
 
-    var preferences = MyPreferences()
+    private val preferences: MyPreferences by inject()
 
     //Sucursales Supér Admin
     var listaSucursales = mutableListOf<Sucursales>()

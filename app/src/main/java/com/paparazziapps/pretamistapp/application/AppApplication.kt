@@ -1,6 +1,5 @@
 package com.paparazziapps.pretamistapp.application
 
-import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.paparazziapps.pretamistapp.data.di.FirebaseService
@@ -38,8 +37,6 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-lateinit var ctx      : Context
-
 class AppApplication : MultiDexApplication() {
 
     private val dataModule = module {
@@ -52,7 +49,7 @@ class AppApplication : MultiDexApplication() {
         single { RegisterProvider(get()) } // Provide RegisterProvider
         single { UserProvider(get()) } // Provide UserProvider
         //DB
-        singleOf(::MyPreferences) { bind() } // single<MyPreferences> { MyPreferences() }
+        single { MyPreferences(androidContext())} // Provide MyPreferences
 
         //Data
         singleOf(::RemoteBranchDataSourceImpl) { bind<RemoteBranchDataSource>() }
@@ -76,7 +73,6 @@ class AppApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         turnOffDarkModeInAllApp(resources)
-        ctx = this
         FirebaseAnalytics.getInstance(this)
         initKoin()
     }

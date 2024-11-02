@@ -37,6 +37,7 @@ import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewMode
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -46,7 +47,7 @@ class PrincipalActivity : AppCompatActivity(){
     private lateinit var toolbar: Toolbar
     private lateinit var layout_detalle_prestamo: BottomsheetDetallePrestamoBinding
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
-    private var preferences = MyPreferences()
+    private val preferences: MyPreferences by inject()
 
     private var isEnabledCheck = true
 
@@ -62,18 +63,12 @@ class PrincipalActivity : AppCompatActivity(){
         toolbar              = binding.tool.toolbar
 
 
-        MyPreferences().isLogin = true
+        preferences.isLogin = true
         isFreeTrial()
         setUpInicialToolbar()
         //testCrashlytics()
         _viewModelBranches.getBranches()
         observers()
-
-        /*val disappearView = DisappearView.attach(this)
-        disappearView.execute(binding.layoutBottomsheetDetallePrestamo.root,
-            duration = 4000,
-            interpolator = AccelerateInterpolator(0.5f),
-            needDisappear = true)*/
     }
 
     private fun observers() {
@@ -102,7 +97,7 @@ class PrincipalActivity : AppCompatActivity(){
         _viewModelBranches.sucursales.observe(this){
             //save info sucursales
             if(it.isNotEmpty()){
-                MyPreferences().branches = toJson(it)
+                preferences.branches = toJson(it)
             }
             //Get Info user
             _viewModelPrincipal.searchUserByEmail()
@@ -127,7 +122,7 @@ class PrincipalActivity : AppCompatActivity(){
 
             //val resouse = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.corner_boton_outline) as Drawable
             val resouse = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.border_mask) as Drawable
-            val customResource = tintDrawable(resouse, colorState)
+            val customResource = tintDrawable(this@PrincipalActivity,resouse, colorState)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 resouse.colorFilter = BlendModeColorFilter(ContextCompat.getColor(this@PrincipalActivity, R.color.red), BlendMode.SRC_ATOP)
             }else{
@@ -136,7 +131,7 @@ class PrincipalActivity : AppCompatActivity(){
             background = customResource
 
             val resouseDrawable = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.ic_logout) as Drawable
-            val customResourceDrawable = tintDrawable(resouseDrawable, colorStateTxt)
+            val customResourceDrawable = tintDrawable(this@PrincipalActivity,resouseDrawable, colorStateTxt)
 
             setCompoundDrawablesWithIntrinsicBounds(customResourceDrawable, null, null, null)
             setTextColor(colorStateTxt)
@@ -274,7 +269,7 @@ class PrincipalActivity : AppCompatActivity(){
             btnPagar.apply {
                 text = "Actualizar deuda"
                 isVisible = false
-                standardSimpleButton()
+                standardSimpleButton(this@PrincipalActivity)
             }
         }
         layout_detalle_prestamo.contenCapitalPrestado.apply {
@@ -401,7 +396,7 @@ class PrincipalActivity : AppCompatActivity(){
 
             if (input.isNotEmpty() && input.toInt() <= maxLimit) {
                 layout_detalle_prestamo.btnPagar.apply {
-                    this.standardSimpleButtonOutline()
+                    this.standardSimpleButtonOutline(this@PrincipalActivity)
                     isEnabled = true
                 }
 
@@ -435,7 +430,7 @@ class PrincipalActivity : AppCompatActivity(){
                     text = "Cerrar préstamo"
                     isVisible = true
                     isEnabled = true
-                    standardSimpleButtonOutline()
+                    standardSimpleButtonOutline(this@PrincipalActivity)
                 }
                 contentDiasAPagar.isVisible = false
                 contentPagoTotal.isVisible = false

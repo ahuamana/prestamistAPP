@@ -1,11 +1,12 @@
 package com.paparazziapps.pretamistapp.application
 
+import android.content.Context
 import android.graphics.Color
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 
-class MyPreferences {
+class MyPreferences(private val context: Context) {
 
-    private val prefs = CacheData()
+    private val prefs = CacheData(context)
 
     //PREFERENCES STRING
     var emailUser: String

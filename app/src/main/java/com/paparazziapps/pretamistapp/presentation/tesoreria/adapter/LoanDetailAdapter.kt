@@ -66,7 +66,7 @@ class LoanDetailAdapter : RecyclerView.Adapter<LoanDetailAdapter.ViewHolder>() {
                 {
                     deuda.apply {
                         text = "Sin Deudas"
-                        standardSimpleButtonOutline()
+                        standardSimpleButtonOutline(itemView.context)
                     }
 
                 }

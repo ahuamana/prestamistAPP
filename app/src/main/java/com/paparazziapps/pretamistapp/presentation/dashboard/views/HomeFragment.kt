@@ -30,6 +30,7 @@ import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -41,7 +42,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
     private var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
 
-    private var preferences = MyPreferences()
+    private val preferences: MyPreferences by inject()
     private var loanAdapter = LoanAdapter(this)
 
     private lateinit var recyclerPrestamos: RecyclerView
@@ -101,8 +102,8 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
             //Recibes todos los prestamos
             binding.emptyPrestamo.isVisible = false
 
-            if(MyPreferences().isSuperAdmin){
-                val branches = MyPreferences().branches
+            if(preferences.isSuperAdmin){
+                val branches = preferences.branches
                 if(branches.isEmpty()){
                     loanAdapter.setData(prestamosAll)
                 }else{

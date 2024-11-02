@@ -18,6 +18,7 @@ import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelLogin
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -30,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
     var isValidPass:Boolean = false
     val _viewModelLogin:ViewModelLogin  by viewModel()
     var TAG = "LoginActivity"
+    private val preferences: MyPreferences by inject()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,8 +170,7 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun isAlreadyLogin() {
-        if(MyPreferences().isLogin)
-        {
+        if(preferences.isLogin) {
           startActivity(Intent(this@LoginActivity, PrincipalActivity::class.java))
         }
     }
