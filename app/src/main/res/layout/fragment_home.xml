@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_fondo_pantalla"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".modulos.dashboard.views.HomeFragment">
+    tools:context=".presentation.dashboard.views.HomeFragment">
 
     <LinearLayout
         android:id="@+id/empty_prestamo"

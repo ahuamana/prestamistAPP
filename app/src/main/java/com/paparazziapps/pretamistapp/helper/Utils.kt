@@ -179,7 +179,8 @@ fun String?.fromHtml() : Spanned? {
 }
 
 
-fun getValidateColorHex(color: Int = ctx.resources.getColor(R.color.colorPrimary)): Int{
+fun getValidateColorHex(
+    color: Int = ctx.resources.getColor(R.color.colorPrimary)): Int{
     val hexColor = "#"+Integer.toHexString(color).substring(2)
     val validateColor = Color.parseColor(hexColor)
     return validateColor
