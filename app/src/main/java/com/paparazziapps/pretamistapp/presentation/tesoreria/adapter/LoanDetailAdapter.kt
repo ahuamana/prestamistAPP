@@ -59,11 +59,9 @@ class LoanDetailAdapter : RecyclerView.Adapter<LoanDetailAdapter.ViewHolder>() {
                 nombres.text = replaceFirstCharInSequenceToUppercase(item.nombres.toString())
                 plazo_vto.text = "Se vence en ${if(plazo==1) "$plazo día" else "$plazo días"}"
 
-                if(deudaTotal > 0)
-                {
+                if(deudaTotal > 0) {
                     deuda.text = "${getDoubleWithTwoDecimalsReturnDouble(deudaTotal)} Deuda"
-                }else
-                {
+                }else {
                     deuda.apply {
                         text = "Sin Deudas"
                         standardSimpleButtonOutline(itemView.context)

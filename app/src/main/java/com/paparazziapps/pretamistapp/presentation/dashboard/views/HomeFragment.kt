@@ -62,9 +62,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
 
         //Configuration
         setupRecyclerPrestamos()
-        //Observers
         observers()
-        getInforUser()
         return view
     }
 
@@ -78,7 +76,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
     }
 
     private fun getInforUser() {
-        _viewModelPrincipal.searchUserByEmail()
+        TODO("Not Implemented")//_viewModelPrincipal.searchUserByEmail()
     }
 
     private fun observers() {

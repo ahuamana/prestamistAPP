@@ -17,7 +17,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -37,6 +40,7 @@ import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewMode
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,11 +52,8 @@ class PrincipalActivity : AppCompatActivity(){
     private lateinit var layout_detalle_prestamo: BottomsheetDetallePrestamoBinding
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
     private val preferences: MyPreferences by inject()
-
     private var isEnabledCheck = true
-
-    val _viewModelPrincipal by viewModel<ViewModelPrincipal>()
-    val _viewModelBranches:ViewModelBranches by viewModel()
+    private val viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,47 +62,56 @@ class PrincipalActivity : AppCompatActivity(){
 
         bottomNavigationView = binding.navView
         toolbar              = binding.tool.toolbar
-
-
-        preferences.isLogin = true
         isFreeTrial()
         setUpInicialToolbar()
-        //testCrashlytics()
-        _viewModelBranches.getBranches()
         observers()
     }
 
     private fun observers() {
+        lifecycleScope.launch {
+            viewModelPrincipal.uiState.observe(this@PrincipalActivity, ::handleUIState)
+        }
+    }
 
-        _viewModelPrincipal.getUser().observe(this){
-            println("Info usuario: ${it.superAdmin}")
-            preferences.isAdmin = it.admin
-            preferences.isSuperAdmin = it.superAdmin
-            preferences.branchId = it.sucursalId?: INT_DEFAULT
-            preferences.branchName = it.sucursal?:""
-            preferences.emailUser = it.email?:""
-            preferences.isActiveUser = it.activeUser
+    private fun handleUIState(uiStatePrincipal: ViewModelPrincipal.UIStatePrincipal) {
+        Log.d("UIStatePrincipal", uiStatePrincipal.toString())
+        when(uiStatePrincipal) {
+            is ViewModelPrincipal.UIStatePrincipal.Loading -> {
+                binding.loadingContainer.loadingContainer.beVisible()
+            }
+            is ViewModelPrincipal.UIStatePrincipal.Error -> {
+                binding.errorContainer.root.beVisible()
+            }
+            is ViewModelPrincipal.UIStatePrincipal.SuccessActiveUser -> {
+                binding.loadingContainer.root.beGone()
+                binding.errorContainer.root.beGone()
+                binding.cortinaUserInactive.beGone()
+                binding.cortinaFreeTrial.beGone()
 
-            if(it.activeUser) {
-                setUpBottomNav()
-                setupBottomSheetDetallePrestamo()
                 binding.navView.beVisible()
 
-            }else {
-                //Usuario desactivado
+                setUpBottomNav()
+                setupBottomSheetDetallePrestamo()
+                setNavGraphProgramaticatly()
+                binding.navHostFragmentActivityMain
+
+            }
+            is ViewModelPrincipal.UIStatePrincipal.SuccessInactiveUser -> {
+                binding.loadingContainer.root.beGone()
+                binding.errorContainer.root.beGone()
+                binding.cortinaUserInactive.beGone()
+                binding.cortinaFreeTrial.beGone()
                 binding.navView.beGone()
                 isUserActivePrincipal()
             }
         }
+    }
 
-        _viewModelBranches.sucursales.observe(this){
-            //save info sucursales
-            if(it.isNotEmpty()){
-                preferences.branches = toJson(it)
-            }
-            //Get Info user
-            _viewModelPrincipal.searchUserByEmail()
-        }
+    private fun setNavGraphProgramaticatly() {
+        val navHostFragment: NavHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+
+        navHostFragment.findNavController().setGraph(R.navigation.navigation_parent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

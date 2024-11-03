@@ -39,6 +39,7 @@
     <string name="type_loan_example">Diario (cada día)</string>
     <string name="quotes_paid_title">Cuotas pagadas</string>
     <string name="days_paid_title">Días pagados</string>
+    <string name="error_icon_description">error image</string>
 
 
 </resources>

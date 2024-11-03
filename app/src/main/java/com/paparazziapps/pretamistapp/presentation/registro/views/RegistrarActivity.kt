@@ -73,11 +73,6 @@ class RegistrarActivity : AppCompatActivity() {
         binding = ActivityRegistrarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fecha = binding.fecha
-        nombres = binding.nombres
-        apellidos = binding.apellidos
-        dni = binding.dni
-        celular = binding.celular
         registerButton = binding.registrarButton
         toolbar         = binding.tool.toolbar
 
@@ -123,7 +118,7 @@ class RegistrarActivity : AppCompatActivity() {
     private fun startObservers() {
         viewModel.getMessage().observe(this){ message ->  showMessage(message)}
 
-        _viewModelBranches.sucursales.observe(this){
+        _viewModelBranches.branches.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()
@@ -220,67 +215,50 @@ class RegistrarActivity : AppCompatActivity() {
 
     private fun validateFields() {
 
-        fecha.doAfterTextChanged {
+        binding.fecha.doAfterTextChanged {
             showbutton()
         }
 
-        nombres.doAfterTextChanged {
+        binding.nombres.doAfterTextChanged { input->
+            val names = input.toString()
+            layoutNombres.error = when {
+                names.isEmpty() -> "El nombre esta vacío"
+                names.count() < 4 -> "El nombre esta incompleto"
+                else -> null
+            }
+            showbutton()
+        }
 
-            var nombresChanged = it.toString()
-
-            layoutNombres.error = when
-            {
-                nombresChanged.isNullOrEmpty() -> "El nombre esta vacío"
-                nombresChanged.count() < 4 -> "El nombre esta incompleto"
+        binding.apellidos.doAfterTextChanged { input->
+            val lastnames = input.toString()
+            layoutApellidos.error = when {
+                lastnames.isEmpty() -> "Los apellidos estan vacíos"
+                lastnames.count() < 4 -> "Los apellidos estan incompletos"
                 else -> null
             }
             showbutton()
 
         }
 
-        apellidos.doAfterTextChanged {
-
-            var apellidosChanged = it.toString()
-
-            layoutApellidos.error = when
-            {
-                apellidosChanged.isNullOrEmpty() -> "Los apellidos estan vacíos"
-                apellidosChanged.count() < 4 -> "Los apellidos estan incompletos"
+        binding.dni.doAfterTextChanged { input ->
+            val document = input.toString()
+            val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
+            layoutDNI.error = when {
+                document.isEmpty() -> getString(R.string.documento_vacío)
+                document.count() in 1 until documentMaxLength -> getString(R.string.documento_incompleto)
                 else -> null
             }
             showbutton()
-
         }
 
-        dni.doAfterTextChanged {
-
-            var doucmentoChanged = it.toString()
-            var documentoMax = resources.getInteger(R.integer.cantidad_documento_max)
-
-            layoutDNI.error = when
-            {
-                doucmentoChanged.isNullOrEmpty() -> "${getString(R.string.documento_vacío)}"
-                doucmentoChanged.count() in 1 until documentoMax -> "${getString(R.string.documento_incompleto)}"
+        binding.celular.doAfterTextChanged {
+            val cellular = it.toString()
+            layoutCelular.error = when {
+                cellular.isEmpty() -> "Celular vacío"
+                cellular.count() in 1..8 -> "Celular incompleto"
                 else -> null
             }
-
             showbutton()
-
-        }
-
-        celular.doAfterTextChanged {
-
-            var celularChanged = it.toString()
-
-            layoutCelular.error = when
-            {
-                celularChanged.isNullOrEmpty() -> "Celular vacío"
-                celularChanged.count() in 1..8 -> "Celular incompleto"
-                else -> null
-            }
-
-            showbutton()
-
         }
 
 

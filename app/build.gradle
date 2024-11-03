@@ -119,4 +119,7 @@ dependencies {
     //Koin dependency injection
     implementation("io.insert-koin:koin-android:$koin_version")
 
+    //Animation
+    def lottieVersion = "6.6.0"
+    implementation ("com.airbnb.android:lottie:$lottieVersion")
 }
