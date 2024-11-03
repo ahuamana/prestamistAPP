@@ -23,10 +23,6 @@ class ViewModelPrincipal(
 ) : ViewModel(){
 
     private val tag = ViewModelPrincipal::class.java.simpleName
-    private val _user = MutableLiveData<User>()
-
-    fun getUser(): LiveData<User> { return _user }
-
     private val _uiState = MutableLiveData<UIStatePrincipal>()
     val uiState: LiveData<UIStatePrincipal> = _uiState
 

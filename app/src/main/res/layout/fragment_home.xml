@@ -54,6 +54,7 @@
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scroll_prestamos"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -97,6 +98,25 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <!--Loading container !-->
+
+    <include
+        android:id="@+id/loading_container"
+        layout="@layout/pa_custom_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <!-- Error container !-->
+
+    <include
+        android:id="@+id/error_container"
+        layout="@layout/pa_custom_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 
 
     <TextView

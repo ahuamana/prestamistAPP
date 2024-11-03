@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +20,6 @@ import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnCli
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.User
-import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.TypePrestamo
@@ -37,15 +35,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeFragment : Fragment(),SetOnClickedLoan {
 
     private val viewModel by viewModel<ViewModelDashboard>()
-    val _viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
     private var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
 
     private val preferences: MyPreferences by inject()
     private var loanAdapter = LoanAdapter(this)
-
-    private lateinit var recyclerPrestamos: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,101 +52,79 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
 
         setOnClickedLoanHome = this
 
-        //Link items with layout
-        recyclerPrestamos = binding.recyclerPrestamos
-
         //Configuration
-        setupRecyclerPrestamos()
+        setupRecyclerLoans()
         observers()
         return view
     }
 
-
-
-    private fun setupRecyclerPrestamos() {
-        recyclerPrestamos.apply {
+    private fun setupRecyclerLoans() {
+        binding.recyclerPrestamos.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = loanAdapter
         }
     }
 
-    private fun getInforUser() {
-        TODO("Not Implemented")//_viewModelPrincipal.searchUserByEmail()
-    }
-
     private fun observers() {
-        _viewModelPrincipal.getUser().observe(viewLifecycleOwner, Observer(::updateUser))
-
         lifecycleScope.launch {
-            viewModel.loans.flowWithLifecycle(
+            viewModel.state.flowWithLifecycle(
                 lifecycle = lifecycle,
                 minActiveState = androidx.lifecycle.Lifecycle.State.STARTED
-            ).collectLatest(::updatePrestamos)
+            ).collectLatest(::onStateChange)
         }
-
     }
 
-    fun updatePrestamos(prestamosAll:MutableList<LoanDomain>){
-        if(prestamosAll.isEmpty()) {
-            binding.emptyPrestamo.isVisible = true
-            recyclerPrestamos.isVisible = false
-            //showMessage("No hay prestamos")
-        }else {
-            //Recibes todos los prestamos
-            binding.emptyPrestamo.isVisible = false
-
-            if(preferences.isSuperAdmin){
-                val branches = preferences.branches
-                if(branches.isEmpty()){
-                    loanAdapter.setData(prestamosAll)
-                }else{
-                    try {
-                        val newLoanRespons = mutableListOf<LoanDomain>()
-                        val localSucursales = fromJson<List<Sucursales>>(branches)
-                        localSucursales.forEach{ sucurlocal ->
-                            val item = LoanDomain(
-                                type = TypePrestamo.TITLE.value,
-                                title = sucurlocal.name
-                            )
-                            newLoanRespons.add(item)
-
-                            val items = prestamosAll.filter {
-                                it.sucursalId == sucurlocal.id
-                            }
-                            newLoanRespons.addAll(items)
-                        }
-                        loanAdapter.setData(newLoanRespons)
-
-                    }catch (t:Throwable){
-                        FirebaseCrashlytics.getInstance().recordException(t)
-                    }
+    private fun onStateChange(state: ViewModelDashboard.DashboardState) {
+        when(state.state) {
+            ViewModelDashboard.DashboardEvent.LOADING -> {
+                with(binding) {
+                    emptyPrestamo.isVisible = false
+                    scrollPrestamos.isVisible = false
+                    errorContainer.errorContainer.isVisible = false
+                    loadingContainer.loadingContainer.isVisible = true
                 }
-            }else{
-                loanAdapter.setData(prestamosAll)
+            }
+            ViewModelDashboard.DashboardEvent.SUCCESS -> {
+                with(binding){
+                    emptyPrestamo.isVisible = false
+                    errorContainer.errorContainer.isVisible = false
+                    loadingContainer.loadingContainer.isVisible = false
+                    scrollPrestamos.isVisible = true
+                }
+
+                state.loans?.let {
+                    updateLoans(it.toMutableList())
+                }
+
+            }
+            ViewModelDashboard.DashboardEvent.ERROR -> {
+                with(binding) {
+                    emptyPrestamo.isVisible = false
+                    scrollPrestamos.isVisible = false
+                    loadingContainer.loadingContainer.isVisible = false
+                    errorContainer.errorContainer.isVisible = true
+                }
             }
 
-
-            recyclerPrestamos.isVisible = true
+            ViewModelDashboard.DashboardEvent.EMPTY -> {
+                with(binding){
+                    scrollPrestamos.isVisible = false
+                    errorContainer.errorContainer.isVisible = false
+                    loadingContainer.loadingContainer.isVisible = false
+                    emptyPrestamo.isVisible = true
+                }
+            }
         }
     }
 
-    fun updateUser(it: User){
-        println("Info usuario: ${it.superAdmin}")
-        preferences.isAdmin = it.admin
-        preferences.isSuperAdmin = it.superAdmin
-        preferences.branchId = it.sucursalId?: INT_DEFAULT
-        preferences.branchName = it.sucursal?:""
-        preferences.emailUser = it.email?:""
-        preferences.isActiveUser = it.activeUser
-
-        if(it.activeUser) {
-            viewModel.getLoans()
-        }
+    private fun updateLoans(loans:MutableList<LoanDomain>){
+        loanAdapter.setData(loans)
     }
 
     private fun showMessage(message:String) {
         showMessageAboveMenuInferiorGlobal(message,binding.root)
     }
+
 
 
 
@@ -210,7 +183,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
             setOnClickListener {
                 dialog.dismiss()
                 if (isClosed) {
-                    viewModel.cerrarPrestamo(loanDomain.id){
+                    viewModel.closeLoan(loanDomain.id){
                             isCorrect, msj, result, isRefresh ->
                         if(isCorrect) {
                             loanAdapter.removeItem(adapterPosition)//remover item de  local recycler View

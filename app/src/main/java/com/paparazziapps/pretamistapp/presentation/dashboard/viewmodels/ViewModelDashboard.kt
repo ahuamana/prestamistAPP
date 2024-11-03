@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.toObject
+import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
@@ -12,36 +13,91 @@ import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
+import com.paparazziapps.pretamistapp.domain.Sucursales
+import com.paparazziapps.pretamistapp.domain.TypePrestamo
+import com.paparazziapps.pretamistapp.helper.fromJson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ViewModelDashboard (
-    private val repository: PARepository
+    private val repository: PARepository,
+    private val preferences: MyPreferences
 ) : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
-    private var _loans = MutableStateFlow<MutableList<LoanDomain>>(mutableListOf())
-    val loans: StateFlow<MutableList<LoanDomain>> = _loans
+    private val _state = MutableStateFlow(DashboardState.idle())
+    val state: StateFlow<DashboardState> = _state.asStateFlow()
 
-    fun getLoans() = viewModelScope.launch {
-        val loans = mutableListOf<LoanDomain>()
+    init {
+        loadLoans()
+    }
 
-        val result = repository.getLoans()
+    fun handleIntent(intent: DashboardIntent) {
+        when (intent) {
+            is DashboardIntent.LoadLoans -> loadLoans()
+            is DashboardIntent.UpdateLoan -> updateLoan(
+                intent.loanDomain,
+                intent.totalAmountToPay,
+                intent.adapterPosition,
+                intent.daysMissingToPay,
+                intent.paidDays,
+                intent.isClosed
+            )
+            is DashboardIntent.CloseLoan -> closeLoan(intent.loanId)
+            DashboardIntent.UpdateStatusDialogs -> {
+                resetStatusDialogs()
+            }
+        }
+    }
 
-        when(result){
-            is PAResult.Error -> TODO()
+    private fun updateLoan(
+        loanDomain: LoanDomain,
+        totalAmountToPay: Double,
+        adapterPosition: Int,
+        daysMissingToPay: Int,
+        paidDays: Int,
+        closed: Boolean
+    ) {
+        TODO("Not yet implemented")
+    }
+
+
+    private fun loadLoans() = viewModelScope.launch {
+        _state.value = _state.value.copy(state = DashboardEvent.LOADING)
+        when(val result = repository.getLoans()){
+            is PAResult.Error -> {
+                Log.d(tag,"ViewModelDashboard --> : Error ${result.exception.message}")
+                _state.value = _state.value.copy(state = DashboardEvent.ERROR, message = result.exception.message)
+            }
             is PAResult.Success -> {
-
+                Log.d(tag,"ViewModelDashboard --> : Success ${result.data.count()}")
                 if(result.data.isEmpty) {
                     Log.d(tag," lista prestamos esta vacia")
+                    _state.value = _state.value.copy(state = DashboardEvent.EMPTY)
                     return@launch
                 }
-                result.data.forEach { document->
-                    loans.add(document.toObject())
-                    Log.d(tag," lista prestamos ${loans.size}")
+                val loans = result.data.mapNotNull { document->
+                    document.toObject<LoanDomain>()
                 }
-                _loans.value = loans
+
+                if(preferences.isSuperAdmin){
+                    _state.value = DashboardState.success(loans)
+                    return@launch
+                }
+
+                //Include Title for the branch
+                val localBranches = fromJson<List<Sucursales>>(preferences.branches)
+                val newLoansWithTitles = localBranches.flatMap { branch ->
+                    listOf(
+                        LoanDomain(
+                            type = TypePrestamo.TITLE.value,
+                            title = branch.name
+                        )
+                    ) + loans.filter { it.sucursalId == branch.id }.distinct() // Elimina duplicados si los hay
+                }
+                _state.value = DashboardState.success(newLoansWithTitles)
             }
         }
     }
@@ -85,8 +141,7 @@ class ViewModelDashboard (
                     fecha?:"",
                     diasRestantesPorPagar,
                     paidDays = newCurrentPaidDays,
-                    quotesPaid = diasPagadosNuevo
-                    )
+                    quotesPaid = diasPagadosNuevo)
 
                     when(result){
                         is PAResult.Error -> {
@@ -132,24 +187,62 @@ class ViewModelDashboard (
         }
     }
 
-
-
-
-    fun cerrarPrestamo(id:String?, onComplete: (Boolean, String, String?, Boolean) -> Unit) = viewModelScope.launch {
-        var isCorrect = false
-        val result = repository.closeLoan(id?:"")
-
+    private fun closeLoan(id:String) = viewModelScope.launch {
+        _state.value = _state.value.copy(showLoadingDialog = true)
+        val result = repository.closeLoan(id)
         when(result){
             is PAResult.Error -> {
                 Log.d(tag,"ViewModelRegister --> : Error ${result.exception.message}")
-                //_message.value = "No se pudo actualizar el pago, intentelo otra vez"
-                isCorrect = false
-                onComplete(isCorrect, "No se pudo cerrar el pago, inténtelo otra vez", null, false)
+                _state.value = _state.value.copy(showDialogErrorCloseLoan = true, showLoadingDialog = false)
             }
             is PAResult.Success -> {
-                isCorrect = true
-                onComplete(isCorrect, "Se cerro el pago", null, false)
+                _state.value = _state.value.copy(showDialogSuccessCloseLoan = true, showLoadingDialog = false)
             }
         }
+    }
+
+    fun resetStatusDialogs() {
+        _state.value = _state.value.copy(
+            showDialogErrorCloseLoan = false,
+            showDialogSuccessCloseLoan = false,
+            showLoadingDialog = false
+        )
+    }
+
+    data class DashboardState(
+        val state : DashboardEvent,
+        val loans: List<LoanDomain>? = null,
+        val message: String? = null,
+        val showLoadingDialog: Boolean = false,
+        val showDialogErrorCloseLoan: Boolean = false,
+        val showDialogSuccessCloseLoan: Boolean = false
+    ){
+        companion object {
+            fun idle() = DashboardState(DashboardEvent.LOADING)
+            fun loading() = DashboardState(DashboardEvent.LOADING)
+            fun success(loans: List<LoanDomain>) = DashboardState(DashboardEvent.SUCCESS, loans)
+            fun error(message: String) = DashboardState(DashboardEvent.ERROR, message = message)
+        }
+    }
+
+    sealed class DashboardIntent {
+        data object LoadLoans : DashboardIntent()
+        data class UpdateLoan(
+            val loanDomain: LoanDomain,
+            val totalAmountToPay: Double,
+            val adapterPosition: Int,
+            val daysMissingToPay: Int,
+            val paidDays: Int,
+            val isClosed: Boolean
+        ) : DashboardIntent()
+        data class CloseLoan(val loanId: String) : DashboardIntent()
+        data object UpdateStatusDialogs : DashboardIntent()
+    }
+
+    enum class DashboardEvent {
+        LOADING,
+        SUCCESS,
+        ERROR,
+        EMPTY
     }
 }
