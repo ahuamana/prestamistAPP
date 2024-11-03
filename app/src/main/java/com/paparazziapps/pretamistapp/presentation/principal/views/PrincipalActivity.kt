@@ -34,7 +34,6 @@ import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment.Companion.setOnClickedLoanHome
-import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.presentation.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.application.MyPreferences
@@ -264,10 +263,8 @@ class PrincipalActivity : AppCompatActivity(){
 
 
     fun showBottomSheetDetallePrestamoPrincipal(loanDomain: LoanDomain, montoTotalAPagar: Double, diasRestrasado:String, adapterPosition: Int, needUpdate:Boolean) {
-        var diasRestantesPorPagarNuevo:Int?= null
-        val diasEnQueTermina = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",loanDomain.plazo_vto_in_days?:0)
-        var isClosed:Boolean = false
 
+        val daysWhenEnds = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",loanDomain.quotas?:0)
 
         //Set inicial bottomsheet
         layout_detalle_prestamo.edtDiasAPagar.apply {
@@ -289,20 +286,20 @@ class PrincipalActivity : AppCompatActivity(){
 
 
         layout_detalle_prestamo.tvMontoDiario.apply {
-            text= "S./ ${loanDomain.montoDiarioAPagar}"
+            text= "S./ ${loanDomain.amountPerQuota}"
         }
 
-        layout_detalle_prestamo.tvPlazoPrestamo.text = "${loanDomain.plazo_vto_in_days.toString()} días"
+        layout_detalle_prestamo.tvPlazoPrestamo.text = "${loanDomain.quotas.toString()} días"
 
         handledCloseLoan(loanDomain, montoTotalAPagar)
 
         val typeLoan = PaymentScheduled.getPaymentScheduledById( loanDomain.typeLoan?: INT_DEFAULT)
 
         layout_detalle_prestamo.tvTypeOfLoan.text = typeLoan.displayName
-        layout_detalle_prestamo.lblNombreCompleto.text = "${replaceFirstCharInSequenceToUppercase(loanDomain.nombres?:"")}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos?:"")}"
+        layout_detalle_prestamo.lblNombreCompleto.text = "${replaceFirstCharInSequenceToUppercase(loanDomain.names?:"")}, ${replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?:"")}"
         layout_detalle_prestamo.tvCapitalPrestado.text = "${getString(R.string.tipo_moneda)} ${loanDomain.capital}"
-        layout_detalle_prestamo.tvInteresPrestado.text = "${loanDomain.interes}%"
-        layout_detalle_prestamo.tvPlazoVto.text = "en $diasEnQueTermina días"
+        layout_detalle_prestamo.tvInteresPrestado.text = "${loanDomain.interest}%"
+        layout_detalle_prestamo.tvPlazoVto.text = "en $daysWhenEnds días"
 
         layout_detalle_prestamo.tvDni.text = "${loanDomain.dni}"
         layout_detalle_prestamo.tvFechaPrestamo.text = "${loanDomain.fecha_start_loan}"
@@ -315,7 +312,7 @@ class PrincipalActivity : AppCompatActivity(){
                 // set in days
                 layout_detalle_prestamo.contentLayoutDiasAPagar.hint = "Día(s) a pagar"
                 layout_detalle_prestamo.lblPaidDaysOrQuotas.text = getString(R.string.days_paid_title)
-                layout_detalle_prestamo.tvDiasPagados.text = "${loanDomain.diasPagados} días de ${loanDomain.plazo_vto_in_days} días"
+                layout_detalle_prestamo.tvDiasPagados.text = "${loanDomain.quotasPaid} días de ${loanDomain.quotas} días"
             }
             else -> {
                 // set in quotes
@@ -333,55 +330,19 @@ class PrincipalActivity : AppCompatActivity(){
 
         layout_detalle_prestamo.btnPagar.apply {
             setOnClickListener {
-                //Actualizar en fragment
-                isClosed = text.toString()=="Cerrar préstamo"
-                if(isClosed) {
-                    binding.cortinaBottomSheet.isVisible = false
-                    bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                    setOnClickedLoanHome?.openDialogUpdateLoan(loanDomain,0.0,adapterPosition, 0, 0, isClosed = isClosed)
-                }else{
+                //get type of loan
+                val quotesToPay = binding.layoutBottomsheetDetallePrestamo.edtDiasAPagar.text.toString().trim().toIntOrNull()?:0
 
-                    //get type of loan
-                    when(typeLoan){
-                        PaymentScheduledEnum.DAILY -> {
-                            val montoTotalAPagarNuevo = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt() * (loanDomain.montoDiarioAPagar?:0.0)
-                            diasRestantesPorPagarNuevo = loanDomain.dias_restantes_por_pagar?.minus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
-                            val diasPagadosNuevo = loanDomain.diasPagados?.plus(layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt())
-                            binding.cortinaBottomSheet.isVisible = false
-                            bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                            setOnClickedLoanHome?.openDialogUpdateLoan(
-                                loanDomain,
-                                montoTotalAPagarNuevo,
-                                adapterPosition,
-                                diasRestantesPorPagarNuevo?:-9999,
-                                paidDays = diasPagadosNuevo!!,
-                                isClosed = isClosed)
-                        }
-                        else -> {
-                            val quotesToPayNow = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt()
-                            val amountPay = layout_detalle_prestamo.edtDiasAPagar.text.toString().trim().toInt() * (loanDomain.montoDiarioAPagar?:0.0)
-                            val quotesPaidBefore = loanDomain.quotasPaid?:0
-                            val currentQuotesPending = loanDomain.quotasPending?:loanDomain.quotas?:0
-                            val newQuotesPending = currentQuotesPending - quotesToPayNow
-                            val quotesPaidNowPlusQuotesPaidBefore = quotesPaidBefore.plus(quotesToPayNow)
-
-                            Log.d("QuotesPaidNowPlusQuotesPaidBefore", quotesPaidNowPlusQuotesPaidBefore.toString())
-                            Log.d("newQuotesPending", newQuotesPending.toString())
-                            Log.d("QuotesToPayNow", quotesToPayNow.toString())
-                            Log.d("AmountPay", amountPay.toString())
-                            Log.d("QuotesPaidBefore", quotesPaidBefore.toString())
-
-                            binding.cortinaBottomSheet.isVisible = false
-                            bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
-                            setOnClickedLoanHome?.openDialogUpdateLoan(
-                                loanDomain,
-                                amountPay,
-                                adapterPosition,
-                                daysMissingToPay = newQuotesPending,
-                                paidDays = quotesPaidNowPlusQuotesPaidBefore,
-                                isClosed = isClosed)
-
-                        }
+                when(typeLoan){
+                    PaymentScheduledEnum.DAILY -> {
+                        binding.cortinaBottomSheet.isVisible = false
+                        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
+                        setOnClickedLoanHome?.openDialogUpdateLoan(loanDomain, quotesToPay = quotesToPay)
+                    }
+                    else -> {
+                        binding.cortinaBottomSheet.isVisible = false
+                        bottomSheetDetallePrestamo.state = BottomSheetBehavior.STATE_HIDDEN
+                        setOnClickedLoanHome?.openDialogUpdateLoan(loanDomain, quotesToPay = quotesToPay)
                     }
                 }
             }
@@ -392,10 +353,7 @@ class PrincipalActivity : AppCompatActivity(){
         //Validar
         layout_detalle_prestamo.edtDiasAPagar.doAfterTextChanged {
             val input = it.toString().trim()
-            val maxLimit = when (typeLoan) {
-                PaymentScheduledEnum.DAILY -> (loanDomain.plazo_vto_in_days ?: 0) - (loanDomain.diasPagados ?: 0)
-                else -> (loanDomain.quotas ?: 0) - (loanDomain.quotasPaid ?: 0)
-            }
+            val maxLimit = (loanDomain.quotas ?: 0) - (loanDomain.quotasPaid ?: 0)
 
             layout_detalle_prestamo.contentLayoutDiasAPagar.error = when {
                 input.isEmpty() -> "Debe ingresar un valor"
@@ -411,8 +369,8 @@ class PrincipalActivity : AppCompatActivity(){
                 }
 
                 val totalAmount = when (typeLoan) {
-                    PaymentScheduledEnum.DAILY -> loanDomain.montoDiarioAPagar?.times(input.toInt()) ?: 0.0
-                    else -> (loanDomain.montoDiarioAPagar?.times(input.toInt())) ?: 0.0
+                    PaymentScheduledEnum.DAILY -> loanDomain.amountPerQuota?.times(input.toInt()) ?: 0.0
+                    else -> (loanDomain.amountPerQuota?.times(input.toInt())) ?: 0.0
                 }
                 Log.d("TotalAmount", totalAmount.toString())
                 layout_detalle_prestamo.tvMontoTotal.text = "S/. ${getDoubleWithTwoDecimals(totalAmount)}"
@@ -432,8 +390,8 @@ class PrincipalActivity : AppCompatActivity(){
 
     private fun handledCloseLoan(loanDomain: LoanDomain, montoTotalAPagar:Double) {
         //Ocultar vistas si no tiene deudas
-        if(loanDomain.dias_restantes_por_pagar == 0 || loanDomain.quotasPending == 0) {
-            Log.d("this","Dias restantes por pagar es == a 0 *---> ${loanDomain.dias_restantes_por_pagar}")
+        if((loanDomain.quotasPending?:0) <= 0) {
+            Log.d("this","Dias restantes por pagar es == a 0 *---> ${loanDomain.quotasPending}")
             //If dias restantes es cero
             layout_detalle_prestamo.apply {
                 btnPagar.apply {

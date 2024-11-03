@@ -40,6 +40,11 @@
     <string name="quotes_paid_title">Cuotas pagadas</string>
     <string name="days_paid_title">Días pagados</string>
     <string name="error_icon_description">error image</string>
+    <string name="error_message">Algo salió mal, por favor inténtalo de nuevo</string>
+    <string name="success_icon_description">success icon</string>
+    <string name="default_success_message">Success! Your action was completed.</string>
+    <string name="loan_closed_sucefully_message">Operación realizada con éxito.</string>
+    <string name="loading_dialog_message">Cargando...</string>
 
 
 </resources>

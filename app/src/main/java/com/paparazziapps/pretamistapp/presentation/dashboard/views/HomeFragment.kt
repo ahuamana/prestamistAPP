@@ -2,15 +2,12 @@ package com.paparazziapps.pretamistapp.presentation.dashboard.views
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
@@ -18,17 +15,10 @@ import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.presentation.dashboard.adapters.LoanAdapter
 import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnClickedLoan
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
-import com.paparazziapps.pretamistapp.domain.Sucursales
-import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.paparazziapps.pretamistapp.domain.TypePrestamo
-import com.paparazziapps.pretamistapp.application.MyPreferences
-import com.paparazziapps.pretamistapp.domain.PaymentScheduled
-import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -38,9 +28,29 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
 
     private var _binding: FragmentHomeBinding?= null
     private val binding get() = _binding!!
-
-    private val preferences: MyPreferences by inject()
     private var loanAdapter = LoanAdapter(this)
+
+    private val loadingDialog by lazy {
+        PADialogFactory(requireContext()).createLoadingDialog()
+    }
+
+    private val generalErrorDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralErrorDialog(
+            onRetryClick = {
+                viewModel.processIntent(ViewModelDashboard.DashboardIntent.ResetStatusDialogs)
+            }
+        )
+    }
+
+    private val generalSuccessDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralSuccessDialog(
+            successMessage = getString(R.string.loan_closed_sucefully_message),
+            onConfirmClick = {
+                viewModel.processIntent(ViewModelDashboard.DashboardIntent.ResetStatusDialogs)
+            }
+        )
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -115,19 +125,44 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
                 }
             }
         }
+
+        when(state.dialogState){
+            is ViewModelDashboard.DashboardDialogState.Error -> {
+                loadingDialog.dismiss()
+                generalSuccessDialog.dismiss()
+                generalErrorDialog.show()
+            }
+            ViewModelDashboard.DashboardDialogState.ErrorCloseLoan -> {
+                loadingDialog.dismiss()
+                generalSuccessDialog.show()
+                generalErrorDialog.show()
+            }
+            ViewModelDashboard.DashboardDialogState.Loading -> {
+                loadingDialog.show()
+            }
+            ViewModelDashboard.DashboardDialogState.None -> {
+                loadingDialog.dismiss()
+                generalErrorDialog.dismiss()
+                generalSuccessDialog.dismiss()
+            }
+            ViewModelDashboard.DashboardDialogState.SuccessCloseLoan -> {
+                generalErrorDialog.dismiss()
+                loadingDialog.dismiss()
+                generalSuccessDialog.show()
+            }
+
+            ViewModelDashboard.DashboardDialogState.SuccessUpdateLoan -> {
+                generalErrorDialog.dismiss()
+                loadingDialog.dismiss()
+                generalSuccessDialog.show()
+            }
+        }
+
     }
 
     private fun updateLoans(loans:MutableList<LoanDomain>){
         loanAdapter.setData(loans)
     }
-
-    private fun showMessage(message:String) {
-        showMessageAboveMenuInferiorGlobal(message,binding.root)
-    }
-
-
-
-
 
     companion object {
         var setOnClickedLoanHome:SetOnClickedLoan? = null
@@ -139,9 +174,15 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
         }
     }
 
-    override fun openDialogUpdateLoan(loanDomain: LoanDomain, totalAmountToPay: Double, adapterPosition: Int, daysMissingToPay:Int, paidDays:Int, isClosed:Boolean) {
+    override fun openDialogUpdateLoan(
+        loanDomain: LoanDomain,
+        quotesToPay:Int,
+    ) {
 
         binding.cntCortina.isVisible = true
+
+        val needToClose = loanDomain.quotasPending == quotesToPay //Works for daily and other
+        val amountToPay = quotesToPay.times(loanDomain.amountPerQuota ?: 0.0) // rename to quotaAmount // works for daily and other
 
         val dialogBuilder = AlertDialog.Builder(context, R.style.CustomDialogBackground)
         val view : View   = layoutInflater.inflate(R.layout.dialog_salir_sin_guardar, null)
@@ -152,13 +193,13 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
         val btnPositive   = bindingDialogSalir.btnAceptarSalir
         val btnNegative = bindingDialogSalir.btnCancelarSalir
 
-        if(isClosed) {
+        if(needToClose) {
             title.text = "¿Estas seguro de cerrar el préstamo?"
-            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos.toString())}").fromHtml()
+            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.names.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.lastnames.toString())}").fromHtml()
         }else {
             title.text = "¿Estas seguro de actualizar la deuda?"
-            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.nombres.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.apellidos.toString())} </b>" +
-                    ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${totalAmountToPay}<b>").fromHtml()
+            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.names.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.lastnames.toString())} </b>" +
+                    ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${amountToPay}<b>").fromHtml()
         }
 
         dialogBuilder.apply {
@@ -177,62 +218,17 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
             show()
         }
 
-
         btnPositive.apply {
             visibility = View.VISIBLE
             setOnClickListener {
                 dialog.dismiss()
-                if (isClosed) {
-                    viewModel.closeLoan(loanDomain.id){
-                            isCorrect, msj, result, isRefresh ->
-                        if(isCorrect) {
-                            loanAdapter.removeItem(adapterPosition)//remover item de  local recycler View
-                            showMessage(msj)
-                        }else {
-                            showMessage(msj)
-                        }
-                    }
-                }else {
 
-                    viewModel.updateUltimoPago(
-                        loanDomain = loanDomain, loanDomain.id,
-                        getFechaActualNormalCalendar(),
-                        totalAmountToPay,
-                        daysMissingToPay,
-                        paidDays){
-                            isCorrect, msj, result, isRefresh ->
+                val intent = ViewModelDashboard.DashboardIntent.UpdateLoan(
+                    loanDomain = loanDomain,
+                    quotesToPay = quotesToPay
+                )
 
-                        if(isCorrect) {
-                            //Here you can update the item in the recycler view with the new data
-                            val loanType = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan ?: INT_DEFAULT)
-                            loanDomain.fechaUltimoPago = getFechaActualNormalCalendar()
-                            when(loanType) {
-                                PaymentScheduledEnum.DAILY -> {
-                                    loanDomain.dias_restantes_por_pagar = daysMissingToPay
-                                    loanDomain.diasPagados = paidDays
-                                    loanAdapter.updateItem(adapterPosition, loanDomain)
-                                }
-                                else -> {
-                                    //calculateTheNewDaysPaid
-                                    val paidDaysBefore = loanDomain.diasPagados?:0
-                                    val quotesPaidBefore = loanDomain.quotasPaid?:0
-                                    val currentLoanDays = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan?: INT_DEFAULT).days
-                                    val newCurrentPaidDays = paidDaysBefore + (currentLoanDays.times(paidDays))
-
-                                    Log.d("", "Dias pagados antes: $paidDaysBefore")
-                                    loanDomain.quotasPending = daysMissingToPay
-                                    loanDomain.quotasPaid = paidDays
-                                    loanDomain.diasPagados = paidDays.times(currentLoanDays)
-                                    loanDomain.dias_restantes_por_pagar = daysMissingToPay.times(currentLoanDays)
-                                    loanAdapter.updateItem(adapterPosition, loanDomain)
-                                }
-                            }
-                            showMessage(msj)
-                        }else {
-                            showMessage(msj)
-                        }
-                    }
-                }
+                viewModel.processIntent(intent)
             }
         }
 
@@ -243,5 +239,12 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
                 dialog.dismiss()
             }
         }
+    }
+
+    override fun onDestroy() {
+        loadingDialog.dismiss()
+        generalErrorDialog.dismiss()
+        generalSuccessDialog.dismiss()
+        super.onDestroy()
     }
 }

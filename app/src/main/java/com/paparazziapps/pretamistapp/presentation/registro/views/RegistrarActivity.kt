@@ -159,22 +159,19 @@ class RegistrarActivity : AppCompatActivity() {
                 binding.cortina.isVisible = true
 
                 val loanDomain = LoanDomain(
-                    nombres     = nombres.text.toString().trim(),
-                    apellidos   = apellidos.text.toString().trim(),
+                    names     = nombres.text.toString().trim(),
+                    lastnames   = apellidos.text.toString().trim(),
                     dni         = dni.text.toString().trim(),
-                    celular     = celular.text.toString().trim(),
+                    cellular     = celular.text.toString().trim(),
                     fecha_start_loan       = fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
                     capital     = loanDomainReceived.capital,
-                    interes     = loanDomainReceived.interes,
-                    plazo_vto_in_days   = loanDomainReceived.plazo_vto_in_days, // Only for daily loans
-                    dias_restantes_por_pagar   = loanDomainReceived.plazo_vto_in_days,
-                    diasPagados = 0,
-                    montoDiarioAPagar = loanDomainReceived.montoDiarioAPagar,
-                    montoTotalAPagar = loanDomainReceived.montoTotalAPagar,
+                    interest     = loanDomainReceived.interest,
+                    quotasPaid = 0,
+                    amountPerQuota = loanDomainReceived.amountPerQuota,
+                    totalAmountToPay = loanDomainReceived.totalAmountToPay,
                     state = "ABIERTO",
-
                     //fields new version 2.0
                     typeLoan = loanDomainReceived.typeLoan,
                     typeLoanDays = loanDomainReceived.typeLoanDays,
@@ -338,14 +335,14 @@ class RegistrarActivity : AppCompatActivity() {
                     PaymentScheduledEnum.DAILY -> {
                         binding.containerDaily.beVisible()
                         binding.containerOther.beGone()
-                        binding.plazosEnDias.setText("${loanDomainReceived.plazo_vto_in_days.toString()} dias")
-                        binding.interes.setText("${loanDomainReceived.interes!!.toInt()}%")
+                        binding.plazosEnDias.setText("${loanDomainReceived.quotas.toString()} dias")
+                        binding.interes.setText("${loanDomainReceived.interest!!.toInt()}%")
 
                     }
                     else -> {
                         binding.containerDaily.beGone()
                         binding.containerOther.beVisible()
-                        binding.interesOther.setText("${loanDomainReceived.interes!!.toInt()}%")
+                        binding.interesOther.setText("${loanDomainReceived.interest!!.toInt()}%")
                         binding.quotasOther.setText(loanDomainReceived.quotas.toString())
                     }
                 }
