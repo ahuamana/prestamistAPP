@@ -17,7 +17,6 @@ android {
         multiDexEnabled true
         versionCode 5
         versionName "3.0.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,6 +29,11 @@ android {
                 nativeSymbolUploadEnabled true
                 strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+            }
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "prestamist-pa-${variant.name}-${variant.versionName}.apk"
+                }
             }
         }
 
@@ -54,6 +58,9 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+
+
 
     namespace 'com.paparazziapps.pretamistapp'
 
