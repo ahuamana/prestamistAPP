@@ -21,7 +21,7 @@ class LoanProvider(
 
     //Super admin -- implemented
     suspend fun createLoan(loanDomain: LoanDomain, idBranch:Int): PAResult<Void> {
-        loanDomain.sucursalId = if(preferences.isSuperAdmin) idBranch else  preferences.branchId
+        loanDomain.branchId = if(preferences.isSuperAdmin) idBranch else  preferences.branchId
         loanDomain.id = mCollectionLoan.document().id
 
         return NetworkOperation.safeApiCall {
@@ -49,33 +49,35 @@ class LoanProvider(
     }
 
     //No need superAdmin - or Adming to update
-    suspend fun setLastPayment(id:String, date:String, daysMissingToPay:Int, paidDays:Int): PAResult<Void> {
+    suspend fun setLastPayment(
+        idLoan:String,
+        dateLastPaymentNew:String,
+        quotesPendingNew:Int,
+        quotesPaidNew:Int): PAResult<Void> {
         val map = mutableMapOf<String,Any?>()
-        map.put("fechaUltimoPago",date)
-        map.put("dias_restantes_por_pagar",daysMissingToPay)
-        map.put("diasPagados",paidDays)
+        map.put("lastPaymentDate",dateLastPaymentNew)
+        map.put("quotasPending",quotesPendingNew)
+        map.put("quotasPaid",quotesPaidNew)
 
         return NetworkOperation.safeApiCall {
-            mCollectionLoan.document(id).update(map).await()
+            mCollectionLoan.document(idLoan).update(map).await()
         }
     }
 
     suspend fun setLastPaymentForQuota(
-        id:String,
-        date:String,
-        daysMissingToPay:Int,
-        paidDays:Int,
-        quotesPaid:Int): PAResult<Void> {
+        idLoan:String,
+        dateLastPaymentNew:String,
+        quotesPendingNew:Int,
+        quotesPaidNew:Int
+        ): PAResult<Void> {
 
         val map = mutableMapOf<String,Any?>()
-        map.put("fechaUltimoPago",date)
-        map.put("quotasPending",daysMissingToPay)
-        map.put("quotasPaid",quotesPaid)
-        map.put("diasPagados",paidDays)
-
+        map.put("lastPaymentDate",dateLastPaymentNew)
+        map.put("quotasPending",quotesPendingNew)
+        map.put("quotasPaid",quotesPaidNew)
 
         return NetworkOperation.safeApiCall {
-            mCollectionLoan.document(id).update(map).await()
+            mCollectionLoan.document(idLoan).update(map).await()
         }
     }
 

@@ -20,18 +20,22 @@ class ViewModelBranches(
 
     private val tag = ViewModelBranches::class.java.simpleName
 
-    private val _sucursales = MutableLiveData<List<Sucursales>>()
-    val sucursales : LiveData<List<Sucursales>> =  _sucursales
+    private val _branches = MutableLiveData<List<Sucursales>>()
+    val branches : LiveData<List<Sucursales>> =  _branches
 
-    private val _sucursalesFinanzas = MutableLiveData<List<Sucursales>>()
-    val sucursalesFinanzas : LiveData<List<Sucursales>> =  _sucursales
+    private val _branchesFinances = MutableLiveData<List<Sucursales>>()
+    val branchesFinances : LiveData<List<Sucursales>> =  _branches
 
    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         Log.e("ViewModelSucursales", "Error: $exception")
         viewModelScope.launch {
-            _sucursales.value = emptyList()
-            _sucursalesFinanzas.value = emptyList()
+            _branches.value = emptyList()
+            _branchesFinances.value = emptyList()
         }
+    }
+
+    init {
+        getBranches()
     }
 
     fun getBranches() = viewModelScope.launch(Dispatchers.IO + exceptionHandler){
@@ -41,8 +45,8 @@ class ViewModelBranches(
         when(result){
             is PAResult.Error -> {
                 Log.e(tag, "Error: ${result.exception}")
-                _sucursales.postValue(emptyList())
-                _sucursalesFinanzas.postValue(emptyList())
+                _branches.postValue(emptyList())
+                _branchesFinances.postValue(emptyList())
             }
             is PAResult.Success -> {
                 result.data.children.forEach { snapshot ->
@@ -52,8 +56,8 @@ class ViewModelBranches(
                     }
                 }
 
-                _sucursales.postValue(branches)
-                _sucursalesFinanzas.postValue(branches)
+                _branches.postValue(branches)
+                _branchesFinances.postValue(branches)
             }
         }
 

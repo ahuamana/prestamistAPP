@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/menu_principal"/>
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment_activity_main"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
@@ -47,8 +47,7 @@
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tool"
-            app:navGraph="@navigation/nav_view" />
+            app:layout_constraintTop_toBottomOf="@+id/tool" />
 
 
 
@@ -160,10 +159,30 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!--Error Container-->
+    <include
+        android:id="@+id/error_container"
+        layout="@layout/pa_custom_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--Loading Container-->
+    <include
+        android:id="@+id/loading_container"
+        layout="@layout/pa_custom_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
     <include
         android:id="@+id/layout_bottomsheet_detalle_prestamo"
-        layout="@layout/bottomsheet_detalle_prestamo"></include>
+        layout="@layout/bottomsheet_detalle_prestamo"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

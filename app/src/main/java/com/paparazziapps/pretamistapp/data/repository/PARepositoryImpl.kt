@@ -51,22 +51,21 @@ class PARepositoryImpl(
     }
 
     override suspend fun setLastPayment(
-        id: String,
-        date: String,
-        daysMissingToPay: Int,
-        paidDays: Int
+        idLoan:String,
+        dateLastPaymentNew:String,
+        quotesPendingNew:Int,
+        quotesPaidNew:Int
     ): PAResult<Void> {
-        return remoteLoanDataSource.setLastPayment(id, date, daysMissingToPay, paidDays)
+        return remoteLoanDataSource.setLastPayment(idLoan, dateLastPaymentNew, quotesPendingNew, quotesPaidNew)
     }
 
     override suspend fun setLastPaymentForQuota(
-        id: String,
-        date: String,
-        daysMissingToPay: Int,
-        paidDays: Int,
-        quotesPaid: Int
+        idLoan:String,
+        dateLastPaymentNew:String,
+        quotesPendingNew:Int,
+        quotesPaidNew:Int
     ): PAResult<Void> {
-        return remoteLoanDataSource.setLastPaymentForQuota(id, date, daysMissingToPay, paidDays, quotesPaid)
+        return remoteLoanDataSource.setLastPaymentForQuota(idLoan, dateLastPaymentNew, quotesPendingNew, quotesPaidNew)
     }
 
     override suspend fun closeLoan(id: String): PAResult<Void> {

@@ -43,15 +43,10 @@ class RegistrarActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityRegistrarBinding
     var loanDomainReceived = LoanDomain()
-    lateinit var fecha:TextInputEditText
     lateinit var layoutFecha:TextInputLayout
-    lateinit var nombres:TextInputEditText
     lateinit var layoutNombres:TextInputLayout
-    lateinit var apellidos:TextInputEditText
     lateinit var layoutApellidos:TextInputLayout
-    lateinit var dni:TextInputEditText
     lateinit var layoutDNI:TextInputLayout
-    lateinit var celular:TextInputEditText
     lateinit var layoutCelular:TextInputLayout
 
     lateinit var registerButton:MaterialButton
@@ -73,11 +68,6 @@ class RegistrarActivity : AppCompatActivity() {
         binding = ActivityRegistrarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fecha = binding.fecha
-        nombres = binding.nombres
-        apellidos = binding.apellidos
-        dni = binding.dni
-        celular = binding.celular
         registerButton = binding.registrarButton
         toolbar         = binding.tool.toolbar
 
@@ -98,7 +88,7 @@ class RegistrarActivity : AppCompatActivity() {
         fieldsSuperAdmin()
 
         //Set max lengh Document
-        dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
+        binding.dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
         layoutDNI.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
 
         //get intent
@@ -123,7 +113,7 @@ class RegistrarActivity : AppCompatActivity() {
     private fun startObservers() {
         viewModel.getMessage().observe(this){ message ->  showMessage(message)}
 
-        _viewModelBranches.sucursales.observe(this){
+        _viewModelBranches.branches.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()
@@ -164,22 +154,19 @@ class RegistrarActivity : AppCompatActivity() {
                 binding.cortina.isVisible = true
 
                 val loanDomain = LoanDomain(
-                    nombres     = nombres.text.toString().trim(),
-                    apellidos   = apellidos.text.toString().trim(),
-                    dni         = dni.text.toString().trim(),
-                    celular     = celular.text.toString().trim(),
-                    fecha_start_loan       = fecha.text.toString().trim(),
+                    names     = binding.nombres.text.toString().trim(),
+                    lastnames   = binding.apellidos.text.toString().trim(),
+                    dni         = binding.dni.text.toString().trim(),
+                    cellular     = binding.celular.text.toString().trim(),
+                    fecha_start_loan       = binding.fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
                     capital     = loanDomainReceived.capital,
-                    interes     = loanDomainReceived.interes,
-                    plazo_vto_in_days   = loanDomainReceived.plazo_vto_in_days, // Only for daily loans
-                    dias_restantes_por_pagar   = loanDomainReceived.plazo_vto_in_days,
-                    diasPagados = 0,
-                    montoDiarioAPagar = loanDomainReceived.montoDiarioAPagar,
-                    montoTotalAPagar = loanDomainReceived.montoTotalAPagar,
+                    interest     = loanDomainReceived.interest,
+                    quotasPaid = 0,
+                    amountPerQuota = loanDomainReceived.amountPerQuota,
+                    totalAmountToPay = loanDomainReceived.totalAmountToPay,
                     state = "ABIERTO",
-
                     //fields new version 2.0
                     typeLoan = loanDomainReceived.typeLoan,
                     typeLoanDays = loanDomainReceived.typeLoanDays,
@@ -220,82 +207,65 @@ class RegistrarActivity : AppCompatActivity() {
 
     private fun validateFields() {
 
-        fecha.doAfterTextChanged {
+        binding.fecha.doAfterTextChanged {
             showbutton()
         }
 
-        nombres.doAfterTextChanged {
+        binding.nombres.doAfterTextChanged { input->
+            val names = input.toString()
+            layoutNombres.error = when {
+                names.isEmpty() -> "El nombre esta vacío"
+                names.count() < 4 -> "El nombre esta incompleto"
+                else -> null
+            }
+            showbutton()
+        }
 
-            var nombresChanged = it.toString()
-
-            layoutNombres.error = when
-            {
-                nombresChanged.isNullOrEmpty() -> "El nombre esta vacío"
-                nombresChanged.count() < 4 -> "El nombre esta incompleto"
+        binding.apellidos.doAfterTextChanged { input->
+            val lastnames = input.toString()
+            layoutApellidos.error = when {
+                lastnames.isEmpty() -> "Los apellidos estan vacíos"
+                lastnames.count() < 4 -> "Los apellidos estan incompletos"
                 else -> null
             }
             showbutton()
 
         }
 
-        apellidos.doAfterTextChanged {
-
-            var apellidosChanged = it.toString()
-
-            layoutApellidos.error = when
-            {
-                apellidosChanged.isNullOrEmpty() -> "Los apellidos estan vacíos"
-                apellidosChanged.count() < 4 -> "Los apellidos estan incompletos"
+        binding.dni.doAfterTextChanged { input ->
+            val document = input.toString()
+            val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
+            layoutDNI.error = when {
+                document.isEmpty() -> getString(R.string.documento_vacío)
+                document.count() in 1 until documentMaxLength -> getString(R.string.documento_incompleto)
                 else -> null
             }
             showbutton()
-
         }
 
-        dni.doAfterTextChanged {
-
-            var doucmentoChanged = it.toString()
-            var documentoMax = resources.getInteger(R.integer.cantidad_documento_max)
-
-            layoutDNI.error = when
-            {
-                doucmentoChanged.isNullOrEmpty() -> "${getString(R.string.documento_vacío)}"
-                doucmentoChanged.count() in 1 until documentoMax -> "${getString(R.string.documento_incompleto)}"
+        binding.celular.doAfterTextChanged {
+            val cellular = it.toString()
+            layoutCelular.error = when {
+                cellular.isEmpty() -> "Celular vacío"
+                cellular.count() in 1..8 -> "Celular incompleto"
                 else -> null
             }
-
             showbutton()
-
-        }
-
-        celular.doAfterTextChanged {
-
-            var celularChanged = it.toString()
-
-            layoutCelular.error = when
-            {
-                celularChanged.isNullOrEmpty() -> "Celular vacío"
-                celularChanged.count() in 1..8 -> "Celular incompleto"
-                else -> null
-            }
-
-            showbutton()
-
         }
 
 
     }
 
     private fun showbutton() {
-        if(!nombres.text.toString().trim().isNullOrEmpty()          &&
-            nombres.text.toString().trim().count() >= 4             &&
-            !apellidos.text.toString().trim().isNullOrEmpty()       &&
-            apellidos.text.toString().trim().count() >= 4           &&
-            !celular.text.toString().trim().isNullOrEmpty()         &&
-            celular.text.toString().trim().count() == 9             &&
-            !dni.text.toString().trim().isNullOrEmpty()             &&
-            dni.text.toString().trim().count() == resources.getInteger(R.integer.cantidad_documento_max)             &&
-            !fecha.text.toString().trim().isNullOrEmpty())
+        if(!binding.nombres.text.toString().trim().isNullOrEmpty()          &&
+            binding.nombres.text.toString().trim().count() >= 4             &&
+            !binding.apellidos.text.toString().trim().isNullOrEmpty()       &&
+            binding.apellidos.text.toString().trim().count() >= 4           &&
+            !binding.celular.text.toString().trim().isNullOrEmpty()         &&
+            binding.celular.text.toString().trim().count() == 9             &&
+            !binding.dni.text.toString().trim().isNullOrEmpty()             &&
+            binding.dni.text.toString().trim().count() == resources.getInteger(R.integer.cantidad_documento_max)             &&
+            !binding.fecha.text.toString().trim().isNullOrEmpty())
         {
             //Registrar prestamo
             registerButton.apply {
@@ -360,14 +330,14 @@ class RegistrarActivity : AppCompatActivity() {
                     PaymentScheduledEnum.DAILY -> {
                         binding.containerDaily.beVisible()
                         binding.containerOther.beGone()
-                        binding.plazosEnDias.setText("${loanDomainReceived.plazo_vto_in_days.toString()} dias")
-                        binding.interes.setText("${loanDomainReceived.interes!!.toInt()}%")
+                        binding.plazosEnDias.setText("${loanDomainReceived.quotas.toString()} dias")
+                        binding.interes.setText("${loanDomainReceived.interest!!.toInt()}%")
 
                     }
                     else -> {
                         binding.containerDaily.beGone()
                         binding.containerOther.beVisible()
-                        binding.interesOther.setText("${loanDomainReceived.interes!!.toInt()}%")
+                        binding.interesOther.setText("${loanDomainReceived.interest!!.toInt()}%")
                         binding.quotasOther.setText(loanDomainReceived.quotas.toString())
                     }
                 }

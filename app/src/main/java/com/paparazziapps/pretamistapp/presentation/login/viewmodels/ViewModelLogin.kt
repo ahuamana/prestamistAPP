@@ -39,6 +39,10 @@ class ViewModelLogin (
             is PAResult.Success -> {
                 //TODO: Save user data
                 preferences.setEmail(email)
+                preferences.isLogin = true
+
+                //TODO: Save the rest of the user data on preferences
+
                 _message.value = "Bienvenido"
                 _isLoginEmail.value = true
                 _isLoading.value = false

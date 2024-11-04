@@ -102,9 +102,9 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
             itemView.apply {
                 val tag = LoanAdapter::class.java.simpleName
                 //Set name
-                nombreCompleto.setText("${replaceFirstCharInSequenceToUppercase(item.nombres.toString().trim())}, ${replaceFirstCharInSequenceToUppercase(item.apellidos.toString().trim())}")
+                nombreCompleto.setText("${replaceFirstCharInSequenceToUppercase(item.names.toString().trim())}, ${replaceFirstCharInSequenceToUppercase(item.lastnames.toString().trim())}")
                 //Set amount to pay
-                val amountToPayDailyWithCurrency = "${context.getString(R.string.tipo_moneda)} ${item.montoDiarioAPagar}"
+                val amountToPayDailyWithCurrency = "${context.getString(R.string.tipo_moneda)} ${item.amountPerQuota}"
                 binding.amountToPayValue.text = amountToPayDailyWithCurrency
 
                 //Set type of loan
@@ -131,12 +131,12 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
                         try {
                             //calcular el monto total a pagar
                             diasRetraso = numero_dias_retrasados.text.toString().toInt()
-                            montoTotalAPagar = getDoubleWithOneDecimalsReturnDouble((diasRetraso * item.montoDiarioAPagar!!))
+                            montoTotalAPagar = getDoubleWithOneDecimalsReturnDouble((diasRetraso * item.amountPerQuota!!))
 
                             //Mensaje
                             val msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
                                     "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
-                            openWhatsapp(item.celular, msj)
+                            openWhatsapp(item.cellular, msj)
                         }catch (t:Throwable) {
                             Firebase.crashlytics.recordException(t)
                         }
@@ -148,7 +148,7 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
                 setOnClickListener {
                     //calcular el monto total a pagar
                     diasRetraso = numero_dias_retrasados.text.toString().toInt()
-                    montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(diasRetraso * (item.capital?.toDouble()?.div(item.plazo_vto_in_days!!)!!))
+                    montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(diasRetraso * (item.capital?.toDouble()?.div(item.quotas!!)!!))
 
                     if(numero_dias_retrasados.text.toString().toInt() == 0) {
                         Log.d(tag,"numero de dias retrasados es cero: ${numero_dias_retrasados.text}")
@@ -175,8 +175,8 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
 
             when (tyLoan) {
                 PaymentScheduledEnum.DAILY -> {
-                    val daysPaid = item.diasPagados ?: 0
-                    val daysTotal = item.plazo_vto_in_days ?: 0
+                    val daysPaid = item.quotasPaid ?: 0
+                    val daysTotal = item.quotas ?: 0
                     val pendingDays = daysTotal - daysPaid
                     val missingText = if (pendingDays == 1) "día pagado" else "días pagados"
                     binding.lblDiasPorPagar.text = missingText
@@ -213,31 +213,8 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
             }
         }
 
-        private fun setDiasRestantesPorPagar(item: LoanDomain) {
-
-            val diasEnQueTermina = getDiasRestantesFromStart(item.fecha_start_loan?:"",item.plazo_vto_in_days?:0)
-
-            if(diasEnQueTermina < 0) {
-                binding.numeroDiasPorPagar.setText("0") // Dias por pagar es igual o menor a cero entonces Prestamó vencido - completado
-            }else{
-                binding.numeroDiasPorPagar.apply { setText(diasEnQueTermina.toString()) }
-            }
-
-
-            binding.lblDiasPorPagar.apply {
-                text = when {
-                    diasEnQueTermina == 1 -> "día por pagar"
-                    else -> "días por pagar "
-                }
-            }
-        }
-
         private fun calculateTheMissingDaysToPayForTypeLoan(loan: LoanDomain): Int {
-            val tyLoan = PaymentScheduled.getPaymentScheduledById(loan.typeLoan ?: INT_DEFAULT)
-            val result = when (tyLoan) {
-                PaymentScheduledEnum.DAILY -> (loan.plazo_vto_in_days ?: 0) - (loan.diasPagados ?: 0)
-                else -> (loan.quotas ?: 0) - (loan.quotasPaid ?: 0)
-            }
+            val result = (loan.quotas ?: 0) - (loan.quotasPaid ?: 0)
             return result
         }
 
@@ -258,15 +235,23 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
         private fun calculateDelayForTypeLoan(item: LoanDomain): Int {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
             val calculatorDelay = DelayCalculator()
-            val daysDelayed = if (item.fechaUltimoPago.isNullOrEmpty()) {
-                Log.d("FechaUltimoPago", "Fecha ultimo pago vacia")
+            val daysDelayed = if (item.lastPaymentDate.isNullOrEmpty()) {
+                Log.d("lastPaymentDate", "Fecha ultimo pago vacia")
                 getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
             } else {
-                Log.d("FechaUltimoPago", "Fecha ultimo pago: ${item.fechaUltimoPago}")
-                getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.diasPagados ?: 0).toIntOrNull() ?: 0
+                Log.d("lastPaymentDate", "Fecha ultimo pago: ${item.lastPaymentDate}")
+                getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
             }
             Log.d("DaysDelayed", "Days delayed: $daysDelayed")
+
+            val pendingQuotes = item.quotas?.minus(item.quotasPaid ?: 0) ?: 0
+            Log.d("PendingQuotes", "Pending quotes: $pendingQuotes")
+
+            if(pendingQuotes <= 0 || daysDelayed <=0) return 0
+
             return calculatorDelay.calculateDelay(tyLoan, daysDelayed)
+
+
         }
 
         //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" else set "<WEEKS> semanas retrasadas" and so on

@@ -49,21 +49,19 @@ class LoanDetailAdapter : RecyclerView.Adapter<LoanDetailAdapter.ViewHolder>() {
             var plazo_vto = binding.tvDiasRestantes
 
             //
-            var plazo = getDiasRestantesFromStart(item.fecha_start_loan?:"",item.plazo_vto_in_days?:0)
+            var plazo = getDiasRestantesFromStart(item.fecha_start_loan?:"",item.quotas?:0)
 
             //Calcular deuda de dias no pagados
-            var deudaTotal = getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan?:"",item.diasPagados?:0).toInt().times(item.montoDiarioAPagar?:0.0)
+            var deudaTotal = getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan?:"",item.quotasPaid?:0).toInt().times(item.amountPerQuota?:0.0)
 
             itemView.apply {
                 position.text = adapterPosition.toString()
-                nombres.text = replaceFirstCharInSequenceToUppercase(item.nombres.toString())
+                nombres.text = replaceFirstCharInSequenceToUppercase(item.names.toString())
                 plazo_vto.text = "Se vence en ${if(plazo==1) "$plazo día" else "$plazo días"}"
 
-                if(deudaTotal > 0)
-                {
+                if(deudaTotal > 0) {
                     deuda.text = "${getDoubleWithTwoDecimalsReturnDouble(deudaTotal)} Deuda"
-                }else
-                {
+                }else {
                     deuda.apply {
                         text = "Sin Deudas"
                         standardSimpleButtonOutline(itemView.context)

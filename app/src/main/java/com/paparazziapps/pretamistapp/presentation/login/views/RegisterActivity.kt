@@ -253,7 +253,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun observers() {
 
         lifecycleScope.launch {
-            _viewModel.sucursales.observe(this@RegisterActivity) {
+            _viewModel.branches.observe(this@RegisterActivity) {
                 listaSucursales = it.toMutableList()
                 var scrsales = mutableListOf<String>()
                 it.forEach {

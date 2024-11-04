@@ -221,7 +221,7 @@ class FinanzasFragment : Fragment() {
         }
 
         //Observers SuperAdmin
-        _viewModelBranches.sucursalesFinanzas.observe(viewLifecycleOwner){
+        _viewModelBranches.branchesFinances.observe(viewLifecycleOwner){
 
             println("Sucursales Finanzas: $it")
 

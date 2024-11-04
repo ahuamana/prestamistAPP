@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/error_background"
+    android:gravity="center">
+
+    <!-- Error Icon -->
+    <ImageView
+        android:id="@+id/error_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete_circle"
+        android:contentDescription="@string/error_icon_description"
+        android:layout_gravity="center"
+        app:tint="@color/red" />
+
+    <!-- Error Message -->
+    <TextView
+        android:id="@+id/error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/googlesans_regular"
+        android:text="@string/error_message"
+        android:textSize="16sp"
+        android:textColor="@android:color/black" />
+
+    <!-- Retry Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_retry"
+        android:layout_width="match_parent"
+        app:cornerRadius="32dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:fontFamily="@font/googlesans_regular"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Retry" />
+</LinearLayout>
