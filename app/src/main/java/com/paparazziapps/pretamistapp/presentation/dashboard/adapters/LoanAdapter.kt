@@ -236,14 +236,22 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
             val calculatorDelay = DelayCalculator()
             val daysDelayed = if (item.lastPaymentDate.isNullOrEmpty()) {
-                Log.d("FechaUltimoPago", "Fecha ultimo pago vacia")
+                Log.d("lastPaymentDate", "Fecha ultimo pago vacia")
                 getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
             } else {
-                Log.d("FechaUltimoPago", "Fecha ultimo pago: ${item.lastPaymentDate}")
+                Log.d("lastPaymentDate", "Fecha ultimo pago: ${item.lastPaymentDate}")
                 getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
             }
             Log.d("DaysDelayed", "Days delayed: $daysDelayed")
+
+            val pendingQuotes = item.quotas?.minus(item.quotasPaid ?: 0) ?: 0
+            Log.d("PendingQuotes", "Pending quotes: $pendingQuotes")
+
+            if(pendingQuotes <= 0 || daysDelayed <=0) return 0
+
             return calculatorDelay.calculateDelay(tyLoan, daysDelayed)
+
+
         }
 
         //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" else set "<WEEKS> semanas retrasadas" and so on

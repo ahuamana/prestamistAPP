@@ -55,7 +55,7 @@ class LoanProvider(
         quotesPendingNew:Int,
         quotesPaidNew:Int): PAResult<Void> {
         val map = mutableMapOf<String,Any?>()
-        map.put("fechaUltimoPago",dateLastPaymentNew)
+        map.put("lastPaymentDate",dateLastPaymentNew)
         map.put("quotasPending",quotesPendingNew)
         map.put("quotasPaid",quotesPaidNew)
 
@@ -72,7 +72,7 @@ class LoanProvider(
         ): PAResult<Void> {
 
         val map = mutableMapOf<String,Any?>()
-        map.put("fechaUltimoPago",dateLastPaymentNew)
+        map.put("lastPaymentDate",dateLastPaymentNew)
         map.put("quotasPending",quotesPendingNew)
         map.put("quotasPaid",quotesPaidNew)
 

@@ -43,15 +43,10 @@ class RegistrarActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityRegistrarBinding
     var loanDomainReceived = LoanDomain()
-    lateinit var fecha:TextInputEditText
     lateinit var layoutFecha:TextInputLayout
-    lateinit var nombres:TextInputEditText
     lateinit var layoutNombres:TextInputLayout
-    lateinit var apellidos:TextInputEditText
     lateinit var layoutApellidos:TextInputLayout
-    lateinit var dni:TextInputEditText
     lateinit var layoutDNI:TextInputLayout
-    lateinit var celular:TextInputEditText
     lateinit var layoutCelular:TextInputLayout
 
     lateinit var registerButton:MaterialButton
@@ -93,7 +88,7 @@ class RegistrarActivity : AppCompatActivity() {
         fieldsSuperAdmin()
 
         //Set max lengh Document
-        dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
+        binding.dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
         layoutDNI.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
 
         //get intent
@@ -159,11 +154,11 @@ class RegistrarActivity : AppCompatActivity() {
                 binding.cortina.isVisible = true
 
                 val loanDomain = LoanDomain(
-                    names     = nombres.text.toString().trim(),
-                    lastnames   = apellidos.text.toString().trim(),
-                    dni         = dni.text.toString().trim(),
-                    cellular     = celular.text.toString().trim(),
-                    fecha_start_loan       = fecha.text.toString().trim(),
+                    names     = binding.nombres.text.toString().trim(),
+                    lastnames   = binding.apellidos.text.toString().trim(),
+                    dni         = binding.dni.text.toString().trim(),
+                    cellular     = binding.celular.text.toString().trim(),
+                    fecha_start_loan       = binding.fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
                     capital     = loanDomainReceived.capital,
@@ -262,15 +257,15 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun showbutton() {
-        if(!nombres.text.toString().trim().isNullOrEmpty()          &&
-            nombres.text.toString().trim().count() >= 4             &&
-            !apellidos.text.toString().trim().isNullOrEmpty()       &&
-            apellidos.text.toString().trim().count() >= 4           &&
-            !celular.text.toString().trim().isNullOrEmpty()         &&
-            celular.text.toString().trim().count() == 9             &&
-            !dni.text.toString().trim().isNullOrEmpty()             &&
-            dni.text.toString().trim().count() == resources.getInteger(R.integer.cantidad_documento_max)             &&
-            !fecha.text.toString().trim().isNullOrEmpty())
+        if(!binding.nombres.text.toString().trim().isNullOrEmpty()          &&
+            binding.nombres.text.toString().trim().count() >= 4             &&
+            !binding.apellidos.text.toString().trim().isNullOrEmpty()       &&
+            binding.apellidos.text.toString().trim().count() >= 4           &&
+            !binding.celular.text.toString().trim().isNullOrEmpty()         &&
+            binding.celular.text.toString().trim().count() == 9             &&
+            !binding.dni.text.toString().trim().isNullOrEmpty()             &&
+            binding.dni.text.toString().trim().count() == resources.getInteger(R.integer.cantidad_documento_max)             &&
+            !binding.fecha.text.toString().trim().isNullOrEmpty())
         {
             //Registrar prestamo
             registerButton.apply {

@@ -57,18 +57,15 @@ class ViewModelDashboard (
     ) {
         //Daily payment
         val idLoan = loanDomain.id ?: "" //Works for daily and other
-        val needToClose = loanDomain.quotasPending == quotesToPay //Works for daily and other
+        val needToClose = (loanDomain.quotasPending == (loanDomain.quotas?:0)) // works for daily and other
         val totalAmountToPay = quotesToPay.times(loanDomain.amountPerQuota ?: 0.0) // rename to quotaAmount // works for daily and other
 
         //Other payment
         val quotesPaidBefore = loanDomain.quotasPaid ?: 0
         val quotesPaidNew = quotesPaidBefore + quotesToPay
 
-        val quotesPendingBefore = loanDomain.quotasPending ?: 0
-        val quotesPendingNew = quotesPendingBefore - quotesToPay
-
-        val daysFromTypeLoan = PaymentScheduled.getPaymentScheduledById(loanDomain.typeLoan ?: INT_DEFAULT).days
-        val quotesPaidInDays = quotesPaidNew * daysFromTypeLoan
+        val quotesPendingBefore = loanDomain.quotasPending ?: loanDomain.quotas ?: 0
+        val quotesPendingNew =  quotesPendingBefore - quotesToPay
 
         if (needToClose) {
             processIntent(DashboardIntent.CloseLoan(idLoan))

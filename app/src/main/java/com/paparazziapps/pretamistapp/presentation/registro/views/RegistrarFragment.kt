@@ -142,36 +142,35 @@ class RegistrarFragment : Fragment() {
 
     private fun continuar() {
         btnContinuar.setOnClickListener {
+
             loanDomain.capital = binding.capitalprestadoEdt.text.toString().toInt()
 
             loanDomain.amountPerQuota = montoDiarioAPagar
             loanDomain.totalAmountToPay = montoTotalAPagar
             //fields new version 2.0
 
-            // TODO: Modify depending on the mode selected
             val mode = binding.modePaymentScheduled.text.toString()
             val paymentScheduled = PaymentScheduled.getPaymentScheduledByName(mode)
             if(paymentScheduled == PaymentScheduledEnum.DAILY) {
-                loanDomain.quotas = mesesEntero // Only works for daily and personalized
+                loanDomain.quotas = mesesEntero
                 loanDomain.interest = interesEntero
             } else {
                 loanDomain.interest = binding.interesExtras.text.toString().toIntOrNull()?:0
                 //multiply the quotas and the type of loan days
                 val quotas = binding.quotasTextExtras.text.toString().toIntOrNull()?:0
-                loanDomain.quotas = quotas * paymentScheduled.days
+                loanDomain.quotas = quotas
             }
 
             loanDomain.typeLoan = PaymentScheduled.getPaymentScheduledByName(binding.modePaymentScheduled.text.toString()).id
             loanDomain.typeLoanDays = PaymentScheduled.getPaymentScheduledByName(binding.modePaymentScheduled.text.toString()).days
-            loanDomain.quotas = binding.quotasTextExtras.text.toString().toIntOrNull()?:0
             loanDomain.typeLoanName = binding.modePaymentScheduled.text.toString()
 
             val gson = Gson()
-            val prestamoJson = gson.toJson(loanDomain)
+            val loanJson = gson.toJson(loanDomain)
 
             //Show next activity - Register pagos
             val intent = Intent(context, RegistrarActivity::class.java).apply {
-                putExtra(PAConstants.EXTRA_LOAN_JSON,prestamoJson)
+                putExtra(PAConstants.EXTRA_LOAN_JSON,loanJson)
             }
             startForResult.launch(intent)
         }

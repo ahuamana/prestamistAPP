@@ -232,8 +232,7 @@ class PrincipalActivity : AppCompatActivity(){
         bottomNavigationView.setupWithNavController(navController)
         bottomNavigationView.setOnItemSelectedListener { item ->
 
-            when(item.itemId)
-            {
+            when(item.itemId) {
                 R.id.navigation_finanzas -> {
                     println("Mostraste finanzas")
                     navController.navigate(R.id.navigation_finanzas)
@@ -264,7 +263,10 @@ class PrincipalActivity : AppCompatActivity(){
 
     fun showBottomSheetDetallePrestamoPrincipal(loanDomain: LoanDomain, montoTotalAPagar: Double, diasRestrasado:String, adapterPosition: Int, needUpdate:Boolean) {
 
-        val daysWhenEnds = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",loanDomain.quotas?:0)
+        val quotas = loanDomain.quotas?:0
+        val typeLoanInDays = loanDomain.typeLoanDays?:1
+        val quotasPerDays = quotas * typeLoanInDays
+        val daysWhenEndsInDays = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",quotasPerDays)
 
         //Set inicial bottomsheet
         layout_detalle_prestamo.edtDiasAPagar.apply {
@@ -299,7 +301,7 @@ class PrincipalActivity : AppCompatActivity(){
         layout_detalle_prestamo.lblNombreCompleto.text = "${replaceFirstCharInSequenceToUppercase(loanDomain.names?:"")}, ${replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?:"")}"
         layout_detalle_prestamo.tvCapitalPrestado.text = "${getString(R.string.tipo_moneda)} ${loanDomain.capital}"
         layout_detalle_prestamo.tvInteresPrestado.text = "${loanDomain.interest}%"
-        layout_detalle_prestamo.tvPlazoVto.text = "en $daysWhenEnds días"
+        layout_detalle_prestamo.tvPlazoVto.text = "en $daysWhenEndsInDays días"
 
         layout_detalle_prestamo.tvDni.text = "${loanDomain.dni}"
         layout_detalle_prestamo.tvFechaPrestamo.text = "${loanDomain.fecha_start_loan}"
@@ -312,7 +314,7 @@ class PrincipalActivity : AppCompatActivity(){
                 // set in days
                 layout_detalle_prestamo.contentLayoutDiasAPagar.hint = "Día(s) a pagar"
                 layout_detalle_prestamo.lblPaidDaysOrQuotas.text = getString(R.string.days_paid_title)
-                layout_detalle_prestamo.tvDiasPagados.text = "${loanDomain.quotasPaid} días de ${loanDomain.quotas} días"
+                layout_detalle_prestamo.tvDiasPagados.text = "${loanDomain.quotasPaid} de ${loanDomain.quotas} días"
             }
             else -> {
                 // set in quotes
@@ -323,7 +325,7 @@ class PrincipalActivity : AppCompatActivity(){
                 val paidQuotes = loanDomain.quotasPaid?:0
                 Log.d("PaidQuotes", paidQuotes.toString())
                 val displayQuotesPaid = if(paidQuotes == 1) "cuota" else "cuotas"
-                layout_detalle_prestamo.tvDiasPagados.text = "$paidQuotes $displayQuotesPaid de $quotes $displayQuotes"
+                layout_detalle_prestamo.tvDiasPagados.text = "$paidQuotes de $quotes $displayQuotes"
             }
         }
 
@@ -389,8 +391,9 @@ class PrincipalActivity : AppCompatActivity(){
     }
 
     private fun handledCloseLoan(loanDomain: LoanDomain, montoTotalAPagar:Double) {
-        //Ocultar vistas si no tiene deudas
-        if((loanDomain.quotasPending?:0) <= 0) {
+
+        val needToClose = ((loanDomain.quotasPending?:loanDomain.quotas?:0) <=0)
+        if(needToClose) {
             Log.d("this","Dias restantes por pagar es == a 0 *---> ${loanDomain.quotasPending}")
             //If dias restantes es cero
             layout_detalle_prestamo.apply {
