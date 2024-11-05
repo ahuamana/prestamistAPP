@@ -204,20 +204,6 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
             return result
         }
 
-        private fun openWhatsapp(celular: String?, msj: String) {
-            //NOTE : please use with country code first 2digits without plus signed
-            try {
-                itemView.context.startActivity(
-                    Intent(Intent.ACTION_VIEW, Uri.parse(
-                    "https://api.whatsapp.com/send?phone=${itemView.context.getString(R.string.codigo_pais)}" + celular + "&text=" + msj)).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                })
-            }catch (t: Throwable){
-                //whatsapp app not install
-               Log.d("Error","Whatsapp app not install")
-            }
-        }
-
         private fun calculateDelayForTypeLoan(item: LoanDomain): Int {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
             val calculatorDelay = DelayCalculator()
