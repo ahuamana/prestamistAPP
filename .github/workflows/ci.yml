@@ -36,10 +36,13 @@ jobs:
               distribution: 'temurin'
           - name: Build APK
             run: bash ./gradlew assembleDebug --stacktrace
+          - name: Get version name
+            id: get_version_name
+            run: echo "VERSION_NAME=$(./gradlew -q printVersionName)" >> $GITHUB_ENV
           - name: Upload APK
             uses: actions/upload-artifact@v3
             with:
               name: app-debug
-              path: app/build/outputs/apk/debug/prestamist-pa-debug-${{ android.defaultConfig.versionName }}.apk
+              path: app/build/outputs/apk/debug/prestamist-pa-debug-${{ env.VERSION_NAME }}.apk
               if-no-files-found: error
 
