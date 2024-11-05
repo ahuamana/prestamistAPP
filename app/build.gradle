@@ -16,7 +16,7 @@ android {
         targetSdk 34
         multiDexEnabled true
         versionCode 5
-        versionName "3.0.0"
+        versionName "3.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -64,6 +64,12 @@ android {
 
     namespace 'com.paparazziapps.pretamistapp'
 
+}
+
+task printVersionName {
+    doLast {
+        println android.defaultConfig.versionName
+    }
 }
 
 dependencies {
