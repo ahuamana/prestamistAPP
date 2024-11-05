@@ -267,6 +267,7 @@ class PrincipalActivity : AppCompatActivity(){
         val typeLoanInDays = loanDomain.typeLoanDays?:1
         val quotasPerDays = quotas * typeLoanInDays
         val daysWhenEndsInDays = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",quotasPerDays)
+        val daysSett = if(daysWhenEndsInDays > 0) daysWhenEndsInDays else 0
 
         //Set inicial bottomsheet
         layout_detalle_prestamo.edtDiasAPagar.apply {

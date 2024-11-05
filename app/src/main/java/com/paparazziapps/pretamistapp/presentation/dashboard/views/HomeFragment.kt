@@ -241,6 +241,14 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
         }
     }
 
+    override fun sendMessageToOtherApp(loanDomain: LoanDomain) {
+        viewModel.processIntent(ViewModelDashboard.DashboardIntent.SendMessageToOtherApp(loanDomain, requireContext()))
+    }
+
+    override fun sendMessageToWhatsapp(loanDomain: LoanDomain) {
+        viewModel.processIntent(ViewModelDashboard.DashboardIntent.SendMessageToWhatsApp(loanDomain, requireContext()))
+    }
+
     override fun onDestroy() {
         loadingDialog.dismiss()
         generalErrorDialog.dismiss()

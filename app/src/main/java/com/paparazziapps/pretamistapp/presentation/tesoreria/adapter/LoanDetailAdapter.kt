@@ -43,24 +43,29 @@ class LoanDetailAdapter : RecyclerView.Adapter<LoanDetailAdapter.ViewHolder>() {
 
         fun bind(item: LoanDomain){
 
-            var position = binding.circleCount
-            var deuda = binding.btnDeuda
-            var nombres = binding.tvNombres
-            var plazo_vto = binding.tvDiasRestantes
+            val position = binding.circleCount
+            val deuda = binding.btnDeuda
+            val nombres = binding.tvNombres
+            val plazo_vto = binding.tvDiasRestantes
 
-            //
-            var plazo = getDiasRestantesFromStart(item.fecha_start_loan?:"",item.quotas?:0)
+            //Calcular total deuda
+            val totalDebt = ((item.quotas?:0) - (item.quotasPaid?:0)).times(item.amountPerQuota?:0.0)
 
-            //Calcular deuda de dias no pagados
-            var deudaTotal = getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan?:"",item.quotasPaid?:0).toInt().times(item.amountPerQuota?:0.0)
+
+            val quotas = item.quotas?:0
+            val typeLoanInDays = item.typeLoanDays?:1
+            val quotasPerDays = quotas * typeLoanInDays
+            val daysWhenEndsInDays = getDiasRestantesFromStart(item.fecha_start_loan?:"",quotasPerDays)
+            val daysSett= if(daysWhenEndsInDays > 0) daysWhenEndsInDays else 0
+
 
             itemView.apply {
                 position.text = adapterPosition.toString()
                 nombres.text = replaceFirstCharInSequenceToUppercase(item.names.toString())
-                plazo_vto.text = "Se vence en ${if(plazo==1) "$plazo día" else "$plazo días"}"
+                plazo_vto.text = "Se vence en ${if(daysSett==1) "$daysSett día" else "$daysSett días"}"
 
-                if(deudaTotal > 0) {
-                    deuda.text = "${getDoubleWithTwoDecimalsReturnDouble(deudaTotal)} Deuda"
+                if(totalDebt > 0) {
+                    deuda.text = "${getDoubleWithTwoDecimalsReturnDouble(totalDebt)} Deuda"
                 }else {
                     deuda.apply {
                         text = "Sin Deudas"
