@@ -1,8 +1,14 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.views
 
+import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
@@ -63,9 +69,24 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
         setOnClickedLoanHome = this
 
         //Configuration
+        requestPermissionsSms()
         setupRecyclerLoans()
         observers()
         return view
+    }
+
+    private fun requestPermissionsSms() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            // Request SMS permission if not granted
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.SEND_SMS),
+                123
+            )
+        }else {
+            // Permission already granted
+            Log.d("TAG", "Permission already granted")
+        }
     }
 
     private fun setupRecyclerLoans() {

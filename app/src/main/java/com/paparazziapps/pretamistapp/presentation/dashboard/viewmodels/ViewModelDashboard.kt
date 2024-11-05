@@ -1,8 +1,10 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.telephony.SmsManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,6 +27,7 @@ import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -121,35 +124,39 @@ class ViewModelDashboard (
     private fun sendMessageToOtherApp(
         loanDomain: LoanDomain,
         context: Context) = viewModelScope.launch {
-        val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
-        val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
-        val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
-        val phone = loanDomain.cellular ?: ""
-        val quotesPending = loanDomain.quotasPending ?: loanDomain.quotas ?: 0
 
-        val delay = calculateDelayForTypeLoan(loanDomain)
-        val delayText = if (delay == 1) "día retrasado" else " días retrasados"
+            _state.value = _state.value.copy(dialogState = DashboardDialogState.Loading)
+            val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
+            val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
+            val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
+            val phone = loanDomain.cellular ?: ""
+            val quotesPending = loanDomain.quotasPending ?: loanDomain.quotas ?: 0
 
-        val message = if (delay > 0) {
-            // Si hay retraso, incluir los días de retraso en el mensaje
-            "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
-                    "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
-                    "Lamentablemente, tu pago está $delay $delayText. Te sugerimos ponerte al día lo antes posible para evitar cargos adicionales."
-        } else {
-            // Si no hay retraso, solo información sobre el saldo pendiente
-            "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
-                    "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
-                    "¡Gracias por mantenerte al día con tus pagos!"
-        }
+            val delay = calculateDelayForTypeLoan(loanDomain)
+            val delayText = if (delay == 1) "día retrasado" else " días retrasados"
 
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, message)
-        }
+            val message = if (delay > 0) {
+                // Si hay retraso, incluir los días de retraso en el mensaje
+                "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                        "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                        "Lamentablemente, tu pago está $delay $delayText. Te sugerimos ponerte al día lo antes posible para evitar cargos adicionales."
+            } else {
+                // Si no hay retraso, solo información sobre el saldo pendiente
+                "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                        "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                        "¡Gracias por mantenerte al día con tus pagos!"
+            }
 
-        val chooser = Intent.createChooser(intent, "Enviar mensaje a $fullName")
-        context.startActivity(chooser)
-
+            try {
+                val smsManager = context.getSystemService(SmsManager::class.java)
+                val dividedMessage = smsManager.divideMessage(message)
+                val codeCountry = context.getString(R.string.codigo_pais)
+                smsManager.sendMultipartTextMessage(codeCountry+phone, null, dividedMessage, null, null)
+                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan)
+            }catch (e: Exception){
+                Log.d(tag, "Error al enviar mensaje: ${e.message}")
+                _state.value = _state.value.copy(dialogState = DashboardDialogState.Error(e.message ?: ""))
+            }
     }
 
     private fun updateLoan(

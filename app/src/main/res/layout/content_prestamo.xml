@@ -145,24 +145,30 @@
 
             <!--Add circular imageview-->
 
-            <com.google.android.material.imageview.ShapeableImageView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/img_avatar_circular"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginTop="5dp"
-                android:src="@drawable/border_mask"
+                tools:text="AH"
+                android:fontFamily="@font/googlesans_bold"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:background="@drawable/border_mask"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/CircularImageView" />
 
             <LinearLayout
                 android:id="@+id/container_info_user"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@+id/img_avatar_circular"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_avatar_circular"
                 app:layout_constraintTop_toTopOf="@+id/img_avatar_circular">
 
@@ -170,6 +176,9 @@
                     android:id="@+id/nombre_completo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:maxLines="1"
                     android:fontFamily="@font/googlesans_bold"
                     android:textColor="@color/black"
                     android:textSize="12sp"
@@ -180,7 +189,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -192,17 +200,20 @@
                         android:padding="3dp"
                         android:text="cuotas pagadas"
                         android:textColor="@color/black"
-                        android:textSize="9dp" />
+                        android:textSize="11sp" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/numero_dias_por_pagar"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/googlesans_bold"
+                        android:lines="1"
+                        android:maxLines="1"
                         android:textColor="@color/black"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        tools:text="1/6" />
+                        android:textSize="12sp"
+                        tools:text="1/180" />
                 </LinearLayout>
 
 
@@ -215,9 +226,11 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_buttons"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
@@ -226,12 +239,29 @@
                 android:id="@+id/btn_send_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_whatsapp"
-                android:padding="9dp"
                 android:background="@drawable/rounded_button_image_background"
+                android:padding="9dp"
+                android:src="@drawable/ic_whatsapp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_share"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Text button to send message -->
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/btn_send_message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/googlesans_regular"
+                android:text="Enviar recordatorio"
+                android:textColor="@color/black"
+                android:textSize="9sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/btn_send_message"
+                app:layout_constraintStart_toStartOf="@+id/btn_send_message"
+                app:layout_constraintTop_toBottomOf="@+id/btn_send_message" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/btn_share"
@@ -243,9 +273,26 @@
                 android:src="@drawable/ic_share"
                 android:text="Share"
                 android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_send_message"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Text button to share -->
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/btn_share_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/googlesans_regular"
+                android:text="Enviar recordario x sms"
+                android:textColor="@color/black"
+                android:textSize="9sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/btn_share"
+                app:layout_constraintStart_toStartOf="@+id/btn_share"
+                app:layout_constraintTop_toBottomOf="@+id/btn_share" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

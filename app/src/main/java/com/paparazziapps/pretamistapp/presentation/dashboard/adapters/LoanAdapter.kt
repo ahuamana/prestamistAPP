@@ -1,13 +1,16 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.adapters
 
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.R
@@ -19,6 +22,7 @@ import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnCli
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.RandomColorGenerator
 import com.paparazziapps.pretamistapp.domain.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -111,9 +115,6 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
                 val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(item.typeLoan?: INT_DEFAULT).displayName
                 binding.typeOfLoanLabel.text = typeLoanDisplayName
 
-                //Metodo para el calculo de dias retrasados
-                //calcularDiasRetrasados(itemView, numero_dias_retrasados, item, binding.cardviewDiasRetrasadosV2, fechaActual)
-
                 //set the delay for the type of loan
                 val delay = calculateDelayForTypeLoan(item)
                 updateDelayForLoanTypeInDays(item, delay) //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" only set days for every type of loan
@@ -123,9 +124,17 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
                 val daysMissing = calculateTheMissingDaysToPayForTypeLoan(item)
                 updatePendingLoanTypeInDaysOrQuotas(item, daysMissing)
 
-                //setDiasRestantesPorPagar(item)
 
-                //Enviar mensaje a whatsapp
+                //set text for image avatar
+                val firstLetter = item.names?.firstOrNull()?.uppercase()
+                val firstLetterLastname = item.lastnames?.firstOrNull()?.uppercase()
+                binding.imgAvatarCircular.text  = "$firstLetter$firstLetterLastname"
+
+                //set background color for image avatar from a random list of colors
+                val color = RandomColorGenerator.getRandomColor()
+                setRoundedAvatarBackground(binding.imgAvatarCircular, color)
+
+
                 binding.btnSendMessage.setOnClickListener {
                     listenerLoan.sendMessageToWhatsapp(item)
                 }
@@ -150,6 +159,14 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
                 }
             }
         }
+
+        private fun setRoundedAvatarBackground(textView: TextView, color: Int) {
+            val drawable = GradientDrawable()
+            drawable.shape = GradientDrawable.OVAL
+            drawable.setColor(color)
+            textView.background = drawable
+        }
+
 
         private fun updatePendingLoanTypeInDaysOrQuotas(item: LoanDomain, daysMissing: Int) {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
