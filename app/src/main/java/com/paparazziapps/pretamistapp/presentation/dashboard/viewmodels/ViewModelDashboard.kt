@@ -1,9 +1,15 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.telephony.SmsManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.toObject
+import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
@@ -12,11 +18,16 @@ import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.data.repository.PARepository
+import com.paparazziapps.pretamistapp.domain.DelayCalculator
 import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.TypePrestamo
 import com.paparazziapps.pretamistapp.helper.fromJson
+import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
+import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
+import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +58,105 @@ class ViewModelDashboard (
             DashboardIntent.ResetStatusDialogs -> {
                 resetStatusDialogs()
             }
+
+            is DashboardIntent.SendMessageToOtherApp ->{
+                sendMessageToOtherApp(intent.loanDomain, context = intent.context)
+            }
+
+            is DashboardIntent.SendMessageToWhatsApp -> {
+                sendMessageToWhatsApp(intent.loanDomain, context = intent.context)
+
+            }
         }
+    }
+
+    private fun sendMessageToWhatsApp(loanDomain: LoanDomain, context: Context) {
+        val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
+        val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
+        val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
+        val phone = loanDomain.cellular ?: ""
+        val quotesPending = loanDomain.quotasPending ?: loanDomain.quotas ?: 0
+
+        val delay = calculateDelayForTypeLoan(loanDomain)
+        val delayText = if (delay == 1) "día retrasado" else " días retrasados"
+
+        val message = if (delay > 0) {
+            // Si hay retraso, incluir los días de retraso en el mensaje
+            "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                    "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                    "Lamentablemente, tu pago está $delay $delayText. Te sugerimos ponerte al día lo antes posible para evitar cargos adicionales."
+        } else {
+            // Si no hay retraso, solo información sobre el saldo pendiente
+            "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                    "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                    "¡Gracias por mantenerte al día con tus pagos!"
+        }
+
+        val uri = Uri.parse("https://api.whatsapp.com/send?phone=${context.getString(R.string.codigo_pais)}" + phone + "&text=" + message)
+
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        context.startActivity(intent)
+    }
+
+    private fun calculateDelayForTypeLoan(item: LoanDomain): Int {
+        val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
+        val calculatorDelay = DelayCalculator()
+        val daysDelayed = if (item.lastPaymentDate.isNullOrEmpty()) {
+            Log.d("lastPaymentDate", "Fecha ultimo pago vacia")
+            getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
+        } else {
+            Log.d("lastPaymentDate", "Fecha ultimo pago: ${item.lastPaymentDate}")
+            getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
+        }
+        Log.d("DaysDelayed", "Days delayed: $daysDelayed")
+
+        val pendingQuotes = item.quotas?.minus(item.quotasPaid ?: 0) ?: 0
+        Log.d("PendingQuotes", "Pending quotes: $pendingQuotes")
+
+        if(daysDelayed<= 0) return 0
+        if(pendingQuotes <= 0) return 0
+
+        return calculatorDelay.calculateDelay(tyLoan, daysDelayed)
+    }
+
+    private fun sendMessageToOtherApp(
+        loanDomain: LoanDomain,
+        context: Context) = viewModelScope.launch {
+
+            _state.value = _state.value.copy(dialogState = DashboardDialogState.Loading)
+            val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
+            val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
+            val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
+            val phone = loanDomain.cellular ?: ""
+            val quotesPending = loanDomain.quotasPending ?: loanDomain.quotas ?: 0
+
+            val delay = calculateDelayForTypeLoan(loanDomain)
+            val delayText = if (delay == 1) "día retrasado" else " días retrasados"
+
+            val message = if (delay > 0) {
+                // Si hay retraso, incluir los días de retraso en el mensaje
+                "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                        "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                        "Lamentablemente, tu pago está $delay $delayText. Te sugerimos ponerte al día lo antes posible para evitar cargos adicionales."
+            } else {
+                // Si no hay retraso, solo información sobre el saldo pendiente
+                "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                        "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                        "¡Gracias por mantenerte al día con tus pagos!"
+            }
+
+            try {
+                val smsManager = context.getSystemService(SmsManager::class.java)
+                val dividedMessage = smsManager.divideMessage(message)
+                val codeCountry = context.getString(R.string.codigo_pais)
+                smsManager.sendMultipartTextMessage(codeCountry+phone, null, dividedMessage, null, null)
+                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan)
+            }catch (e: Exception){
+                Log.d(tag, "Error al enviar mensaje: ${e.message}")
+                _state.value = _state.value.copy(dialogState = DashboardDialogState.Error(e.message ?: ""))
+            }
     }
 
     private fun updateLoan(
@@ -277,6 +386,8 @@ class ViewModelDashboard (
         ) : DashboardIntent()
         data class CloseLoan(val loanId: String) : DashboardIntent()
         data object ResetStatusDialogs : DashboardIntent()
+        data class SendMessageToOtherApp(val loanDomain: LoanDomain, val context: Context) : DashboardIntent()
+        data class SendMessageToWhatsApp(val loanDomain: LoanDomain, val context: Context) : DashboardIntent()
     }
 
     enum class DashboardEvent {

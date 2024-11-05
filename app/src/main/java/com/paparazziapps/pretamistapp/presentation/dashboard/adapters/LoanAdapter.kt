@@ -1,13 +1,16 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.adapters
 
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.R
@@ -19,11 +22,12 @@ import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnCli
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.domain.RandomColorGenerator
 import com.paparazziapps.pretamistapp.domain.TypePrestamo
 import java.text.SimpleDateFormat
 import java.util.*
 
-class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var prestamosList: MutableList<LoanDomain> = mutableListOf()
     var fechaActual:String
@@ -69,7 +73,7 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as PrestamoViewHolder).bindView(prestamosList[position],fechaActual,onClickedLoan)
+        (holder as PrestamoViewHolder).bindView(prestamosList[position],fechaActual,listener)
     }
 
     override fun getItemCount(): Int {
@@ -79,8 +83,8 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
     interface PrestamoViewHolder {
         fun bindView(
             item: LoanDomain,
-            fechaActual: String,
-            setOnClickedLoan: SetOnClickedLoan
+            currentDate: String,
+            listenerLoan: SetOnClickedLoan
         )
     }
 
@@ -90,8 +94,8 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
 
         override fun bindView(
             item: LoanDomain,
-            fechaActual: String,
-            setOnClickedLoan: SetOnClickedLoan
+            currentDate: String,
+            listenerLoan: SetOnClickedLoan
         ) {
             val nombreCompleto = binding.nombreCompleto
             val numero_dias_retrasados = binding.numeroDiasRetrasados
@@ -111,9 +115,6 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
                 val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(item.typeLoan?: INT_DEFAULT).displayName
                 binding.typeOfLoanLabel.text = typeLoanDisplayName
 
-                //Metodo para el calculo de dias retrasados
-                //calcularDiasRetrasados(itemView, numero_dias_retrasados, item, binding.cardviewDiasRetrasadosV2, fechaActual)
-
                 //set the delay for the type of loan
                 val delay = calculateDelayForTypeLoan(item)
                 updateDelayForLoanTypeInDays(item, delay) //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" only set days for every type of loan
@@ -123,25 +124,23 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
                 val daysMissing = calculateTheMissingDaysToPayForTypeLoan(item)
                 updatePendingLoanTypeInDaysOrQuotas(item, daysMissing)
 
-                //setDiasRestantesPorPagar(item)
 
-                //Enviar mensaje a whatsapp
-                binding.btnSendWhatsapp.apply {
-                    setOnClickListener {
-                        try {
-                            //calcular el monto total a pagar
-                            diasRetraso = numero_dias_retrasados.text.toString().toInt()
-                            montoTotalAPagar = getDoubleWithOneDecimalsReturnDouble((diasRetraso * item.amountPerQuota!!))
+                //set text for image avatar
+                val firstLetter = item.names?.firstOrNull()?.uppercase()
+                val firstLetterLastname = item.lastnames?.firstOrNull()?.uppercase()
+                binding.imgAvatarCircular.text  = "$firstLetter$firstLetterLastname"
 
-                            //Mensaje
-                            val msj = "Hola *${nombreCompleto.text}*, te escribimos para recordarte que tienes *${diasRetraso} ${lblDiasRetrasados.text}* " +
-                                    "con los pagos de tu préstamo con un monto total a pagar de: *${context.getString(R.string.tipo_moneda)}$montoTotalAPagar*"
-                            openWhatsapp(item.cellular, msj)
-                        }catch (t:Throwable) {
-                            Firebase.crashlytics.recordException(t)
-                        }
+                //set background color for image avatar from a random list of colors
+                val color = RandomColorGenerator.getRandomColor()
+                setRoundedAvatarBackground(binding.imgAvatarCircular, color)
 
-                    }
+
+                binding.btnSendMessage.setOnClickListener {
+                    listenerLoan.sendMessageToWhatsapp(item)
+                }
+
+                binding.btnShare.setOnClickListener {
+                    listenerLoan.sendMessageToOtherApp(item)
                 }
 
                 //Actualizar Pago al hacer click al itemview
@@ -152,14 +151,22 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
 
                     if(numero_dias_retrasados.text.toString().toInt() == 0) {
                         Log.d(tag,"numero de dias retrasados es cero: ${numero_dias_retrasados.text}")
-                        setOnClickedLoan.updateLoanPaid(item, false, 0.0, adapterPosition, numero_dias_retrasados.text.toString())
+                        listenerLoan.updateLoanPaid(item, false, 0.0, adapterPosition, numero_dias_retrasados.text.toString())
                     }else {
                         Log.d(tag,"monto total a pagar: ${montoTotalAPagar}")
-                        setOnClickedLoan.updateLoanPaid(item, true, montoTotalAPagar?:0.0, adapterPosition,numero_dias_retrasados.text.toString())
+                        listenerLoan.updateLoanPaid(item, true, montoTotalAPagar?:0.0, adapterPosition,numero_dias_retrasados.text.toString())
                     }
                 }
             }
         }
+
+        private fun setRoundedAvatarBackground(textView: TextView, color: Int) {
+            val drawable = GradientDrawable()
+            drawable.shape = GradientDrawable.OVAL
+            drawable.setColor(color)
+            textView.background = drawable
+        }
+
 
         private fun updatePendingLoanTypeInDaysOrQuotas(item: LoanDomain, daysMissing: Int) {
             val tyLoan = PaymentScheduled.getPaymentScheduledById(item.typeLoan ?: INT_DEFAULT)
@@ -203,11 +210,9 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
 
         private fun updateUIForDelay(delay: Int) {
             if (delay <= 0) {
-                binding.btnSendWhatsapp.isVisible = false
                 binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
                     itemView.context, R.color.colorPrimary)
             } else {
-                binding.btnSendWhatsapp.isVisible = true
                 binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
                     itemView.context, R.color.red)
             }
@@ -216,20 +221,6 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
         private fun calculateTheMissingDaysToPayForTypeLoan(loan: LoanDomain): Int {
             val result = (loan.quotas ?: 0) - (loan.quotasPaid ?: 0)
             return result
-        }
-
-        private fun openWhatsapp(celular: String?, msj: String) {
-            //NOTE : please use with country code first 2digits without plus signed
-            val tag = LoanAdapter::class.java.simpleName
-            try {
-                var msg = "Its Working"
-                itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=${itemView.context.getString(R.string.codigo_pais)}" + celular + "&text=" + msj)).apply {
-                    setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                })
-            }catch (t: Throwable){
-                //whatsapp app not install
-                Log.d(tag,"Error whatsapp: $t")
-            }
         }
 
         private fun calculateDelayForTypeLoan(item: LoanDomain): Int {
@@ -250,8 +241,6 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
             if(pendingQuotes <= 0 || daysDelayed <=0) return 0
 
             return calculatorDelay.calculateDelay(tyLoan, daysDelayed)
-
-
         }
 
         //set the delay for the type of loan if the loan is daily set "<DAYS> días retrasados" else set "<WEEKS> semanas retrasadas" and so on
@@ -292,10 +281,10 @@ class LoanAdapter(private val onClickedLoan: SetOnClickedLoan) : RecyclerView.Ad
 
         override fun bindView(
             item: LoanDomain,
-            fechaActual: String,
+            currentDate: String,
             setOnClickedLoan: SetOnClickedLoan
         ) {
-            var title = binding.title
+            val title = binding.title
             itemView.apply {
                 title.text = item.title
             }

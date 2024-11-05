@@ -106,4 +106,9 @@
     </style>
 
 
+    <style name="CircularImageView" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>

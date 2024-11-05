@@ -82,13 +82,11 @@ fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int {
     return diasEnCuantoTerminado.toInt()
 }
 
-fun getYesterdayFechaNormal():String
-{
+fun getYesterdayFechaNormal():String {
    return convertUnixtimeToFechaNormal(getFechaActualNormalInUnixtime().minus(DiaUnixtime))
 }
 
-fun convertUnixtimeToFechaNormal(unixtime_date:Long): String
-{
+fun convertUnixtimeToFechaNormal(unixtime_date:Long): String {
     unixtime_date.also {
         SimpleDateFormat("dd/MM/yyyy").apply {
             timeZone = TimeZone.getTimeZone("GMT")
@@ -100,13 +98,11 @@ fun convertUnixtimeToFechaNormal(unixtime_date:Long): String
 
 }
 
-fun getFechaActualNormalInUnixtime(): Long
-{
+fun getFechaActualNormalInUnixtime(): Long {
   return  convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar())
 }
 
-fun getFechaActualNormalCalendar() : String
-{
+fun getFechaActualNormalCalendar() : String {
     SimpleDateFormat("dd/MM/yyyy").apply {
         timeZone = TimeZone.getTimeZone("GMT-5")
         format(Date()).toString().also {
@@ -116,32 +112,25 @@ fun getFechaActualNormalCalendar() : String
 }
 
 
-fun convertFechaActualNormalToUnixtime(fecha: String)  : Long
-{
+fun convertFechaActualNormalToUnixtime(fecha: String)  : Long {
   return SimpleDateFormat("dd/MM/yyyy").parse(fecha).time
 }
 
-fun replaceFirstCharInSequenceToUppercase(text: String): String
-{
+fun replaceFirstCharInSequenceToUppercase(text: String): String {
     val words = text.split(' ');
-    var subString = words.joinToString(" ") { word ->
+    val subString = words.joinToString(" ") { word ->
         word.replaceFirstChar {
             it.uppercase()
         }
-
     }
-
     return subString
-
 }
 
-fun getDiasRestantesFromDateToNow(fecha: String):String
-{
+fun getDiasRestantesFromDateToNow(fecha: String):String {
    return (convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar()).minus(convertFechaActualNormalToUnixtime(fecha))).div(86400000).toString()
 }
 
-fun getDiasRestantesFromDateToNowMinusDiasPagados(fecha: String, diasPagados:Int):String
-{
+fun getDiasRestantesFromDateToNowMinusDiasPagados(fecha: String, diasPagados:Int):String {
     return ((convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar()).minus(convertFechaActualNormalToUnixtime(fecha))).div(86400000).toInt().minus(diasPagados)).toString()
 }
 
