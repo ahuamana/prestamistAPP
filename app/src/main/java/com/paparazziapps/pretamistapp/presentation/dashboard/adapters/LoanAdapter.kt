@@ -126,8 +126,12 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
                 //setDiasRestantesPorPagar(item)
 
                 //Enviar mensaje a whatsapp
-                binding.btnSendWhatsapp.setOnClickListener {
+                binding.btnSendMessage.setOnClickListener {
                     listenerLoan.sendMessageToWhatsapp(item)
+                }
+
+                binding.btnShare.setOnClickListener {
+                    listenerLoan.sendMessageToOtherApp(item)
                 }
 
                 //Actualizar Pago al hacer click al itemview
@@ -189,11 +193,9 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
 
         private fun updateUIForDelay(delay: Int) {
             if (delay <= 0) {
-                binding.btnSendWhatsapp.isVisible = false
                 binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
                     itemView.context, R.color.colorPrimary)
             } else {
-                binding.btnSendWhatsapp.isVisible = true
                 binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
                     itemView.context, R.color.red)
             }

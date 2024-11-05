@@ -121,8 +121,35 @@ class ViewModelDashboard (
     private fun sendMessageToOtherApp(
         loanDomain: LoanDomain,
         context: Context) = viewModelScope.launch {
+        val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
+        val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
+        val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
+        val phone = loanDomain.cellular ?: ""
+        val quotesPending = loanDomain.quotasPending ?: loanDomain.quotas ?: 0
 
-        TODO("Implement this method")
+        val delay = calculateDelayForTypeLoan(loanDomain)
+        val delayText = if (delay == 1) "día retrasado" else " días retrasados"
+
+        val message = if (delay > 0) {
+            // Si hay retraso, incluir los días de retraso en el mensaje
+            "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                    "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                    "Lamentablemente, tu pago está $delay $delayText. Te sugerimos ponerte al día lo antes posible para evitar cargos adicionales."
+        } else {
+            // Si no hay retraso, solo información sobre el saldo pendiente
+            "Hola ${fullName}, hemos registrado el pago de ${loanDomain.quotasPaid ?: 0} de ${loanDomain.quotas} cuota(s) pagadas. " +
+                    "Te informamos que aún faltan $quotesPending cuota(s) por pagar de tu préstamo. " +
+                    "¡Gracias por mantenerte al día con tus pagos!"
+        }
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, message)
+        }
+
+        val chooser = Intent.createChooser(intent, "Enviar mensaje a $fullName")
+        context.startActivity(chooser)
+
     }
 
     private fun updateLoan(
