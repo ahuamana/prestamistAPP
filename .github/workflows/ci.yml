@@ -42,7 +42,7 @@ jobs:
           - name: Upload APK
             uses: actions/upload-artifact@v3
             with:
-              name: app-debug
+              name: resources
               path: app/build/outputs/apk/debug/prestamist-pa-debug-${{ env.VERSION_NAME }}.apk
               if-no-files-found: error
 

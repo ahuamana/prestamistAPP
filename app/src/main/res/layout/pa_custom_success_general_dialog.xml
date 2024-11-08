@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_circle_check"
-        app:tint="@color/colorPrimary"
+        app:tint="@color/primary"
         android:contentDescription="@string/success_icon_description"
         android:layout_gravity="center" />
     <TextView
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/googlesans_regular"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/primary"
         app:cornerRadius="32dp"
         android:text="Okay" />
 </LinearLayout>

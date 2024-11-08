@@ -205,7 +205,7 @@ class RegisterActivity : AppCompatActivity() {
                 isEnabled = true
                 backgroundTintMode = PorterDuff.Mode.SCREEN
                 backgroundTintList =
-                ContextCompat.getColorStateList(applicationContext, R.color.colorPrimary)
+                ContextCompat.getColorStateList(applicationContext, R.color.primary)
                 setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
             }
         } else {
@@ -306,7 +306,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary))
+            setBackgroundColor(ContextCompat.getColor(context, R.color.primary))
             setNavigationOnClickListener { onBackPressed() }
             title = "Registrar"
             supportActionBar?.setDisplayHomeAsUpEnabled(true)

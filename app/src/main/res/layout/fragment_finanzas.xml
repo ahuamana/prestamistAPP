@@ -204,7 +204,7 @@
                         android:textColor="@color/black"
                         android:background="@drawable/buttom_corners"
                         android:paddingVertical="8dp"
-                        android:backgroundTint="@color/colorPrimary"
+                        android:backgroundTint="@color/primary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/caja_text_result_title_admin"
                         app:layout_constraintBottom_toBottomOf="parent"

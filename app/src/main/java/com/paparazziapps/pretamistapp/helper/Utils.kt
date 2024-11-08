@@ -155,7 +155,7 @@ fun String?.fromHtml() : Spanned? {
 
 fun getValidateColorHex(
     context: Context,
-    color: Int = getColor(context, R.color.colorPrimary)
+    color: Int = getColor(context, R.color.primary)
 ): Int{
     val hexColor = "#"+Integer.toHexString(color).substring(2)
     val validateColor = Color.parseColor(hexColor)
@@ -164,7 +164,7 @@ fun getValidateColorHex(
 
 fun AppCompatButton.standardSimpleButtonOutline(
     context: Context,
-    color: Int = getColor(context, R.color.colorPrimary)){
+    color: Int = getColor(context, R.color.primary)){
     this.apply {
         background = getRippleDrawable(BUTTON_OUTLINE, context)
         setTextColor(getValidateColorHex(context,color))
@@ -200,7 +200,7 @@ fun getRippleDrawable(type: String, context: Context): RippleDrawable {
 
 fun tintDrawable(context:Context,
                  drawable: Drawable,
-                 @ColorInt color: Int = getColor(context,R.color.colorPrimary)): Drawable {
+                 @ColorInt color: Int = getColor(context,R.color.primary)): Drawable {
     (drawable as? VectorDrawableCompat)
         ?.apply { setTintList(ColorStateList.valueOf(color)) }
         ?.let { return it }
@@ -216,8 +216,8 @@ fun tintDrawable(context:Context,
 
 fun getPressedColorSelector2(
     context: Context,
-    pressedColor : Int      = getColorWithAlpha(getColor(context,R.color.colorPrimary), 0.3f),
-    normalColor  : Int      = getColorWithAlpha(getColor(context,R.color.colorPrimary), 0.3f),
+    pressedColor : Int      = getColorWithAlpha(getColor(context,R.color.primary), 0.3f),
+    normalColor  : Int      = getColorWithAlpha(getColor(context,R.color.primary), 0.3f),
     isSelect     : Boolean  = false,
 ): ColorStateList {
     return ColorStateList(
@@ -278,7 +278,7 @@ fun View.hideKeyboardFrom(){
 }
 
 fun setColorToStatusBar(
-    activity: Activity, color: Int = getColor(activity.applicationContext,R.color.colorPrimary)) {
+    activity: Activity, color: Int = getColor(activity.applicationContext,R.color.primary)) {
     val window = activity.window
     val hsv = FloatArray(3)
     var darkColor: Int = color

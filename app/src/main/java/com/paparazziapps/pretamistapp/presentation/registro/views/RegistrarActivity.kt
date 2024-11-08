@@ -11,7 +11,6 @@ import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
@@ -271,7 +270,7 @@ class RegistrarActivity : AppCompatActivity() {
             registerButton.apply {
                 isEnabled = true
                 backgroundTintMode = PorterDuff.Mode.SCREEN
-                backgroundTintList= ContextCompat.getColorStateList(context,R.color.colorPrimary)
+                backgroundTintList= ContextCompat.getColorStateList(context,R.color.primary)
                 setTextColor(ContextCompat.getColor(context, R.color.white))
             }
         }else

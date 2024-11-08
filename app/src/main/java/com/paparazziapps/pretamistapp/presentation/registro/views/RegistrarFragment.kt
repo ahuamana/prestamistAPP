@@ -426,7 +426,7 @@ class RegistrarFragment : Fragment() {
     private fun activateContinuar(isValidEverything: Boolean) {
         if(isValidEverything) {
             btnContinuar.backgroundTintMode = PorterDuff.Mode.SCREEN
-            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(requireContext(),R.color.colorPrimary)
+            btnContinuar.backgroundTintList= ContextCompat.getColorStateList(requireContext(),R.color.primary)
             btnContinuar.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             btnContinuar.isEnabled = true
         } else {

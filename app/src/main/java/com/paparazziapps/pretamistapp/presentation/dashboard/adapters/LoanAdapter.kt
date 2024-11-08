@@ -1,8 +1,6 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.adapters
 
-import android.content.Intent
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +8,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textview.MaterialTextView
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ContentPrestamoBinding
 import com.paparazziapps.pretamistapp.databinding.ContentTitlePrestamoBinding
@@ -211,7 +206,7 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
         private fun updateUIForDelay(delay: Int) {
             if (delay <= 0) {
                 binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
-                    itemView.context, R.color.colorPrimary)
+                    itemView.context, R.color.primary)
             } else {
                 binding.cardviewDiasRetrasadosV2.backgroundTintList = ContextCompat.getColorStateList(
                     itemView.context, R.color.red)

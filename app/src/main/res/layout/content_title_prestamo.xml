@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:padding="6dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/primary"
         android:layout_height="match_parent">
 
         <com.google.android.material.textview.MaterialTextView
