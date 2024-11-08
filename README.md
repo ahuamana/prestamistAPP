@@ -33,7 +33,6 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - Reporte de caja por fechas personalizados
 - Registro de préstamos personalizados (ínteres ó plazos )
 - Redondeo de préstamos
-- Admob
 
 ## 🛠 Tech Stack & Open-source libraries
 
@@ -46,7 +45,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
     - ViewModel - UI related data holder, lifecycle aware
     - Room - Construct database
     - Navigation Component - Handle everything needed for in-app navigation
-- [Dagger Hilt](https://dagger.dev/hilt/) - Dependency Injection framework
+- [Koin](https://insert-koin.io/) - Dependency Injection framework
 - [Firebase](https://firebase.google.com/) - Backend platform for authentication and realtime database
 - [Material-Components](https://github.com/material-components/material-components-android) - Material design components
 
