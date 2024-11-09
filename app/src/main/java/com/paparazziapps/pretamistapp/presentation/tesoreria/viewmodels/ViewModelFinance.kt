@@ -10,7 +10,7 @@ import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.data.repository.PARepository
-import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
+import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import kotlinx.coroutines.launch
 
 class ViewModelFinance (
@@ -63,8 +63,8 @@ class ViewModelFinance (
                     _pagosTotalesByTime.value = 0.0
                 }else {
                     result.data.forEach { document->
-                        val dps = document.toObject<DetallePrestamoSender>()
-                        pagosTotalesXfecha += dps.pagoTotal?:0.0
+                        val dps = document.toObject<DetailLoanForm>()
+                        pagosTotalesXfecha += dps.totalAmountToPay?:0.0
                     }
                     pagosTotalesXfecha = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesXfecha)?:0.0
                     _pagosTotalesByTime.value = pagosTotalesXfecha
@@ -97,8 +97,8 @@ class ViewModelFinance (
                     onComplete(isCorrect, "", 0.0, false)
                 } else {
                     result.data.forEach { document ->
-                        val dps = document.toObject<DetallePrestamoSender>()
-                        pagosTotalesHoy += dps.pagoTotal ?: 0.0
+                        val dps = document.toObject<DetailLoanForm>()
+                        pagosTotalesHoy += dps.totalAmountToPay ?: 0.0
                     }
                     pagosTotalesHoy = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesHoy) ?: 0.0
                     onComplete(isCorrect, "", pagosTotalesHoy, false)
@@ -128,8 +128,8 @@ class ViewModelFinance (
                     onComplete(isCorrect, "", 0.0, false)
                 } else {
                     details.data.forEach { document ->
-                        val dps = document.toObject<DetallePrestamoSender>()
-                        pagosTotalesAyer += dps.pagoTotal ?: 0.0
+                        val dps = document.toObject<DetailLoanForm>()
+                        pagosTotalesAyer += dps.totalAmountToPay ?: 0.0
                     }
                     pagosTotalesAyer = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesAyer) ?: 0.0
                     onComplete(isCorrect, "", pagosTotalesAyer, false)

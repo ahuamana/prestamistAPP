@@ -51,6 +51,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
     private val generalSuccessDialog by lazy {
         PADialogFactory(requireContext()).createGeneralSuccessDialog(
             successMessage = getString(R.string.loan_closed_sucefully_message),
+            buttonTitle = getString(R.string.accept),
             onConfirmClick = {
                 viewModel.processIntent(ViewModelDashboard.DashboardIntent.ResetStatusDialogs)
             }

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/background"
     android:clipToPadding="false">
 
     <LinearLayout
@@ -115,7 +114,7 @@
                             android:id="@+id/tv_loan_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="xjw2gasd"
+                            android:text="17306964"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:layout_marginTop="4dp" />
@@ -192,6 +191,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="******jo@example.com"
+                            android:visibility="gone"
                             android:textSize="14sp"
                             android:alpha="0.7" />
                     </LinearLayout>
