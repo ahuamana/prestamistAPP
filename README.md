@@ -51,10 +51,10 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 
 ## 🏗️ Architecture
 - Clean Architecture
-- MVVM Architecture (View - ViewModel - Model)
+- MVI Architecture (View - View - Intent)
 - Repository pattern
 - SOLID Principles
-- 
+- Jetpack Libraries
 ## Installation
 
 1. Reemplazar el archivo Google Services de Firebase
