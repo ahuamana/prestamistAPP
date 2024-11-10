@@ -28,7 +28,8 @@ class ViewModelDetailReceipt(
         quotesPaidNew = 0,
         totalAmountToPay = 0.0,
         amountPerQuote = 0.0,
-        typeLoan = 0
+        typeLoan = 0,
+        loanStartDateUnix = 0
     )
 
     fun getInformationReceipt() = viewModelScope.launch {

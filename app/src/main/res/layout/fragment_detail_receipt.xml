@@ -329,7 +329,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Cuota mensual:"
+                                android:text="Cuota:"
                                 android:textSize="14sp"
                                 android:alpha="0.7" />
 

@@ -10,7 +10,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentDetailReceiptBinding
+import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.utils.convertUnixTimeToFormattedDate
+import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDetailReceipt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -68,7 +70,16 @@ class DetailReceiptFragment : Fragment() {
 
                         tvRemainingPayments.text = getString(R.string.type_remaining_payments, information.quotesPaidNew.toString(), information.quotes.toString())
 
-
+                        //Calculate the next payment date
+                        if(information.quotesPaidNew < information.quotes){
+                            Log.d("DetailReceiptFragment", "Loan Start Date: ${information.loanStartDateUnix} Quotes Paid: ${information.quotesPaidNew} ")
+                            val tyLoan = PaymentScheduled.getPaymentScheduledById(information.typeLoan)
+                            val nextPaymentDate = information.loanStartDateUnix + (information.quotesPaidNew * tyLoan.days * 86400L * 1000L)
+                            Log.d("DetailReceiptFragment", "Next Payment Date: $nextPaymentDate")
+                            tvNextPaymentDate.text = convertUnixTimeToFormattedDate(nextPaymentDate)
+                        }else {
+                            tvNextPaymentDate.text = getString(R.string.type_no_more_payments)
+                        }
 
                         //setup progress loan
                         val progress = (information.quotesPaidNew * 100) / information.quotes

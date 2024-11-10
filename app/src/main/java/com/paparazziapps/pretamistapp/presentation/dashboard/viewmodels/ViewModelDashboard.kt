@@ -327,8 +327,7 @@ class ViewModelDashboard (
                     totalAmountToPay = totalAmountToPay,
                     amountPerQuote = loanDomain.amountPerQuota ?: 0.0,
                     typeLoan = loanDomain.typeLoan ?: INT_DEFAULT,
-
-
+                    loanStartDateUnix = loanDomain.loanStartDateUnix ?: 0
                 )
 
                 _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = newLoans, informationReceipt = informationReceipt)
