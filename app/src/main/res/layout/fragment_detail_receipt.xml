@@ -97,7 +97,7 @@
                                 android:id="@+id/tv_payment_date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="May 15, 2023"
+                                tools:text="May 15, 2023"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginTop="4dp" />
@@ -120,7 +120,7 @@
                                 android:id="@+id/tv_loan_id"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="17306964"
+                                tools:text="17306964"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginTop="4dp" />
@@ -179,7 +179,7 @@
                                 android:id="@+id/tv_borrower_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="John Doe"
+                                tools:text="John Doe"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -187,7 +187,7 @@
                                 android:id="@+id/tv_borrower_phone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="*** *** 234"
+                                tools:text="*** *** 234"
                                 android:textSize="14sp"
                                 android:alpha="0.7"
                                 android:layout_marginTop="4dp" />
@@ -232,7 +232,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:progress="40"
+                        android:progress="19"
+                        android:max="100"
                         app:trackThickness="8dp"
                         app:indicatorColor="@color/primary"
                         app:trackColor="@color/color_gray_web"

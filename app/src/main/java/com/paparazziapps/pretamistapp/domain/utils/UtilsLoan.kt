@@ -1,13 +1,9 @@
 package com.paparazziapps.pretamistapp.domain.utils
 
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 import kotlin.math.ceil
-import kotlin.math.round
 
 //Create a function to receive string in 1, 2 , 3, 4, 5, 6, 7, 8 ... 100 and return the percentage in double
 fun String.toPercentage(): Double {
