@@ -25,6 +25,7 @@ import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnCli
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.domain.LoanDomain
+import com.paparazziapps.pretamistapp.domain.PAConstants
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -61,7 +62,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
                 Log.d("TAG", "information: $information")
 
                 val bundle = Bundle()
-                bundle.putSerializable("informationReceipt", information)
+                bundle.putSerializable(PAConstants.INFORMATION_RECEIPT, information)
                 findNavController().navigate(R.id.action_navigation_home_to_action_detail_receipt, bundle)
 
             }

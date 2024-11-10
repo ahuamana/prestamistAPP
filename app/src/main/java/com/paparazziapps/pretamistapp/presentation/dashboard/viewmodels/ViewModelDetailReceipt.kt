@@ -5,23 +5,27 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
+import com.paparazziapps.pretamistapp.domain.PAConstants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ViewModelDetailReceipt(
-    val stateHandle: SavedStateHandle
+    private val stateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<DetailReceiptState> = MutableStateFlow(DetailReceiptState.Loading)
     val state = _state.asStateFlow()
 
-    private val informationReceipt = stateHandle.get<InformationReceiptDomain>("informationReceipt")?: InformationReceiptDomain(
+    private val informationReceipt = stateHandle.get<InformationReceiptDomain>(PAConstants.INFORMATION_RECEIPT)?: InformationReceiptDomain(
         idReceipt = "",
         codeOperation = 0,
         fullName = "",
         phoneNumber = "",
-        email = "",
+        names = "",
+        lastNames = "",
+        quotes = 0,
+        quotesPaidNew = 0,
         totalAmountToPay = 0.0
     )
 

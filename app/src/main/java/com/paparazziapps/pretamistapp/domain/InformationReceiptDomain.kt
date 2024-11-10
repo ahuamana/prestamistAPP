@@ -7,7 +7,10 @@ data class InformationReceiptDomain(
     val idReceipt:String,
     val codeOperation:Long,
     val fullName:String,
+    val names:String,
+    val lastNames:String,
     val phoneNumber:String,
-    val email:String,
     val totalAmountToPay:Double,
+    val quotes:Int,
+    val quotesPaidNew:Int,
 ) : java.io.Serializable

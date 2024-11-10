@@ -322,7 +322,10 @@ class ViewModelDashboard (
                     codeOperation = resultDetail.data.codeOperation,
                     fullName = fullName,
                     phoneNumber = loanDomain.cellular ?: "",
-                    email = "",
+                    names = loanDomain.names ?: "",
+                    lastNames = loanDomain.lastnames ?: "",
+                    quotes = loanDomain.quotas ?: 0,
+                    quotesPaidNew = quotesPaidNew,
                     totalAmountToPay = totalAmountToPay,
                 )
 

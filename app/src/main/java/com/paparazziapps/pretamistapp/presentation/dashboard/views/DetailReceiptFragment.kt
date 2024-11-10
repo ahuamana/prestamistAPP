@@ -1,6 +1,7 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.views
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,11 +57,19 @@ class DetailReceiptFragment : Fragment() {
                 state.informationReceipt.let { information ->
                     with(binding){
                         val amountWithPrefix = getString(R.string.type_money_with_amount,information.totalAmountToPay.toString())
+                        val firstLetterFirstNameAndLastName = information.names.first().toString().uppercase() + information.lastNames.first().toString().uppercase()
                         tvPaymentDate.text = convertUnixTimeToFormattedDate(information.codeOperation)
                         tvPaymentAmount.text = amountWithPrefix
                         tvLoanId.text = information.codeOperation.toString()
                         tvBorrowerName.text = information.fullName
                         tvBorrowerPhone.text = information.phoneNumber
+                        tvBorrowerInitials.text = firstLetterFirstNameAndLastName
+
+                        //setup progress loan
+                        val progress = (information.quotesPaidNew * 100) / information.quotes
+                        Log.d("DetailReceiptFragment", "Progress: $progress")
+                        loanProgressIndicator.progress = progress
+                        tvProgressPercentage.text = getString(R.string.type_percentage, progress.toString())
                     }
 
                 }

@@ -158,6 +158,7 @@
                         android:layout_marginTop="16dp">
 
                         <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_borrower_initials"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             tools:text="JD"
@@ -243,7 +244,7 @@
                         android:id="@+id/tv_progress_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="40% completado"
+                        tools:text="40% completado"
                         android:textSize="14sp"
                         android:layout_marginTop="8dp"
                         android:alpha="0.7" />
