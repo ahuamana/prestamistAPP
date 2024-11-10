@@ -55,7 +55,7 @@ class LoanDetailAdapter : RecyclerView.Adapter<LoanDetailAdapter.ViewHolder>() {
             val quotas = item.quotas?:0
             val typeLoanInDays = item.typeLoanDays?:1
             val quotasPerDays = quotas * typeLoanInDays
-            val daysWhenEndsInDays = getDiasRestantesFromStart(item.fecha_start_loan?:"",quotasPerDays)
+            val daysWhenEndsInDays = getDiasRestantesFromStart(item.loanStartDateFormatted?:"",quotasPerDays)
             val daysSett= if(daysWhenEndsInDays > 0) daysWhenEndsInDays else 0
 
 

@@ -64,6 +64,11 @@ class DetailReceiptFragment : Fragment() {
                         tvBorrowerName.text = information.fullName
                         tvBorrowerPhone.text = information.phoneNumber
                         tvBorrowerInitials.text = firstLetterFirstNameAndLastName
+                        tvMonthlyPayment.text = getString(R.string.type_money_with_amount, information.amountPerQuote.toString())
+
+                        tvRemainingPayments.text = getString(R.string.type_remaining_payments, information.quotesPaidNew.toString(), information.quotes.toString())
+
+
 
                         //setup progress loan
                         val progress = (information.quotesPaidNew * 100) / information.quotes

@@ -26,7 +26,9 @@ class ViewModelDetailReceipt(
         lastNames = "",
         quotes = 0,
         quotesPaidNew = 0,
-        totalAmountToPay = 0.0
+        totalAmountToPay = 0.0,
+        amountPerQuote = 0.0,
+        typeLoan = 0
     )
 
     fun getInformationReceipt() = viewModelScope.launch {

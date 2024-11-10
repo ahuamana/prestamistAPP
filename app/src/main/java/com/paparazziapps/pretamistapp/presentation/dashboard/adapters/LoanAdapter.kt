@@ -223,10 +223,10 @@ class LoanAdapter(private val listener: SetOnClickedLoan) : RecyclerView.Adapter
             val calculatorDelay = DelayCalculator()
             val daysDelayed = if (item.lastPaymentDate.isNullOrEmpty()) {
                 Log.d("lastPaymentDate", "Fecha ultimo pago vacia")
-                getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
+                getDiasRestantesFromDateToNow(item.loanStartDateFormatted ?: "").toIntOrNull() ?: 0
             } else {
                 Log.d("lastPaymentDate", "Fecha ultimo pago: ${item.lastPaymentDate}")
-                getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
+                getDiasRestantesFromDateToNowMinusDiasPagados(item.loanStartDateFormatted ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
             }
             Log.d("DaysDelayed", "Days delayed: $daysDelayed")
 

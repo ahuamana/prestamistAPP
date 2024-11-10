@@ -157,7 +157,7 @@ class RegistrarActivity : AppCompatActivity() {
                     lastnames   = binding.apellidos.text.toString().trim(),
                     dni         = binding.dni.text.toString().trim(),
                     cellular     = binding.celular.text.toString().trim(),
-                    fecha_start_loan       = binding.fecha.text.toString().trim(),
+                    loanStartDateFormatted       = binding.fecha.text.toString().trim(),
                     unixtime    = fechaSelectedUnixtime,
                     unixtimeRegistered = getFechaActualNormalInUnixtime(),
                     capital     = loanDomainReceived.capital,

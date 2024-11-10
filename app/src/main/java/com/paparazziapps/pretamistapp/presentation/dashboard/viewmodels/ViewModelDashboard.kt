@@ -12,14 +12,12 @@ import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
-import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
 import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
-import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.TypePrestamo
@@ -105,10 +103,10 @@ class ViewModelDashboard (
         val calculatorDelay = DelayCalculator()
         val daysDelayed = if (item.lastPaymentDate.isNullOrEmpty()) {
             Log.d("lastPaymentDate", "Fecha ultimo pago vacia")
-            getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
+            getDiasRestantesFromDateToNow(item.loanStartDateFormatted ?: "").toIntOrNull() ?: 0
         } else {
             Log.d("lastPaymentDate", "Fecha ultimo pago: ${item.lastPaymentDate}")
-            getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
+            getDiasRestantesFromDateToNowMinusDiasPagados(item.loanStartDateFormatted ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
         }
         Log.d("DaysDelayed", "Days delayed: $daysDelayed")
 
@@ -327,6 +325,10 @@ class ViewModelDashboard (
                     quotes = loanDomain.quotas ?: 0,
                     quotesPaidNew = quotesPaidNew,
                     totalAmountToPay = totalAmountToPay,
+                    amountPerQuote = loanDomain.amountPerQuota ?: 0.0,
+                    typeLoan = loanDomain.typeLoan ?: INT_DEFAULT,
+
+
                 )
 
                 _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = newLoans, informationReceipt = informationReceipt)

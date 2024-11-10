@@ -253,6 +253,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         android:layout_marginTop="16dp">
 
                         <LinearLayout
@@ -336,7 +337,7 @@
                                 android:id="@+id/tv_monthly_payment"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="$833.33"
+                                tools:text="$833.33"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 android:layout_marginStart="8dp" />
@@ -359,7 +360,7 @@
                                 android:id="@+id/tv_next_payment_date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="15 de junio, 2023"
+                                tools:text="15 de junio, 2023"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 android:layout_marginStart="8dp" />
