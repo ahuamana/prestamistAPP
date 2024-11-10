@@ -373,6 +373,10 @@ class ViewModelDashboard (
         }
     }
 
+    fun getInformationReceipt(): InformationReceiptDomain? {
+        return _state.value.informationReceipt
+    }
+
     private fun resetStatusDialogs() {
         _state.value = _state.value.copy(dialogState = DashboardDialogState.None)
     }

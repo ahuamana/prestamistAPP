@@ -1,5 +1,8 @@
 package com.paparazziapps.pretamistapp.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class InformationReceiptDomain(
     val idReceipt:String,
     val codeOperation:Long,
@@ -7,5 +10,4 @@ data class InformationReceiptDomain(
     val phoneNumber:String,
     val email:String,
     val totalAmountToPay:Double,
-
-)
+) : java.io.Serializable

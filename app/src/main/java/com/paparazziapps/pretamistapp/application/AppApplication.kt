@@ -29,6 +29,7 @@ import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelReg
 import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.ViewModelRegister
 import com.paparazziapps.pretamistapp.presentation.tesoreria.viewmodels.ViewModelFinance
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDetailReceipt
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -68,6 +69,7 @@ class AppApplication : MultiDexApplication() {
         viewModelOf(::ViewModelPrincipal)
         viewModelOf(::ViewModelRegister)// viewModel { ViewModelRegister(get(), get()) } -> new version dsl
         viewModelOf(::ViewModelLogin)// viewModel { ViewModelLogin(get()) }
+        viewModelOf(::ViewModelDetailReceipt)
     }
 
     override fun onCreate() {

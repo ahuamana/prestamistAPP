@@ -13,10 +13,12 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
+import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.presentation.dashboard.adapters.LoanAdapter
 import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnClickedLoan
@@ -54,6 +56,14 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
             buttonTitle = getString(R.string.accept),
             onConfirmClick = {
                 viewModel.processIntent(ViewModelDashboard.DashboardIntent.ResetStatusDialogs)
+                //Navigate to receipt
+                val information: InformationReceiptDomain? = viewModel.getInformationReceipt()
+                Log.d("TAG", "information: $information")
+
+                val bundle = Bundle()
+                bundle.putSerializable("informationReceipt", information)
+                findNavController().navigate(R.id.action_navigation_home_to_action_detail_receipt, bundle)
+
             }
         )
     }

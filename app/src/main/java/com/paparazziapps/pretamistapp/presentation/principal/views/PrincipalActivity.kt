@@ -54,6 +54,8 @@ class PrincipalActivity : AppCompatActivity(){
     private var isEnabledCheck = true
     private val viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPrincipalBinding.inflate(layoutInflater)
