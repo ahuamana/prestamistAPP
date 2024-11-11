@@ -14,8 +14,6 @@ import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.toJson
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ViewModelPrincipal(
@@ -56,8 +54,8 @@ class ViewModelPrincipal(
                 }
                 preferences.isAdmin = user.admin
                 preferences.isSuperAdmin = user.superAdmin
-                preferences.branchId = user.sucursalId?: INT_DEFAULT
-                preferences.branchName = user.sucursal?:""
+                preferences.branchId = user.branchId?: INT_DEFAULT
+                preferences.branchName = user.branch?:""
                 preferences.isActiveUser = user.activeUser
 
                 if(user.activeUser){

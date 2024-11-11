@@ -222,14 +222,14 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun signUp() {
         binding.signUp.setOnClickListener {
-            userNew.apellidos = edtLastname?.text.toString().trim()
+            userNew.lastnames = edtLastname?.text.toString().trim()
             userNew.email = edtEmail?.text.toString().trim()
-            userNew.nombres = edtFullname?.text.toString().trim()
-            userNew.sucursal = sucursalesTextView.text.toString().trim()
+            userNew.names = edtFullname?.text.toString().trim()
+            userNew.branch = sucursalesTextView.text.toString().trim()
             userNew.password = edtPass?.text.toString().trim()  //Ocultar si no quieres que se muestre la contraseña
 
             listaSucursales.forEach {
-                if(it.name?.equals(sucursalesTextView.text.toString().trim()) == true)  userNew.sucursalId = it.id
+                if(it.name?.equals(sucursalesTextView.text.toString().trim()) == true)  userNew.branchId = it.id
             }
             //Register
 
