@@ -45,6 +45,7 @@
 
             <!-- Main Payment Card -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/payment_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -142,6 +143,7 @@
                         android:text="Compartir recibo via"
                         android:textSize="14sp"
                         android:alpha="0.7"
+                        android:fontFamily="@font/googlesans_bold"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="12dp"/>
 
