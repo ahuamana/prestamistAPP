@@ -11,6 +11,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
+import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
@@ -33,7 +34,8 @@ import kotlinx.coroutines.launch
 
 class ViewModelDashboard (
     private val repository: PARepository,
-    private val preferences: MyPreferences
+    private val preferences: MyPreferences,
+    private val analyticsRepository: PAAnalyticsRepository
 ) : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
@@ -383,6 +385,10 @@ class ViewModelDashboard (
 
     private fun resetStatusDialogs() {
         _state.value = _state.value.copy(dialogState = DashboardDialogState.None)
+    }
+
+    fun logEvent(event: String) {
+        analyticsRepository.logEvent(event)
     }
 
 

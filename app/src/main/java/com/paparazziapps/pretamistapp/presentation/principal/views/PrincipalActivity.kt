@@ -103,6 +103,7 @@ class PrincipalActivity : AppCompatActivity(){
                 binding.cortinaUserInactive.beGone()
                 binding.cortinaFreeTrial.beGone()
                 binding.navView.beGone()
+
                 isUserActivePrincipal()
             }
         }
