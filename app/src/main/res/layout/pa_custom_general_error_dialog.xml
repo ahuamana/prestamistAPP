@@ -34,7 +34,7 @@
         android:id="@+id/btn_retry"
         android:layout_width="match_parent"
         app:cornerRadius="32dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/primary"
         android:fontFamily="@font/googlesans_regular"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

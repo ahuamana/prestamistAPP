@@ -13,16 +13,20 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.paparazziapps.pretamistapp.R
+import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentHomeBinding
+import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.presentation.dashboard.adapters.LoanAdapter
 import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnClickedLoan
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
 import com.paparazziapps.pretamistapp.domain.LoanDomain
+import com.paparazziapps.pretamistapp.domain.PAConstants
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,8 +55,17 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
     private val generalSuccessDialog by lazy {
         PADialogFactory(requireContext()).createGeneralSuccessDialog(
             successMessage = getString(R.string.loan_closed_sucefully_message),
+            buttonTitle = getString(R.string.accept),
             onConfirmClick = {
+                viewModel.logEvent(PADataConstants.EVENT_SEE_RECEIPT)
                 viewModel.processIntent(ViewModelDashboard.DashboardIntent.ResetStatusDialogs)
+                //Navigate to receipt
+                val information: InformationReceiptDomain? = viewModel.getInformationReceipt()
+                Log.d("TAG", "information: $information")
+                val bundle = Bundle()
+                bundle.putSerializable(PAConstants.INFORMATION_RECEIPT, information)
+                findNavController().navigate(R.id.action_navigation_home_to_action_detail_receipt, bundle)
+
             }
         )
     }

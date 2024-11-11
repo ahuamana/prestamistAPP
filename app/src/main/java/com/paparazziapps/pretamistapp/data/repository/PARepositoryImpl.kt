@@ -5,13 +5,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.data.network.PAResult
-import com.paparazziapps.pretamistapp.data.providers.BranchesProvider
 import com.paparazziapps.pretamistapp.data.remote.RemoteBranchDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteDetailLoanDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteLoanDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteLoginDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSource
-import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
+import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
+import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.User
 
@@ -26,8 +26,8 @@ class PARepositoryImpl(
         return remoteBranchDataSource.geBranchesRepo()
     }
 
-    override suspend fun createDetail(detailLoan: DetallePrestamoSender): PAResult<Void> {
-        return remoteDetailLoanDataSource.createDetail(detailLoan)
+    override suspend fun createDetail(detailLoanDomain: DetailLoanDomain): PAResult<DetailLoanForm> {
+        return remoteDetailLoanDataSource.createDetail(detailLoanDomain)
     }
 
     override suspend fun getDetailLoanByDate(date: String): PAResult<QuerySnapshot> {
@@ -40,6 +40,10 @@ class PARepositoryImpl(
         idBranch: Int
     ): PAResult<QuerySnapshot> {
         return remoteDetailLoanDataSource.getLoanByDate(timeStart, timeEnd, idBranch)
+    }
+
+    override suspend fun createIdDetailLoan(): PAResult<String> {
+        return remoteDetailLoanDataSource.createIdDetailLoan()
     }
 
     override suspend fun createLoan(loanDomain: LoanDomain, idBranch: Int): PAResult<Void> {

@@ -8,10 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="facebook_color_like">#0571ed</color>
-    <color name="sand_color">#c8c4b1</color>
+    <color name="sand_color">#F8F1D8</color>
 
     <!--Primary colors 3 colors-->
-    <color name="colorPrimary">#86cdc5</color>
+    <color name="primary">#86cdc5</color>
     <color name="colorSecondary">#4CAFF6</color>
     <color name="colorPrimaryLight">#cceefe</color>
     <color name="colorPrimaryDark">#89c8c3</color>

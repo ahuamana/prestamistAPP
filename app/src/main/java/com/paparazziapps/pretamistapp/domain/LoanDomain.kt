@@ -16,12 +16,12 @@ data class LoanDomain (
     var dni:String? = null,
     @SerialName("cellular")
     var cellular:String? = null,
-    @SerialName("fecha_start_loan")
-    var fecha_start_loan:String? = null,
-    @SerialName("unixtime")
-    var unixtime:Long?= null,
-    @SerialName("unixtimeRegistered")
-    var unixtimeRegistered: Long? = null,
+    @SerialName("loanStartDateFormatted")
+    var loanStartDateFormatted:String? = null, // Stores date in DD/MM/YYYY format
+    @SerialName("loanStartDateUnix")
+    var loanStartDateUnix:Long?= null,  // Same start date but in Unix timestamp
+    @SerialName("loanCreationDateUnix")
+    var loanCreationDateUnix:Long?=null, // // When the loan was created/registered in system
     @SerialName("capital")
     var capital:Int? = null,
     @SerialName("interest")

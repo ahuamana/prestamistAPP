@@ -5,6 +5,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'kotlinx-serialization'
     id("com.google.devtools.ksp")
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -15,8 +16,8 @@ android {
         minSdk 26
         targetSdk 34
         multiDexEnabled true
-        versionCode 5
-        versionName "3.0.1"
+        versionCode 6
+        versionName "3.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -59,9 +60,6 @@ android {
         buildConfig = true
     }
 
-
-
-
     namespace 'com.paparazziapps.pretamistapp'
 
 }
@@ -95,7 +93,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-database-ktx'
 
-    def nav_version = "2.4.1"
+    def nav_version = "2.8.0"
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")

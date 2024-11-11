@@ -4,4 +4,5 @@ object PAConstants {
 
     //Extras
     const val EXTRA_LOAN_JSON = "extra_user"
+    const val INFORMATION_RECEIPT = "information_receipt"
 }

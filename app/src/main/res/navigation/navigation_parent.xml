@@ -18,5 +18,16 @@
         android:id="@+id/navigation_home"
         android:name="com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment"
         android:label="fragment_home2"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_action_detail_receipt"
+            app:destination="@id/action_detail_receipt" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/action_detail_receipt"
+        android:name="com.paparazziapps.pretamistapp.presentation.dashboard.views.DetailReceiptFragment"
+        android:label="fragment_detail_receipt"
+        tools:layout="@layout/fragment_detail_receipt" />
+
 </navigation>

@@ -11,7 +11,6 @@ import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
@@ -158,9 +157,9 @@ class RegistrarActivity : AppCompatActivity() {
                     lastnames   = binding.apellidos.text.toString().trim(),
                     dni         = binding.dni.text.toString().trim(),
                     cellular     = binding.celular.text.toString().trim(),
-                    fecha_start_loan       = binding.fecha.text.toString().trim(),
-                    unixtime    = fechaSelectedUnixtime,
-                    unixtimeRegistered = getFechaActualNormalInUnixtime(),
+                    loanStartDateFormatted       = binding.fecha.text.toString().trim(),
+                    loanStartDateUnix    = fechaSelectedUnixtime,
+                    loanCreationDateUnix = getFechaActualNormalInUnixtime(),
                     capital     = loanDomainReceived.capital,
                     interest     = loanDomainReceived.interest,
                     quotasPaid = 0,
@@ -271,7 +270,7 @@ class RegistrarActivity : AppCompatActivity() {
             registerButton.apply {
                 isEnabled = true
                 backgroundTintMode = PorterDuff.Mode.SCREEN
-                backgroundTintList= ContextCompat.getColorStateList(context,R.color.colorPrimary)
+                backgroundTintList= ContextCompat.getColorStateList(context,R.color.primary)
                 setTextColor(ContextCompat.getColor(context, R.color.white))
             }
         }else

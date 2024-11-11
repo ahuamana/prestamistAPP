@@ -1,6 +1,5 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,14 +11,15 @@ import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
+import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
-import com.paparazziapps.pretamistapp.helper.getFechaActualNormalInUnixtime
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
-import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
+import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
+import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.TypePrestamo
 import com.paparazziapps.pretamistapp.helper.fromJson
@@ -27,7 +27,6 @@ import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +34,8 @@ import kotlinx.coroutines.launch
 
 class ViewModelDashboard (
     private val repository: PARepository,
-    private val preferences: MyPreferences
+    private val preferences: MyPreferences,
+    private val analyticsRepository: PAAnalyticsRepository
 ) : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
@@ -105,10 +105,10 @@ class ViewModelDashboard (
         val calculatorDelay = DelayCalculator()
         val daysDelayed = if (item.lastPaymentDate.isNullOrEmpty()) {
             Log.d("lastPaymentDate", "Fecha ultimo pago vacia")
-            getDiasRestantesFromDateToNow(item.fecha_start_loan ?: "").toIntOrNull() ?: 0
+            getDiasRestantesFromDateToNow(item.loanStartDateFormatted ?: "").toIntOrNull() ?: 0
         } else {
             Log.d("lastPaymentDate", "Fecha ultimo pago: ${item.lastPaymentDate}")
-            getDiasRestantesFromDateToNowMinusDiasPagados(item.fecha_start_loan ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
+            getDiasRestantesFromDateToNowMinusDiasPagados(item.loanStartDateFormatted ?: "", item.quotasPaid ?: 0).toIntOrNull() ?: 0
         }
         Log.d("DaysDelayed", "Days delayed: $daysDelayed")
 
@@ -175,6 +175,9 @@ class ViewModelDashboard (
 
         val quotesPendingBefore = loanDomain.quotasPending ?: loanDomain.quotas ?: 0
         val quotesPendingNew =  quotesPendingBefore - quotesToPay
+
+        //Create Recipe domain
+
 
         if (needToClose) {
             processIntent(DashboardIntent.CloseLoan(idLoan))
@@ -270,23 +273,21 @@ class ViewModelDashboard (
 
             is PAResult.Success -> {
                 Log.d(tag, "ViewModelRegister --> : Success ${result.data}")
-                handledDetailPayment(loanDomain, currentDate, quotesPaidNew, quotesPendingNew, totalAmountToPay)
+                handledDetailPayment(loanDomain, quotesPaidNew, quotesPendingNew, totalAmountToPay)
             }
         }
     }
 
     private fun handledDetailPayment(
         loanDomain: LoanDomain,
-        currentDate: String,
         quotesPaidNew: Int,
         quotesPendingNew: Int,
         totalAmountToPay: Double,
     ) = viewModelScope.launch {
-        val detail = DetallePrestamoSender(
-            idPrestamo = loanDomain.id,
-            fechaPago = currentDate,
-            pagoTotal = totalAmountToPay,
-            unixtime = getFechaActualNormalInUnixtime()
+
+        val detail = DetailLoanDomain(
+            idLoan = loanDomain.id ?: "",
+            totalAmountToPay = totalAmountToPay
         )
 
         when (val resultDetail = repository.createDetail(detail)) {
@@ -300,10 +301,10 @@ class ViewModelDashboard (
                 Log.d(tag, "--> : Success ${resultDetail.data}")
 
                 //Here also update the loans list with the new data changed
-                val idLoan = loanDomain.id ?: ""
+                val idLoan = resultDetail.data.idLoan
                 val currentLoan = _state.value.loans?.firstOrNull { it.id == idLoan }
                 val newLoan = currentLoan?.copy(
-                    lastPaymentDate = currentDate,
+                    lastPaymentDate = resultDetail.data.paymentDate,
                     quotasPaid = quotesPaidNew,
                     quotasPending = quotesPendingNew
                 )
@@ -312,7 +313,26 @@ class ViewModelDashboard (
                     if (loan.id == idLoan) { newLoan } else { loan }
                 }
 
-                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = newLoans)
+                val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
+                val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
+                val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
+
+                val informationReceipt = InformationReceiptDomain(
+                    idReceipt = resultDetail.data.idDetailLoan,
+                    codeOperation = resultDetail.data.codeOperation,
+                    fullName = fullName,
+                    phoneNumber = loanDomain.cellular ?: "",
+                    names = loanDomain.names ?: "",
+                    lastNames = loanDomain.lastnames ?: "",
+                    quotes = loanDomain.quotas ?: 0,
+                    quotesPaidNew = quotesPaidNew,
+                    totalAmountToPay = totalAmountToPay,
+                    amountPerQuote = loanDomain.amountPerQuota ?: 0.0,
+                    typeLoan = loanDomain.typeLoan ?: INT_DEFAULT,
+                    loanStartDateUnix = loanDomain.loanStartDateUnix ?: 0
+                )
+
+                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = newLoans, informationReceipt = informationReceipt)
             }
         }
     }
@@ -340,7 +360,7 @@ class ViewModelDashboard (
 
             is PAResult.Success -> {
                 Log.d(tag, "ViewModelRegister --> : Success ${result.data}")
-                handledDetailPayment(loanDomain, currentDate, quotesPaidNew, quotesPendingNew, totalAmountToPay)
+                handledDetailPayment(loanDomain, quotesPaidNew, quotesPendingNew, totalAmountToPay)
             }
         }
     }
@@ -359,8 +379,16 @@ class ViewModelDashboard (
         }
     }
 
+    fun getInformationReceipt(): InformationReceiptDomain? {
+        return _state.value.informationReceipt
+    }
+
     private fun resetStatusDialogs() {
         _state.value = _state.value.copy(dialogState = DashboardDialogState.None)
+    }
+
+    fun logEvent(event: String) {
+        analyticsRepository.logEvent(event)
     }
 
 
@@ -369,6 +397,7 @@ class ViewModelDashboard (
         val loans: List<LoanDomain>? = null,
         val message: String? = null,
         val dialogState: DashboardDialogState = DashboardDialogState.None,
+        val informationReceipt: InformationReceiptDomain? = null
     ){
         companion object {
             fun idle() = DashboardState(DashboardEvent.LOADING)

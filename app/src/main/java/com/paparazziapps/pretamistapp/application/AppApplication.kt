@@ -3,12 +3,15 @@ package com.paparazziapps.pretamistapp.application
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.paparazziapps.pretamistapp.data.di.FirebaseService
+import com.paparazziapps.pretamistapp.data.di.PAFirebaseAnalytics
 import com.paparazziapps.pretamistapp.data.providers.BranchesProvider
 import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
+import com.paparazziapps.pretamistapp.data.providers.FirebaseProvider
 import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import com.paparazziapps.pretamistapp.data.providers.RegisterProvider
 import com.paparazziapps.pretamistapp.data.providers.UserProvider
+import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteBranchDataSourceImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteBranchDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteDetailLoanDataSourceImpl
@@ -21,6 +24,9 @@ import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSourceImpl
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.data.repository.PARepositoryImpl
+import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepositoryImpl
+import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSourceImpl
+import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.helper.turnOffDarkModeInAllApp
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
@@ -29,6 +35,7 @@ import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelReg
 import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.ViewModelRegister
 import com.paparazziapps.pretamistapp.presentation.tesoreria.viewmodels.ViewModelFinance
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDetailReceipt
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -51,6 +58,10 @@ class AppApplication : MultiDexApplication() {
         //DB
         single { MyPreferences(androidContext())} // Provide MyPreferences
 
+        //Firebase Analytics
+        single { PAFirebaseAnalytics(androidContext())}
+        single { FirebaseProvider(get())}
+
         //Data
         singleOf(::RemoteBranchDataSourceImpl) { bind<RemoteBranchDataSource>() }
         singleOf(::RemoteDetailLoanDataSourceImpl) { bind<RemoteDetailLoanDataSource>() }
@@ -58,6 +69,10 @@ class AppApplication : MultiDexApplication() {
         singleOf(::RemoteLoginDataSourceImpl) { bind<RemoteLoginDataSource>() } // single<RemoteDataSource> { RemoteDataSourceImpl() }
         singleOf(::RemoteUserDataSourceImpl) { bind<RemoteUserDataSource>() } // single<RemoteDataSource> { RemoteDataSourceImpl() }
         singleOf(::PARepositoryImpl) { bind<PARepository>() } // single<PARepository> { PARepositoryImpl() }
+
+        //Data Firebase
+        singleOf(::RemoteAnalyticsDataSourceImpl) { bind<RemoteAnalyticsDataSource>() }
+        singleOf(::PAAnalyticsRepositoryImpl) { bind<PAAnalyticsRepository>() }
     }
 
     private val uiModule = module {
@@ -68,6 +83,7 @@ class AppApplication : MultiDexApplication() {
         viewModelOf(::ViewModelPrincipal)
         viewModelOf(::ViewModelRegister)// viewModel { ViewModelRegister(get(), get()) } -> new version dsl
         viewModelOf(::ViewModelLogin)// viewModel { ViewModelLogin(get()) }
+        viewModelOf(::ViewModelDetailReceipt)
     }
 
     override fun onCreate() {

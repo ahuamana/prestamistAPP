@@ -54,6 +54,8 @@ class PrincipalActivity : AppCompatActivity(){
     private var isEnabledCheck = true
     private val viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPrincipalBinding.inflate(layoutInflater)
@@ -101,6 +103,7 @@ class PrincipalActivity : AppCompatActivity(){
                 binding.cortinaUserInactive.beGone()
                 binding.cortinaFreeTrial.beGone()
                 binding.navView.beGone()
+
                 isUserActivePrincipal()
             }
         }
@@ -266,7 +269,7 @@ class PrincipalActivity : AppCompatActivity(){
         val quotas = loanDomain.quotas?:0
         val typeLoanInDays = loanDomain.typeLoanDays?:1
         val quotasPerDays = quotas * typeLoanInDays
-        val daysWhenEndsInDays = getDiasRestantesFromStart(loanDomain.fecha_start_loan?:"",quotasPerDays)
+        val daysWhenEndsInDays = getDiasRestantesFromStart(loanDomain.loanStartDateFormatted?:"",quotasPerDays)
         val daysSett = if(daysWhenEndsInDays > 0) daysWhenEndsInDays else 0
 
         //Set inicial bottomsheet
@@ -305,7 +308,7 @@ class PrincipalActivity : AppCompatActivity(){
         layout_detalle_prestamo.tvPlazoVto.text = "en $daysWhenEndsInDays días"
 
         layout_detalle_prestamo.tvDni.text = "${loanDomain.dni}"
-        layout_detalle_prestamo.tvFechaPrestamo.text = "${loanDomain.fecha_start_loan}"
+        layout_detalle_prestamo.tvFechaPrestamo.text = "${loanDomain.loanStartDateFormatted}"
         layout_detalle_prestamo.tvMontoTotal.text = "S/. 0.00"
         layout_detalle_prestamo.tvDiasRetrasados.text = "$diasRestrasado días"
 

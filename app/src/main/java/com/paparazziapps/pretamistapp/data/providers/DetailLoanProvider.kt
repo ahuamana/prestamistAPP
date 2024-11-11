@@ -2,12 +2,14 @@ package com.paparazziapps.pretamistapp.data.providers
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.QuerySnapshot
-import com.paparazziapps.pretamistapp.domain.DetallePrestamoSender
+import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
 import com.paparazziapps.pretamistapp.data.network.PAResult
+import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
+import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import kotlinx.coroutines.tasks.await
 
 class DetailLoanProvider(
@@ -17,14 +19,32 @@ class DetailLoanProvider(
 
     private val mCollectionDetallePrestamo: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.DETAIL_LOAN_COLLECTION) }
 
-    // No need to implemented when is super admin
-    suspend fun createDetail(detailLoan: DetallePrestamoSender): PAResult<Void> {
-        detailLoan.id = mCollectionDetallePrestamo.document().id
-        detailLoan.sucursalId = preferences.branchId
+    suspend fun createIdDetailLoan(): PAResult<String> {
+        return NetworkOperation.safeApiCall {
+            mCollectionDetallePrestamo.document().id
+        }
+    }
 
+    private fun createIdLoan(): String {
+        return mCollectionDetallePrestamo.document().id
+    }
+
+    suspend fun createDetail(detailLoanDomain: DetailLoanDomain): PAResult<DetailLoanForm> {
+
+        val idDetailLoan = createIdLoan()
+
+        val receipt= DetailLoanForm(
+            idDetailLoan = idDetailLoan,
+            idLoan = detailLoanDomain.idLoan,
+            paymentDate = getFechaActualNormalCalendar(),
+            totalAmountToPay = detailLoanDomain.totalAmountToPay,
+            branchId = preferences.branchId,
+            codeOperation = System.currentTimeMillis()
+        )
 
         return NetworkOperation.safeApiCall {
-            mCollectionDetallePrestamo.document(detailLoan.id!!).set(detailLoan).await()
+            mCollectionDetallePrestamo.document(idDetailLoan).set(receipt).await()
+            receipt
         }
     }
 

@@ -178,7 +178,7 @@
                         android:fontFamily="@font/googlesans_regular"
                         android:paddingStart="8dp"
                         android:text="@string/create_account"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/primary"
                         android:textSize="15dp" />
 
                 </LinearLayout>

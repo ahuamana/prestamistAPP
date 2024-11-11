@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTint="@color/primary"
                     android:layout_marginVertical="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

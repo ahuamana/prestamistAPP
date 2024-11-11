@@ -154,7 +154,7 @@ class LoginActivity : AppCompatActivity() {
             binding.ingresarLoginButton.apply {
                 isEnabled = true
                 backgroundTintMode = PorterDuff.Mode.SCREEN
-                backgroundTintList = ContextCompat.getColorStateList(applicationContext, R.color.colorPrimary)
+                backgroundTintList = ContextCompat.getColorStateList(applicationContext, R.color.primary)
                 setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
             }
 

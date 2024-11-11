@@ -22,6 +22,4 @@ class FirebaseService {
     val auth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
-
-
 }

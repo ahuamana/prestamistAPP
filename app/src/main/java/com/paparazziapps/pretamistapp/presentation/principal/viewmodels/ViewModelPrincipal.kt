@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
+import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.domain.User
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.Sucursales
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 
 class ViewModelPrincipal(
     private val preferences: MyPreferences,
-    private val repository: PARepository
+    private val repository: PARepository,
+    private val analyticsRepository: PAAnalyticsRepository
 ) : ViewModel(){
 
     private val tag = ViewModelPrincipal::class.java.simpleName
@@ -93,6 +95,10 @@ class ViewModelPrincipal(
             }
         }
 
+    }
+
+    fun logEvent(event: String) {
+        analyticsRepository.logEvent(event)
     }
 
     sealed class UIStatePrincipal {

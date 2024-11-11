@@ -79,6 +79,7 @@ class PADialogFactory(private val context: Context) {
      */
     fun createGeneralSuccessDialog(
         successMessage: String,
+        buttonTitle: String,
         onConfirmClick: (() -> Unit)? = null
     ): Dialog {
         val dialog = Dialog(context).apply {
@@ -91,6 +92,9 @@ class PADialogFactory(private val context: Context) {
 
             // Set the success message in the TextView
             binding.successMessage.text = successMessage
+
+            // Set the button title
+            binding.btnConfirm.text = buttonTitle
 
             // Set up the confirmation button listener
             binding.btnConfirm.setOnClickListener {

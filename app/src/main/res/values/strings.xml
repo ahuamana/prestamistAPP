@@ -8,6 +8,7 @@
     <string name="tipo_documento">DNI</string>
     <integer name="cantidad_documento_max">8</integer>
     <string name="tipo_moneda">S./ </string>
+    <string name="type_money_with_amount">S./%1$s </string>
     <string name="tipo_moneda_defecto">S./ 1000</string>
     <string name="tipo_moneda_defecto_cero">S./ 0</string>
 
@@ -45,6 +46,12 @@
     <string name="default_success_message">Success! Your action was completed.</string>
     <string name="loan_closed_sucefully_message">Operación realizada con éxito.</string>
     <string name="loading_dialog_message">Cargando...</string>
+    <string name="accept">Ver recibo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="type_percentage">%1$s%% completado</string>
+    <string name="type_remaining_payments">%1$s de %2$s</string>
+    <string name="type_no_more_payments">No hay más pagos</string>
 
 
 </resources>
