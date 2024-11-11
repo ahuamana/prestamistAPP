@@ -1,6 +1,6 @@
 package com.paparazziapps.pretamistapp.domain
 
-data class User (
+data class UserForm (
     var names: String? = null,
     var lastnames: String? = null,
     var branchId: Int? = null,

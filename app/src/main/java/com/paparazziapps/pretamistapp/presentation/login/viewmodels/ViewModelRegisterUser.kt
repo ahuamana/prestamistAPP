@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
-import com.paparazziapps.pretamistapp.domain.User
+import com.paparazziapps.pretamistapp.domain.UserForm
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import kotlinx.coroutines.launch
 
@@ -37,7 +37,7 @@ class ViewModelRegisterUser(
         return _user
     }
 
-    fun createUser(email: String, pass: String, userInfo:User) = viewModelScope.launch {
+    fun createUser(email: String, pass: String, userFormInfo:UserForm) = viewModelScope.launch {
         _isLoading.value = true
 
         val result = repository.createUser(email,pass)
@@ -53,14 +53,14 @@ class ViewModelRegisterUser(
                 //get the email and save it on the preferences and then on firebase
                 preferences.setEmail(email)
                 //TODO: Save the rest of the user data on preferences
-                saveFirebaseUser(userInfo)
+                saveFirebaseUser(userFormInfo)
             }
         }
     }
 
-    fun saveFirebaseUser(userInfo: User) = viewModelScope.launch {
+    fun saveFirebaseUser(userFormInfo: UserForm) = viewModelScope.launch {
 
-        val result = repository.createUser(userInfo)
+        val result = repository.createUser(userFormInfo)
 
         when(result){
             is PAResult.Error -> {
