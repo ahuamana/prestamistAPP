@@ -32,6 +32,8 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - Prestamos personalizados (DIARIO, SEMANAL, QUINCENAL, MENSUAL, BIMESTRAL, TRIMESTRAL, SEMESTRAL, ANUAL)
 - Reporte de caja por fechas personalizados
 - Registro de préstamos personalizados (ínteres ó plazos )
+- Genera voucher de pago
+- Opciones para compartir voucher por dispositivo
 - Redondeo de préstamos
 
 ## 🛠 Tech Stack & Open-source libraries
