@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.paparazziapps.pretamistapp.R
+import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.databinding.FragmentDetailReceiptBinding
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.utils.convertUnixTimeToFormattedDate
@@ -51,14 +53,21 @@ class DetailReceiptFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handledObservers()
-        handledButtons()
+        setupButtonsShare()
     }
 
-    private fun handledButtons() {
+    private fun setupButtonsShare() {
         binding.btnShare.setOnClickListener {
+            viewModel.logEvent(PADataConstants.EVENT_SHARE_RECEIPT_OTHER_APPS)
             val bitmap = takeScreenshot(binding.paymentCard)
             val file = saveBitmapToFile(bitmap)
             shareScreenshot(file)
+        }
+
+        binding.btnWhatsapp.setOnClickListener {
+            //add a toast with message in spanish about it will be implemented in future
+            viewModel.logEvent(PADataConstants.EVENT_SHARE_RECEIPT_WHATSAPP)
+            Toast.makeText(requireContext(), "Esta funcionalidad estará disponible próximamente", Toast.LENGTH_SHORT).show()
         }
     }
 

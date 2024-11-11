@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ViewModelDetailReceipt(
-    private val stateHandle: SavedStateHandle
+    private val stateHandle: SavedStateHandle,
+    private val analyticsRepository: PAAnalyticsRepository
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<DetailReceiptState> = MutableStateFlow(DetailReceiptState.Loading)
@@ -41,6 +43,14 @@ class ViewModelDetailReceipt(
             _state.value = DetailReceiptState.Error
         }
 
+    }
+
+    fun logEvent(event: String, params: Map<String, String>) {
+        analyticsRepository.logEvent(event, params)
+    }
+
+    fun logEvent(event: String) {
+        analyticsRepository.logEvent(event)
     }
 
 
