@@ -57,6 +57,8 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - Repository pattern
 - SOLID Principles
 - Jetpack Libraries
+
+  
 ## Installation
 
 1. Reemplazar el archivo Google Services de Firebase
@@ -102,12 +104,12 @@ Super Admin credentials
 - Password: 123456
 
 Admin credentials
-- Username: admin@gmail.com
-- Password: 123456
+- Username: 
+- Password: 
 
 Cashier credentials
-- Username: 1@gmail.com
-- Password: 123456
+- Username: 
+- Password: 
 
 ## Authors
 
