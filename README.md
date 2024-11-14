@@ -27,7 +27,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - Admin Panel / Cashier
 - Actualiza pagos diarios / semanales / personalizados
 - Cierra préstamos 
-- Envía recordatorios personalizados mediante Whatsapp
+- Envía recordatorios personalizados mediante Whatsapp & Sms
 - Administración de caja
 - Prestamos personalizados (DIARIO, SEMANAL, QUINCENAL, MENSUAL, BIMESTRAL, TRIMESTRAL, SEMESTRAL, ANUAL)
 - Reporte de caja por fechas personalizados
