@@ -1,12 +1,19 @@
 package com.paparazziapps.pretamistapp.presentation.login.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PARepository
+import com.paparazziapps.pretamistapp.domain.Sucursales
+import com.paparazziapps.pretamistapp.domain.UserForm
+import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
+import com.paparazziapps.pretamistapp.helper.toJson
+import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal.UIStatePrincipal
 import kotlinx.coroutines.launch
 
 
@@ -27,7 +34,7 @@ class ViewModelLogin (
 
     fun loginWithEmail(email: String, pass: String) = viewModelScope.launch {
         _isLoading.value = true
-        val result = repository.loginEmail(email, pass)
+        val result = repository.loginWithEmailV2(email, pass)
 
         when(result) {
             is PAResult.Error -> {
@@ -37,13 +44,7 @@ class ViewModelLogin (
                 return@launch
             }
             is PAResult.Success -> {
-                //TODO: Save user data
-                preferences.setEmail(email)
-                preferences.isLogin = true
 
-                //TODO: Save the rest of the user data on preferences
-
-                _message.value = "Bienvenido"
                 _isLoginEmail.value = true
                 _isLoading.value = false
             }

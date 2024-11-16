@@ -80,6 +80,10 @@ class PARepositoryImpl(
         return remoteLoginDataSource.loginEmail(email, pass)
     }
 
+    override suspend fun loginWithEmailV2(email: String, pass: String): PAResult<UserForm> {
+        return remoteLoginDataSource.loginWithEmailV2(email, pass)
+    }
+
     override suspend fun loginAnonymously(): PAResult<AuthResult> {
         return remoteLoginDataSource.loginAnonymously()
     }

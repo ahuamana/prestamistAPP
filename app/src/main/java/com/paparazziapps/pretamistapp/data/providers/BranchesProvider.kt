@@ -19,4 +19,8 @@ class BranchesProvider {
             database.get().await()
         }
     }
+
+    suspend fun getBranches(): DataSnapshot {
+       return database.get().await()
+    }
 }

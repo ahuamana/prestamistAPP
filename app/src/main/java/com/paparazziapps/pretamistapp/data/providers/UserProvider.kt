@@ -32,4 +32,8 @@ class UserProvider(
             mCollection.document(email).get().await()
         }
     }
+
+    suspend fun searchUserByEmailV2(email: String): DocumentSnapshot {
+       return mCollection.document(email).get().await()
+    }
 }
