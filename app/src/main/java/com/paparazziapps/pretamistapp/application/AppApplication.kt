@@ -52,11 +52,12 @@ class AppApplication : MultiDexApplication() {
         single { BranchesProvider() } // Provide BranchesProvider
         single { DetailLoanProvider(get(), get()) } // Provide DetailLoanProvider
         single { LoanProvider(get(),get())} // Provide LoanProvider
-        single { LoginProvider(get())} // Provide LoginProvider
         single { RegisterProvider(get()) } // Provide RegisterProvider
         single { UserProvider(get()) } // Provide UserProvider
         //DB
         single { MyPreferences(androidContext())} // Provide MyPreferences
+
+        single { LoginProvider(get(), get(), get(), get()) } // Provide LoginProvider
 
         //Firebase Analytics
         single { PAFirebaseAnalytics(androidContext())}

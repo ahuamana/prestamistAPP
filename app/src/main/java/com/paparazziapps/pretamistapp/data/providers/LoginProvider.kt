@@ -51,6 +51,7 @@ class LoginProvider(
                 preferences.isSuperAdmin = user.superAdmin
                 preferences.branchId = user.branchId?: INT_DEFAULT
                 preferences.branchName = user.branch?:""
+                preferences.creationDate = user.dateCreated?:""
 
                 //if is active user = cashier if isAdmin = administator || if isSuperAdmin = superAdmin
                 preferences.role = when {

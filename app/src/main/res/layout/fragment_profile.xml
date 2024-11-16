@@ -30,7 +30,7 @@
                     android:src="@drawable/ic_person" />
 
                 <TextView
-                    android:id="@+id/profile_status"
+                    android:id="@+id/tv_profile_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/profile_image"
@@ -55,7 +55,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/full_name"
+                    android:id="@+id/tv_full_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="John Doe"
@@ -63,7 +63,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/email"
+                    android:id="@+id/tv_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -71,7 +71,7 @@
                     android:textColor="@color/color_gray_web" />
 
                 <TextView
-                    android:id="@+id/role"
+                    android:id="@+id/tv_role"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -105,7 +105,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/joined_date"
+                            android:id="@+id/tv_joined_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
@@ -127,7 +127,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/filial"
+                            android:id="@+id/tv_filial"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"

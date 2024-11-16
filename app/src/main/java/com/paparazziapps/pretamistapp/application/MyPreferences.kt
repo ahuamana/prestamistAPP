@@ -43,11 +43,6 @@ class MyPreferences(private val context: Context) {
     get()      = prefs.getString("creationDate", "")
     set(value) = prefs.setString("creationDate", value)
 
-    //filial
-    var filial: String
-    get()      = prefs.getString("filial", "")
-    set(value) = prefs.setString("filial", value)
-
     //isActive
     var isActive: String
     get()      = prefs.getString("isActive", "")
@@ -71,6 +66,9 @@ class MyPreferences(private val context: Context) {
     var isActiveUser: Boolean
         get()      = prefs.getBoolean("isActiveUser", false)
         set(value) = prefs.setBoolean("isActiveUser", value)
+
+    val isActiveUserString: String
+        get() = if(isActiveUser) "Activo" else "Inactivo"
 
 
     //PREFERENCES INTEGER
