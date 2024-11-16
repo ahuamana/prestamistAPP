@@ -155,8 +155,6 @@ class PrincipalActivity : AppCompatActivity(){
             }
 
         }
-
-
         return true
     }
 
@@ -254,6 +252,13 @@ class PrincipalActivity : AppCompatActivity(){
                     println("Mostraste registrar")
                     navController.navigate(R.id.navigation_registrar)
                     toolbar.title = "Registrar"
+                    true
+                }
+
+                R.id.navigation_profile -> {
+                    println("Mostraste perfil")
+                    navController.navigate(R.id.navigation_profile)
+                    toolbar.title = "Perfil"
                     true
                 }
 

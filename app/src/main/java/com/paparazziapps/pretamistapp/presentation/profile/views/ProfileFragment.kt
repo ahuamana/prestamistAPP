@@ -9,11 +9,12 @@ import androidx.fragment.app.viewModels
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentProfileBinding
 import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class ProfileFragment : Fragment() {
 
-    private val viewModel: ProfileViewModel by viewModels()
+    private val viewModel by viewModel<ProfileViewModel>()
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -35,7 +36,13 @@ class ProfileFragment : Fragment() {
             tvProfileStatus.text = viewModel.getIsActive()
             tvRole.text = viewModel.getRole()
             tvFullName.text = viewModel.getFullName()
+
+            btnLogout.setOnClickListener {
+                viewModel.logout(requireContext())
+            }
         }
+
+
 
     }
 
