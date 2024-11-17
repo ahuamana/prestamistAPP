@@ -2,6 +2,7 @@ package com.paparazziapps.pretamistapp.presentation.tesoreria.views
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -261,12 +262,14 @@ class FinanzasFragment : Fragment() {
             }
         }
 
-        _viewModel.getPaymentsToday() { isCorrect, msj, result, isRefresh ->
-
+        _viewModel.getPaymentsToday { isCorrect, msj, result, isRefresh ->
             if (isCorrect) {
+                Log.d("FinanzasFragment", "getPaymentsToday: $result")
                 binding.apply {
                     lblCajaHoy.text = "${getString(R.string.tipo_moneda)} $result"
                 }
+            }else{
+                Log.d("FinanzasFragment", "getPaymentsToday: $msj")
             }
 
         }

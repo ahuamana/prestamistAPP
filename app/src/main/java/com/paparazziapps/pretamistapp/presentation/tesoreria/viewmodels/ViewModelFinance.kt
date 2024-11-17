@@ -11,6 +11,8 @@ import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.DetailLoanForm
+import com.paparazziapps.pretamistapp.domain.DetailLoanResponse
+import com.paparazziapps.pretamistapp.domain.toDetailLoanDomain
 import kotlinx.coroutines.launch
 
 class ViewModelFinance (
@@ -53,6 +55,7 @@ class ViewModelFinance (
     fun getLoansByTime(timeStart:Long, timeEnd:Long, idSucursal:Int) = viewModelScope.launch {
         var pagosTotalesXfecha = 0.0
         val result = repository.getLoanByDate(timeStart, timeEnd.plus(DiaUnixtime), idSucursal)
+        Log.d(tag, "getLoansByTime: ${result.toString()}")
 
         when(result) {
             is PAResult.Error -> {
@@ -79,6 +82,8 @@ class ViewModelFinance (
         var pagosTotalesHoy = 0.0
         val result = repository.getDetailLoanByDate(getFechaActualNormalCalendar())
 
+        Log.d(tag, "getPaymentsToday result: $result")
+
         when (result) {
             is PAResult.Error -> {
                 Log.d(tag, "Error: ${result.exception.message}")
@@ -96,11 +101,15 @@ class ViewModelFinance (
                     isCorrect = true
                     onComplete(isCorrect, "", 0.0, false)
                 } else {
+                    isCorrect = true
+                    Log.d(tag, "getPaymentsToday data: ${result.data}")
                     result.data.forEach { document ->
-                        val dps = document.toObject<DetailLoanForm>()
-                        pagosTotalesHoy += dps.totalAmountToPay ?: 0.0
+                        val dps = document.toObject<DetailLoanResponse>().toDetailLoanDomain()
+                        Log.d(tag, "getPaymentsToday totalAmountToPay: ${dps.totalAmountToPay}")
+                        pagosTotalesHoy += dps.totalAmountToPay
                     }
-                    pagosTotalesHoy = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesHoy) ?: 0.0
+                    Log.d(tag, "getPaymentsToday pagosTotalesHoy: $pagosTotalesHoy")
+                    pagosTotalesHoy = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesHoy)
                     onComplete(isCorrect, "", pagosTotalesHoy, false)
                 }
             }
@@ -127,9 +136,10 @@ class ViewModelFinance (
                     isCorrect = true
                     onComplete(isCorrect, "", 0.0, false)
                 } else {
+                    isCorrect = true
                     details.data.forEach { document ->
-                        val dps = document.toObject<DetailLoanForm>()
-                        pagosTotalesAyer += dps.totalAmountToPay ?: 0.0
+                        val dps = document.toObject<DetailLoanResponse>().toDetailLoanDomain()
+                        pagosTotalesAyer += dps.totalAmountToPay
                     }
                     pagosTotalesAyer = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesAyer) ?: 0.0
                     onComplete(isCorrect, "", pagosTotalesAyer, false)
