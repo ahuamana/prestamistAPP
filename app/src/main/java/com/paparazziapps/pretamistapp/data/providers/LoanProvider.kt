@@ -42,7 +42,7 @@ class LoanProvider(
             return  NetworkOperation.safeApiCall {
                 mCollectionLoan
                     .whereEqualTo("state", "ABIERTO")
-                    .whereEqualTo("sucursalId",preferences.branchId)
+                    .whereEqualTo("branchId",preferences.branchId)
                     .get().await()
             }
         }
