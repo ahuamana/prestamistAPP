@@ -8,7 +8,7 @@ import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
 import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.paparazziapps.pretamistapp.domain.User
+import com.paparazziapps.pretamistapp.domain.UserForm
 
 interface PARepository {
     //Branches
@@ -36,11 +36,12 @@ interface PARepository {
 
     //Login
     suspend fun loginEmail(email: String, pass: String): PAResult<AuthResult>
+    suspend fun loginWithEmailV2(email: String, pass: String): PAResult<UserForm>
     suspend fun loginAnonymously(): PAResult<AuthResult>
     suspend fun createUser(email: String, pass: String): PAResult<AuthResult>
     fun signOut()
 
     //User
-    suspend fun createUser(user: User): PAResult<Void>
+    suspend fun createUser(userForm: UserForm): PAResult<Void>
     suspend fun searchUserByEmail(email: String): PAResult<DocumentSnapshot>
 }

@@ -20,6 +20,7 @@
 
     <color name="red">#F44336</color>
     <color name="color_red_trasparente">#83D18989</color>
+    <color name="brown_transparent">#D18989</color>
 
     <color name="colorDialogText">#757575</color>
     <color name="divider">#AFAFAF</color>

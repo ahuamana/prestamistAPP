@@ -99,12 +99,11 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/corner_boton_outline"
-                    android:enabled="false"
+                    android:background="@drawable/buttom_corners"
                     android:fontFamily="@font/googlesans_regular"
                     android:text="Ingresar"
-                    android:textColor="@color/color_input_text"
-                    app:backgroundTint="@color/color_input_text" />
+                    android:textColor="@color/white"
+                    app:backgroundTint="@color/primary" />
 
 
                 <LinearLayout

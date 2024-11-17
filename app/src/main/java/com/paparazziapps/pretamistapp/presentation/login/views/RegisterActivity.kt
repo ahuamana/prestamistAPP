@@ -24,7 +24,7 @@ import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
 import com.paparazziapps.pretamistapp.helper.isValidEmail
 import com.paparazziapps.pretamistapp.helper.setColorToStatusBar
 import com.paparazziapps.pretamistapp.domain.Sucursales
-import com.paparazziapps.pretamistapp.domain.User
+import com.paparazziapps.pretamistapp.domain.UserForm
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelRegisterUser
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
@@ -53,7 +53,7 @@ class RegisterActivity : AppCompatActivity() {
     var isValidPass:kotlin.Boolean? = false
     var btnSignUp: MaterialButton? = null
 
-    var userNew = User()
+    var userFormNew = UserForm()
     var listaSucursales = mutableListOf<Sucursales>()
 
 
@@ -185,8 +185,8 @@ class RegisterActivity : AppCompatActivity() {
         })
     }
 
-    private fun _saveOnFirebase(user: User) {
-        _viewModelRegistro.saveFirebaseUser(user)
+    private fun _saveOnFirebase(userForm: UserForm) {
+        _viewModelRegistro.saveFirebaseUser(userForm)
     }
 
     private fun _showMessageMainThread(message: String?) {
@@ -222,21 +222,21 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun signUp() {
         binding.signUp.setOnClickListener {
-            userNew.apellidos = edtLastname?.text.toString().trim()
-            userNew.email = edtEmail?.text.toString().trim()
-            userNew.nombres = edtFullname?.text.toString().trim()
-            userNew.sucursal = sucursalesTextView.text.toString().trim()
-            userNew.password = edtPass?.text.toString().trim()  //Ocultar si no quieres que se muestre la contraseña
+            userFormNew.lastnames = edtLastname?.text.toString().trim()
+            userFormNew.email = edtEmail?.text.toString().trim()
+            userFormNew.names = edtFullname?.text.toString().trim()
+            userFormNew.branch = sucursalesTextView.text.toString().trim()
+            userFormNew.password = edtPass?.text.toString().trim()  //Ocultar si no quieres que se muestre la contraseña
 
             listaSucursales.forEach {
-                if(it.name?.equals(sucursalesTextView.text.toString().trim()) == true)  userNew.sucursalId = it.id
+                if(it.name?.equals(sucursalesTextView.text.toString().trim()) == true)  userFormNew.branchId = it.id
             }
             //Register
 
             val email = binding.email.text.toString().trim()
             val pass = binding.password.text.toString().trim()
 
-            _viewModelRegistro.createUser(email, pass, userNew)
+            _viewModelRegistro.createUser(email, pass, userFormNew)
         }
     }
 
@@ -277,8 +277,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         _viewModelRegistro.getUser().observe(this) { user ->
-            if (userNew.email.equals(user.getEmail())) {
-                _saveOnFirebase(userNew)
+            if (userFormNew.email.equals(user.getEmail())) {
+                _saveOnFirebase(userFormNew)
             } else {
                 _showMessageMainThread(user.email)
             }

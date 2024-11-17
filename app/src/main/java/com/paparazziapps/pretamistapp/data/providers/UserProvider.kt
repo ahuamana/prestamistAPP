@@ -6,8 +6,9 @@ import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
 import com.paparazziapps.pretamistapp.data.network.PAResult
-import com.paparazziapps.pretamistapp.domain.User
+import com.paparazziapps.pretamistapp.domain.UserForm
 import kotlinx.coroutines.tasks.await
+import java.time.Instant
 
 class UserProvider(
     private val firebaseService: FirebaseService
@@ -15,9 +16,14 @@ class UserProvider(
 
     private val mCollection: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.USERS_COLLECTION) }
 
-    suspend fun createUser(user: User): PAResult<Void> {
+    suspend fun createUser(userForm: UserForm): PAResult<Void> {
+        val form = userForm.copy(
+            activeUser = false,
+            dateCreated = System.currentTimeMillis(),
+        )
+
         return NetworkOperation.safeApiCall {
-            mCollection.document(user.email?:"").set(user).await()
+            mCollection.document(userForm.email?:"").set(form).await()
         }
     }
 
@@ -25,5 +31,9 @@ class UserProvider(
         return NetworkOperation.safeApiCall {
             mCollection.document(email).get().await()
         }
+    }
+
+    suspend fun searchUserByEmailV2(email: String): DocumentSnapshot {
+       return mCollection.document(email).get().await()
     }
 }

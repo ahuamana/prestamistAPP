@@ -24,6 +24,35 @@ class MyPreferences(private val context: Context) {
     set(value) = prefs.setString("branches", value)
 
 
+    var names: String
+    get()      = prefs.getString("names", "")
+    set(value) = prefs.setString("names", value)
+
+    // lastnames
+    var lastnames: String
+    get()      = prefs.getString("lastnames", "")
+    set(value) = prefs.setString("lastnames", value)
+
+    //role
+    var role: String
+    get()      = prefs.getString("role", "")
+    set(value) = prefs.setString("role", value)
+
+    //creationDate
+    var creationDate: Long
+    get()      = prefs.getLong("creationDate", 0)
+    set(value) = prefs.setLong("creationDate", value)
+
+    //isActive
+    var isActive: String
+    get()      = prefs.getString("isActive", "")
+    set(value) = prefs.setString("isActive", value)
+
+    var savedEmail: String
+    get()      = prefs.getString("savedEmail", "")
+    set(value) = prefs.setString("savedEmail", value)
+
+
     //PREFERENCES BOOLEAN
     var isLogin: Boolean
         get()      = prefs.getBoolean("isLogin", false)
@@ -41,6 +70,9 @@ class MyPreferences(private val context: Context) {
     var isActiveUser: Boolean
         get()      = prefs.getBoolean("isActiveUser", false)
         set(value) = prefs.setBoolean("isActiveUser", value)
+
+    val isActiveUserString: String
+        get() = if(isActiveUser) "Activo" else "Inactivo"
 
 
     //PREFERENCES INTEGER

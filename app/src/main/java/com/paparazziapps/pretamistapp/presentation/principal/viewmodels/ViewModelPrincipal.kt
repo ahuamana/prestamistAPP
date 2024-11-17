@@ -9,13 +9,11 @@ import com.google.firebase.database.DataSnapshot
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
-import com.paparazziapps.pretamistapp.domain.User
+import com.paparazziapps.pretamistapp.domain.UserForm
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.toJson
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ViewModelPrincipal(
@@ -48,19 +46,19 @@ class ViewModelPrincipal(
                 _uiState.postValue(UIStatePrincipal.Error("Ah ocurrido un error al traer los datos del usurio"))
             }
             is PAResult.Success -> {
-                val user = result.data.toObject(User::class.java)
-                if(user == null){
+                val userForm = result.data.toObject(UserForm::class.java)
+                if(userForm == null){
                     Log.d(tag, "No se encontro el usuario")
                     _uiState.postValue(UIStatePrincipal.Error("No se encontro el usuario"))
                     return@launch
                 }
-                preferences.isAdmin = user.admin
-                preferences.isSuperAdmin = user.superAdmin
-                preferences.branchId = user.sucursalId?: INT_DEFAULT
-                preferences.branchName = user.sucursal?:""
-                preferences.isActiveUser = user.activeUser
+                preferences.isAdmin = userForm.admin
+                preferences.isSuperAdmin = userForm.superAdmin
+                preferences.branchId = userForm.branchId?: INT_DEFAULT
+                preferences.branchName = userForm.branch?:""
+                preferences.isActiveUser = userForm.activeUser
 
-                if(user.activeUser){
+                if(userForm.activeUser){
                     _uiState.postValue(UIStatePrincipal.SuccessActiveUser(branchesServer))
                 }else {
                     _uiState.postValue(UIStatePrincipal.SuccessInactiveUser(branchesServer))

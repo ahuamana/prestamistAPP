@@ -1,18 +1,11 @@
 package com.paparazziapps.pretamistapp.presentation.login.views
 
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textview.MaterialTextView
-import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityLoginBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelLogin
@@ -24,14 +17,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-
-    lateinit var txtRegistroNuevo:MaterialTextView
-    var btnLoginEmail: MaterialButton? = null
-    var isValidEmail = false
-    var isValidPass:Boolean = false
-    val _viewModelLogin:ViewModelLogin  by viewModel()
-    var TAG = "LoginActivity"
-    private val preferences: MyPreferences by inject()
+    val viewModel:ViewModelLogin  by viewModel()
+    private val tag: String = LoginActivity::class.java.simpleName
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,44 +27,35 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setColorToStatusBar(this)
-        isAlreadyLogin()
+        viewModel.checkIfUserIsLogged(this)
 
 
         binding.apply {
-            txtRegistroNuevo = btnRegister
-            btnLoginEmail    = binding.ingresarLoginButton
+            email.setText(viewModel.getSavedEmail())
+            binding.versioncode.text = "Versión ${getVersionName()}"
         }
 
-        //Validate Data
-        validateFields()
-        openNewRegistro()
-
-        //Observables with MVVM
+        setupButtons()
         showObservables()
-
-        //Login Firebase
-        loginFirebase()
-
-        binding.versioncode.text = "Versión ${getVersionName()}"
     }
 
     private fun showObservables() {
-        _viewModelLogin.showMessage.observe(this) { message ->
+        viewModel.showMessage.observe(this) { message ->
             if (message != null) {
-                _showMessageMainThread(message)
+                showMessageMainThread(message)
             }
         }
-        _viewModelLogin.isLoginAnonymous.observe(this) { isLoginAnonymous ->
+        viewModel.isLoginAnonymous.observe(this) { isLoginAnonymous ->
             if (isLoginAnonymous) {
                 startActivity(Intent(this, LoginActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
             }
         }
 
         //Login with email
-        _viewModelLogin.isLoginEmail.observe(this) { isLoginEmail ->
-            println("isLoginEmail: $isLoginEmail")
+        viewModel.isLoginEmail.observe(this) { isLoginEmail ->
+            Log.d(tag,"isLoginEmail: $isLoginEmail")
             if (isLoginEmail) {
-                Log.e(TAG, "EMAIL ENVIADO: " + binding.email.text.toString().lowercase())
+                Log.e(tag, "EMAIL ENVIADO: " + binding.email.text.toString().lowercase())
                 startActivity(
                     Intent(this, PrincipalActivity::class.java)
                         .putExtra("email", binding.email.text.toString().lowercase())
@@ -85,8 +63,8 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
         }
-        _viewModelLogin.isLoading.observe(this) { isLoading ->
-            Log.e("ISLOADING", "ISLOADING:$isLoading")
+        viewModel.isLoading.observe(this) { isLoading ->
+            Log.e(tag, "ISLOADING:$isLoading")
             if (isLoading) {
                 binding.cortinaLayout.visibility = View.VISIBLE
             } else {
@@ -95,95 +73,45 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun loginFirebase() {
-        btnLoginEmail!!.setOnClickListener {
+
+    private fun setupButtons() {
+        binding.btnRegister.setOnClickListener {
+            startActivity(Intent(this@LoginActivity,RegisterActivity::class.java))
+        }
+
+        binding.ingresarLoginButton.setOnClickListener {
             hideKeyboardActivity(this@LoginActivity)
-            if (isConnected(applicationContext)) {
-                val email = binding.email.text.toString().trim()
-                val pass = binding.pass.text.toString().trim()
-                _viewModelLogin.loginWithEmail(email, pass)
-            } else _showMessageMainThread("Sin conexion a internet")
-        }
-        /*
-        btnAnonimo.setOnClickListener(View.OnClickListener {
-            if (TextUtilsText.isConnected(applicationContext)) {
-                viewmodel.loginAnonymous()
-            } else _showMessageMainThread("Sin conexion a internet")
-        })*/
-    }
-
-    private fun validateFields() {
-        binding.email.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.length > 0) validEmail(s.toString().trim { it <= ' ' })
-            }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-        binding.pass.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.length > 5) {
-                    binding.passLayout.error = null
-                    isValidPass = true
-                } else {
-                    binding.passLayout.error = "La contraseña debe tener minimo 6 caracteres"
-                    isValidPass = false
-                }
-                validEmailPass()
-            }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-    }
-
-    private fun validEmail(s: CharSequence) {
-        if (isValidEmail(s)) {
-            binding.emailLayout.error = null
-            isValidEmail = true
-        } else {
-            binding.emailLayout.error = "Correo electrónico invalido"
-            isValidEmail = false
-        }
-        validEmailPass()
-    }
-
-    private fun validEmailPass() {
-        if (isValidEmail && isValidPass) {
-            binding.ingresarLoginButton.apply {
-                isEnabled = true
-                backgroundTintMode = PorterDuff.Mode.SCREEN
-                backgroundTintList = ContextCompat.getColorStateList(applicationContext, R.color.primary)
-                setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-            }
-
-        } else {
-            binding.ingresarLoginButton.apply {
-                isEnabled = false
-                backgroundTintMode = PorterDuff.Mode.MULTIPLY
-                backgroundTintList = ContextCompat.getColorStateList(applicationContext, R.color.color_input_text)
-                setTextColor(ContextCompat.getColor(applicationContext, R.color.color_input_text))
-            }
+            handledLogin()
         }
     }
 
-
-    private fun isAlreadyLogin() {
-        if(preferences.isLogin) {
-          startActivity(Intent(this@LoginActivity, PrincipalActivity::class.java))
+    private fun handledLogin() {
+        if (isConnected(applicationContext).not()) {
+            showMessageMainThread("Sin conexion a internet")
+            return
         }
+
+        val email = binding.email.text.toString().trim()
+        binding.emailLayout.error = when {
+            email.isEmpty() -> "Ingrese un correo electrónico"
+            isValidEmail(email).not() -> "Correo electrónico invalido"
+            else -> null
+        }
+
+        val pass = binding.pass.text.toString().trim()
+        binding.passLayout.error = when{
+            pass.isEmpty() -> "Ingrese una contraseña"
+            pass.length < 6 -> "La contraseña debe tener minimo 6 caracteres"
+            else -> null
+        }
+
+        if(binding.passLayout.error != null) return
+        if(binding.emailLayout.error != null) return
+
+        viewModel.loginWithEmail(email, pass)
     }
 
-    private fun openNewRegistro() {
-        txtRegistroNuevo.apply {
-            setOnClickListener {
-                startActivity(Intent(this@LoginActivity,RegisterActivity::class.java))
-            }
-        }
-    }
-
-    private fun _showMessageMainThread(message: String) {
+    private fun showMessageMainThread(message: String) {
         Snackbar.make(findViewById(android.R.id.content), "" + message, Snackbar.LENGTH_SHORT).show()
     }
 }

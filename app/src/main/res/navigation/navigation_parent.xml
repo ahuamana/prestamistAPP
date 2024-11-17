@@ -30,4 +30,10 @@
         android:label="fragment_detail_receipt"
         tools:layout="@layout/fragment_detail_receipt" />
 
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.paparazziapps.pretamistapp.presentation.profile.views.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
 </navigation>

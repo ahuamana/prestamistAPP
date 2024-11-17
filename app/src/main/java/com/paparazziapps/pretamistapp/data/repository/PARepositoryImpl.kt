@@ -13,7 +13,7 @@ import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSource
 import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
 import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.paparazziapps.pretamistapp.domain.User
+import com.paparazziapps.pretamistapp.domain.UserForm
 
 class PARepositoryImpl(
     private val remoteBranchDataSource: RemoteBranchDataSource,
@@ -80,6 +80,10 @@ class PARepositoryImpl(
         return remoteLoginDataSource.loginEmail(email, pass)
     }
 
+    override suspend fun loginWithEmailV2(email: String, pass: String): PAResult<UserForm> {
+        return remoteLoginDataSource.loginWithEmailV2(email, pass)
+    }
+
     override suspend fun loginAnonymously(): PAResult<AuthResult> {
         return remoteLoginDataSource.loginAnonymously()
     }
@@ -88,8 +92,8 @@ class PARepositoryImpl(
         return remoteLoginDataSource.createUser(email, pass)
     }
 
-    override suspend fun createUser(user: User): PAResult<Void> {
-        return remoteUserDataSource.createUser(user)
+    override suspend fun createUser(userForm: UserForm): PAResult<Void> {
+        return remoteUserDataSource.createUser(userForm)
     }
 
     override fun signOut() {
