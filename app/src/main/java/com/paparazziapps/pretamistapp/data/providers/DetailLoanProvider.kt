@@ -52,8 +52,8 @@ class DetailLoanProvider(
     suspend fun getDetailLoanByDate(date:String):PAResult<QuerySnapshot> {
         return NetworkOperation.safeApiCall {
             mCollectionDetallePrestamo
-                .whereEqualTo("fechaPago",date)
-                .whereEqualTo("sucursalId",preferences.branchId)
+                .whereEqualTo("paymentDate",date)
+                .whereEqualTo("branchId",preferences.branchId)
                 .get().await()
         }
     }
@@ -62,9 +62,9 @@ class DetailLoanProvider(
     suspend fun getLoanByDate(timeStart:Long, timeEnd:Long, idBranch:Int): PAResult<QuerySnapshot> {
         return  NetworkOperation.safeApiCall {
             mCollectionDetallePrestamo
-                .whereGreaterThanOrEqualTo("unixtime", timeStart)
-                .whereLessThanOrEqualTo("unixtime",timeEnd)
-                .whereEqualTo("sucursalId", if(preferences.isSuperAdmin) idBranch else  preferences.branchId)
+                .whereGreaterThanOrEqualTo("codeOperation", timeStart)
+                .whereLessThanOrEqualTo("codeOperation",timeEnd)
+                .whereEqualTo("branchId", if(preferences.isSuperAdmin) idBranch else  preferences.branchId)
                 .get().await()
         }
     }
