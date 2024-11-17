@@ -17,7 +17,7 @@ class ProfileViewModel(
 
     fun getBranchName() = preferences.branchName
 
-    fun getCreationDate() = preferences.creationDate
+    fun getCreationDate():Long = preferences.creationDate
 
     fun getIsActive() = preferences.isActiveUserString
 

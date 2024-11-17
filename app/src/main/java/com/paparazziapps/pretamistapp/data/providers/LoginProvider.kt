@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.data.providers
 
+import android.util.Log
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.paparazziapps.pretamistapp.application.MyPreferences
@@ -51,15 +52,17 @@ class LoginProvider(
                 preferences.isSuperAdmin = user.superAdmin
                 preferences.branchId = user.branchId?: INT_DEFAULT
                 preferences.branchName = user.branch?:""
-                preferences.creationDate = user.dateCreated?:""
+                preferences.creationDate = user.dateCreated?:0
 
                 //if is active user = cashier if isAdmin = administator || if isSuperAdmin = superAdmin
                 preferences.role = when {
                     user.superAdmin -> "Super Administrador"
                     user.admin -> "Administrador"
                     user.activeUser -> "Cajero"
-                    else -> "Usuario"
+                    else -> "Cajero"
                 }
+
+                Log.d("LoginProvider", "User: $user")
 
 
                 //Save the user info
@@ -70,7 +73,6 @@ class LoginProvider(
 
                 preferences.isLogin
                 preferences.setEmail(email)
-                preferences.isLogin = true
             }
 
             user?: throw Exception("Usuario no encontrado")

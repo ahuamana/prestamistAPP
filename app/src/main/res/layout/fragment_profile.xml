@@ -57,7 +57,10 @@
 
                 <TextView
                     android:id="@+id/tv_full_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:maxLines="1"
                     android:layout_height="wrap_content"
                     android:text="John Doe"
                     android:textSize="20sp"
@@ -65,7 +68,9 @@
 
                 <TextView
                     android:id="@+id/tv_email"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:ellipsize="end"
+                    android:lines="1"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="johndoe@example.com"
@@ -132,6 +137,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             android:text="Main Branch"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -146,10 +153,13 @@
                 android:id="@+id/btn_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:height="60dp"
                 android:text="@string/logout"
                 android:layout_gravity="center_horizontal"
                 app:cornerRadius="30dp"
-                android:backgroundTint="@color/red"
+                app:iconTintMode="src_in"
+                app:icon="@drawable/ic_logout"
+                android:backgroundTint="@color/brown_transparent"
                 android:layout_marginVertical="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

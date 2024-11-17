@@ -103,7 +103,6 @@ class PrincipalActivity : AppCompatActivity(){
                 binding.cortinaUserInactive.beGone()
                 binding.cortinaFreeTrial.beGone()
                 binding.navView.beGone()
-
                 isUserActivePrincipal()
             }
         }
@@ -116,60 +115,9 @@ class PrincipalActivity : AppCompatActivity(){
         navHostFragment.findNavController().setGraph(R.navigation.navigation_parent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_guardar, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-
-        val btnSave   = menu?.findItem(R.id.action_save_perfil)?.actionView?.findViewById<AppCompatButton>(R.id.btn_save_item)
-        val colorState = if (isEnabledCheck) ContextCompat.getColor(this@PrincipalActivity, R.color.red)
-        else ContextCompat.getColor(this@PrincipalActivity, R.color.color_text_web)
-        val colorStateTxt = ContextCompat.getColor(this@PrincipalActivity, R.color.colorWhite)
-
-
-        btnSave?.apply {
-            isEnabled = isEnabledCheck
-
-            //val resouse = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.corner_boton_outline) as Drawable
-            val resouse = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.border_mask) as Drawable
-            val customResource = tintDrawable(this@PrincipalActivity,resouse, colorState)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                resouse.colorFilter = BlendModeColorFilter(ContextCompat.getColor(this@PrincipalActivity, R.color.red), BlendMode.SRC_ATOP)
-            }else{
-                resouse.setColorFilter(ContextCompat.getColor(this@PrincipalActivity, R.color.red), PorterDuff.Mode.SRC_ATOP)
-            }
-            background = customResource
-
-            val resouseDrawable = ContextCompat.getDrawable(this@PrincipalActivity, R.drawable.ic_logout) as Drawable
-            val customResourceDrawable = tintDrawable(this@PrincipalActivity,resouseDrawable, colorStateTxt)
-
-            setCompoundDrawablesWithIntrinsicBounds(customResourceDrawable, null, null, null)
-            setTextColor(colorStateTxt)
-            setText("Cerrar sessión")
-            setOnClickListener {
-                if (isEnabledCheck){
-                    logout()
-                }
-            }
-
-        }
-        return true
-    }
-
-    fun logout(){
-        preferences.isLogin = false
-        preferences.removeLoginData()
-        startActivity(Intent(this@PrincipalActivity, LoginActivity::class.java)
-            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
-    }
-
-    fun isUserActivePrincipal() {
+    private fun isUserActivePrincipal() {
         binding.cortinaUserInactive.beVisible()
-        binding.userInactiveLayout.btnLogout.setOnClickListener {
-            logout()
-        }
     }
 
     private fun isFreeTrial() {

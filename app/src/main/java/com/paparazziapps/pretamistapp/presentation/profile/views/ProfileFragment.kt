@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentProfileBinding
+import com.paparazziapps.pretamistapp.domain.utils.DateConverter
 import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -30,8 +31,10 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
+
+            val date = DateConverter.instance.unixToFormattedDate(viewModel.getCreationDate())
             tvEmail.text = viewModel.getEmail()
-            tvJoinedDate.text = viewModel.getCreationDate()
+            tvJoinedDate.text = date
             tvFilial.text = viewModel.getBranchName()
             tvProfileStatus.text = viewModel.getIsActive()
             tvRole.text = viewModel.getRole()

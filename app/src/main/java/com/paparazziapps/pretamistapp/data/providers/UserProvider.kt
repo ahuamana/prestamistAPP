@@ -19,7 +19,7 @@ class UserProvider(
     suspend fun createUser(userForm: UserForm): PAResult<Void> {
         val form = userForm.copy(
             activeUser = false,
-            dateCreated = Instant.now().toString()
+            dateCreated = System.currentTimeMillis(),
         )
 
         return NetworkOperation.safeApiCall {

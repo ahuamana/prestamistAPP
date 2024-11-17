@@ -39,14 +39,18 @@ class MyPreferences(private val context: Context) {
     set(value) = prefs.setString("role", value)
 
     //creationDate
-    var creationDate: String
-    get()      = prefs.getString("creationDate", "")
-    set(value) = prefs.setString("creationDate", value)
+    var creationDate: Long
+    get()      = prefs.getLong("creationDate", 0)
+    set(value) = prefs.setLong("creationDate", value)
 
     //isActive
     var isActive: String
     get()      = prefs.getString("isActive", "")
     set(value) = prefs.setString("isActive", value)
+
+    var savedEmail: String
+    get()      = prefs.getString("savedEmail", "")
+    set(value) = prefs.setString("savedEmail", value)
 
 
     //PREFERENCES BOOLEAN

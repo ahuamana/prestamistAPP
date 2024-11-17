@@ -10,5 +10,5 @@ data class UserForm (
     var activeUser: Boolean = false,
     var admin: Boolean = false,
     var superAdmin: Boolean = false,
-    val dateCreated: String? = null,
+    val dateCreated: Long? = null,
 )
