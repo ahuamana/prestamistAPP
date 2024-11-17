@@ -92,30 +92,21 @@ class LoginActivity : AppCompatActivity() {
         }
 
         val email = binding.email.text.toString().trim()
-        if(email.isEmpty()){
-            showMessageMainThread("Ingrese un correo electrónico")
-            return
-        }
-
-        //set error if email is not valid
-        if (!isValidEmail(email)) {
-            binding.emailLayout.error = "Correo electrónico invalido"
-            return
+        binding.emailLayout.error = when {
+            email.isEmpty() -> "Ingrese un correo electrónico"
+            isValidEmail(email).not() -> "Correo electrónico invalido"
+            else -> null
         }
 
         val pass = binding.pass.text.toString().trim()
-
-        //set error if pass is empty
-        if (pass.isEmpty()) {
-            binding.passLayout.error = "Ingrese una contraseña"
-            return
+        binding.passLayout.error = when{
+            pass.isEmpty() -> "Ingrese una contraseña"
+            pass.length < 6 -> "La contraseña debe tener minimo 6 caracteres"
+            else -> null
         }
 
-        //set error if pass is less than 6 characters
-        if (pass.length < 6) {
-            binding.passLayout.error = "La contraseña debe tener minimo 6 caracteres"
-            return
-        }
+        if(binding.passLayout.error != null) return
+        if(binding.emailLayout.error != null) return
 
         viewModel.loginWithEmail(email, pass)
     }
