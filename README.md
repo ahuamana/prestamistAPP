@@ -67,7 +67,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
    - Configurar RealTime Database
    - Configurar Authentication method using Email/Password
 
-0.1 Configurar Firestore Database
+1. Configurar Firestore Database
     - Configurar rules
     ```bash
     rules_version = '2';
@@ -88,7 +88,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
   Cambiar el archivo google-services.json que se encuentra dentro de la carpeta 
   ./prestamist/app/google-services.json
 ```
-2. Cargar las sucursales actuales dentro de Realtime Database
+3. Cargar las sucursales actuales dentro de Realtime Database
 
 ```bash
   Ejemplo:
@@ -114,7 +114,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 }
 ```
 
-3. Sincronizar el proyecto y vincularlo con Firebase
+4. Sincronizar el proyecto y vincularlo con Firebase
 
 ```bash
   Disfrútalo 💕 💕 💕
