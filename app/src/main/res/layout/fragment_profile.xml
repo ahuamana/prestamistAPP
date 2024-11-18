@@ -28,7 +28,7 @@
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_person" />
+                    android:src="@drawable/ic_avatar_v3" />
 
                 <TextView
                     android:id="@+id/tv_profile_status"
