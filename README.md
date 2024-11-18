@@ -61,7 +61,30 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
   
 ## Installation
 
-1. Reemplazar el archivo Google Services de Firebase
+0. Configuracion del proyecto en Firebase
+   - Crear un proyecto en firebase
+   - Configurar Firestore Database
+   - Configurar RealTime Database
+   - Configurar Authentication method using Email/Password
+
+0.1 Configurar Firestore Database
+    - Configurar rules
+    ```bash
+    rules_version = '2';
+    service cloud.firestore {
+        match /databases/{database}/documents {
+            match /{document=**} {
+                allow read, write:if(request.auth) != null
+                }
+            }
+        }
+    ```
+    - Configurar Indices para el modulo de finanzas
+    
+    <img width="1565" alt="Setup finance module" src="https://github.com/user-attachments/assets/4878c641-2033-423b-9433-687e04519914">
+
+
+2. Reemplazar el archivo Google Services de Firebase
 ```bash
   Cambiar el archivo google-services.json que se encuentra dentro de la carpeta 
   ./prestamist/app/google-services.json
