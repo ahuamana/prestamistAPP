@@ -397,4 +397,8 @@ class PrincipalActivity : AppCompatActivity(){
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }

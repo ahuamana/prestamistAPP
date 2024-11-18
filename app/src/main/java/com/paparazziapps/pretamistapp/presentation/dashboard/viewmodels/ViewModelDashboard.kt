@@ -65,7 +65,6 @@ class ViewModelDashboard (
 
             is DashboardIntent.SendMessageToWhatsApp -> {
                 sendMessageToWhatsApp(intent.loanDomain, context = intent.context)
-
             }
         }
     }
@@ -98,6 +97,8 @@ class ViewModelDashboard (
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         context.startActivity(intent)
+
+        _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessSendMessage)
     }
 
     private fun calculateDelayForTypeLoan(item: LoanDomain): Int {
@@ -152,7 +153,7 @@ class ViewModelDashboard (
                 val dividedMessage = smsManager.divideMessage(message)
                 val codeCountry = context.getString(R.string.codigo_pais)
                 smsManager.sendMultipartTextMessage(codeCountry+phone, null, dividedMessage, null, null)
-                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan)
+                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessSendMessage)
             }catch (e: Exception){
                 Log.d(tag, "Error al enviar mensaje: ${e.message}")
                 _state.value = _state.value.copy(dialogState = DashboardDialogState.Error(e.message ?: ""))
@@ -432,6 +433,7 @@ class ViewModelDashboard (
         data class Error(val message: String) : DashboardDialogState() // Error dialog with a message
         data object SuccessCloseLoan : DashboardDialogState() // Success dialog for loan closure
         data object SuccessUpdateLoan : DashboardDialogState() // Success dialog for loan update
+        data object SuccessSendMessage : DashboardDialogState() // Success dialog for message sent
         data object ErrorCloseLoan : DashboardDialogState() // Error dialog for loan closure
     }
 }

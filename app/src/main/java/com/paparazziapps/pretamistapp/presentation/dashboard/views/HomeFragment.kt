@@ -2,7 +2,6 @@ package com.paparazziapps.pretamistapp.presentation.dashboard.views
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -54,7 +53,17 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
 
     private val generalSuccessDialog by lazy {
         PADialogFactory(requireContext()).createGeneralSuccessDialog(
-            successMessage = getString(R.string.loan_closed_sucefully_message),
+            successMessage = getString(R.string.operation_success_message),
+            buttonTitle = getString(R.string.continue_button_message),
+            onConfirmClick = {
+                viewModel.processIntent(ViewModelDashboard.DashboardIntent.ResetStatusDialogs)
+            }
+        )
+    }
+
+    private val successReceiptDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralSuccessDialog(
+            successMessage = getString(R.string.operation_success_message),
             buttonTitle = getString(R.string.accept),
             onConfirmClick = {
                 viewModel.logEvent(PADataConstants.EVENT_SEE_RECEIPT)
@@ -178,6 +187,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
                 loadingDialog.dismiss()
                 generalErrorDialog.dismiss()
                 generalSuccessDialog.dismiss()
+                successReceiptDialog.dismiss()
             }
             ViewModelDashboard.DashboardDialogState.SuccessCloseLoan -> {
                 generalErrorDialog.dismiss()
@@ -188,6 +198,15 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
             ViewModelDashboard.DashboardDialogState.SuccessUpdateLoan -> {
                 generalErrorDialog.dismiss()
                 loadingDialog.dismiss()
+                generalSuccessDialog.dismiss()
+                successReceiptDialog.show()
+
+            }
+
+            ViewModelDashboard.DashboardDialogState.SuccessSendMessage ->{
+                generalErrorDialog.dismiss()
+                loadingDialog.dismiss()
+                successReceiptDialog.dismiss()
                 generalSuccessDialog.show()
             }
         }
@@ -287,6 +306,7 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
         loadingDialog.dismiss()
         generalErrorDialog.dismiss()
         generalSuccessDialog.dismiss()
+        successReceiptDialog.dismiss()
         super.onDestroy()
     }
 }
