@@ -319,7 +319,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_marginTop="16dp">
 
                         <LinearLayout
@@ -339,7 +339,7 @@
                                 android:id="@+id/tv_total_paid"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="$1,200.00"
+                                tools:text="$1,200.00"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/primary"
@@ -363,7 +363,7 @@
                                 android:id="@+id/tv_total_amount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="$10,000.00"
+                                tools:text="$10,000.00"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/primary"

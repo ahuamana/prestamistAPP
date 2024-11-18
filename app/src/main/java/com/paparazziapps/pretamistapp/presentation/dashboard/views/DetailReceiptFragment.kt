@@ -20,7 +20,9 @@ import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.databinding.FragmentDetailReceiptBinding
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.utils.convertUnixTimeToFormattedDate
+import com.paparazziapps.pretamistapp.domain.utils.roundToOneDecimal
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
+import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimalsReturnDouble
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDetailReceipt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -94,7 +96,6 @@ class DetailReceiptFragment : Fragment() {
                         tvBorrowerPhone.text = information.phoneNumber
                         tvBorrowerInitials.text = firstLetterFirstNameAndLastName
                         tvMonthlyPayment.text = getString(R.string.type_money_with_amount, information.amountPerQuote.toString())
-
                         tvRemainingPayments.text = getString(R.string.type_remaining_payments, information.quotesPaidNew.toString(), information.quotes.toString())
 
                         //Calculate the next payment date
@@ -113,6 +114,13 @@ class DetailReceiptFragment : Fragment() {
                         Log.d("DetailReceiptFragment", "Progress: $progress")
                         loanProgressIndicator.progress = progress
                         tvProgressPercentage.text = getString(R.string.type_percentage, progress.toString())
+
+                        //Loan progress information
+                        val totalPaid = getDoubleWithTwoDecimalsReturnDouble(information.amountPerQuote * information.quotesPaidNew)
+                        val totalToPay = getDoubleWithTwoDecimalsReturnDouble(information.amountPerQuote * information.quotes)
+
+                        tvTotalPaid.text = getString(R.string.type_money_with_amount, totalPaid.toString())
+                        tvTotalAmount.text = getString(R.string.type_money_with_amount, totalToPay.toString())
                     }
 
                 }
