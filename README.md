@@ -80,7 +80,6 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
         }
     ```
     - Configurar Indices para el modulo de finanzas
-    
     <img width="1565" alt="Setup finance module" src="https://github.com/user-attachments/assets/4878c641-2033-423b-9433-687e04519914">
 
 
