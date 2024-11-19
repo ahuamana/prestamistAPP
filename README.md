@@ -1,7 +1,7 @@
 
 # Loan Manager App
 
-![Prestamist - app - background v4 0 0](https://github.com/user-attachments/assets/590c34c8-8359-4018-bd10-e48579ae313f)
+![Prestamist - app - background v4 0 0](https://github.com/user-attachments/assets/0d5a0ac6-ab06-449f-8e48-99d22604749d)
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.8.0-blue.svg)](https://kotlinlang.org)
 [![Android Studio](https://img.shields.io/badge/Android%20Studio-2023.1.1-green.svg)](https://developer.android.com/studio)
