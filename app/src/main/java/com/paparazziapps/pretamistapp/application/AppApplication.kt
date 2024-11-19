@@ -27,6 +27,7 @@ import com.paparazziapps.pretamistapp.data.repository.PARepositoryImpl
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepositoryImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSourceImpl
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
+import com.paparazziapps.pretamistapp.frameworks.network.NetworkModuleImpl
 import com.paparazziapps.pretamistapp.helper.turnOffDarkModeInAllApp
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
@@ -75,6 +76,10 @@ class AppApplication : MultiDexApplication() {
         //Data Firebase
         singleOf(::RemoteAnalyticsDataSourceImpl) { bind<RemoteAnalyticsDataSource>() }
         singleOf(::PAAnalyticsRepositoryImpl) { bind<PAAnalyticsRepository>() }
+
+        //New Module
+
+        singleOf(::NetworkModuleImpl) { bind<NetworkModuleImpl>() }
     }
 
     private val uiModule = module {
