@@ -2,6 +2,7 @@ package com.paparazziapps.pretamistapp.frameworks.network
 
 import android.content.Context
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.data.services.EmailRetrofit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -32,4 +33,5 @@ class NetworkModuleImpl(
     override fun provideHeaderInterceptor(): HeaderInterceptor {
         return HeaderInterceptor(context,preferences)
     }
+
 }
