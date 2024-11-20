@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.data.repository
 
+import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.remote.RemoteEmailDataSource
@@ -33,7 +34,7 @@ class PAEmailRepositoryImpl(
             val htmlContent = htmlTemplate.create(params)
 
             val emailRequest = EmailRequest(
-                from = "PrestamistApp <info@paparazziteam.work>",
+                from = PADataConstants.RESEND_EMAIL_FROM,
                 to = listOf(recipientEmail),
                 subject = params.subject,
                 html = htmlContent

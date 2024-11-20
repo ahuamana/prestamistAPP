@@ -3,7 +3,10 @@ package com.paparazziapps.pretamistapp.data
 object PADataConstants {
 
     //currency
-    const val CURRENCY = "S/."
+    const val CURRENCY = "S/." // S/. is the symbol for the Peruvian Sol currency
+
+    //Resend email
+    const val RESEND_EMAIL_FROM = "PrestamistApp <info@paparazziteam.work>"
 
     //child branches
     const val BRANCHES = "sucusales"
