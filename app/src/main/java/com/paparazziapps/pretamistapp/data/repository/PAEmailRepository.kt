@@ -8,6 +8,7 @@ interface PAEmailRepository {
         recipientEmail: String,
         amount: Double,
         date: String,
-        operationCode: String
+        operationCode: String,
+        recipientName: String
     ): PAResult<EmailReceiptResponse>
 }

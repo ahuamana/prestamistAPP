@@ -18,12 +18,13 @@ class PAEmailRepositoryImpl(
         recipientEmail: String,
         amount: Double,
         date: String,
-        operationCode: String
+        operationCode: String,
+        recipientName: String
     ): PAResult<EmailReceiptResponse> {
         return NetworkOperation.safeApiCallWithResult {
             //handle other operations here this must be in the use case layer
             val params = ReceiptParams(
-                recipientName = "Antony",
+                recipientName = recipientName,
                 amount = amount,
                 date = date,
                 operationCode = operationCode
@@ -32,7 +33,7 @@ class PAEmailRepositoryImpl(
             val htmlContent = htmlTemplate.create(params)
 
             val emailRequest = EmailRequest(
-                from = "PrestamistApp <prestamistapp@resend.dev>",
+                from = "PrestamistApp <info@paparazziteam.work>",
                 to = listOf(recipientEmail),
                 subject = params.subject,
                 html = htmlContent

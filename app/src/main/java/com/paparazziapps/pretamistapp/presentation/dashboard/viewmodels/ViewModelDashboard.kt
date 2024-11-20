@@ -351,6 +351,7 @@ class ViewModelDashboard (
             amount = informationReceipt.totalAmountToPay,
             date = convertUnixTimeToFormattedDate(informationReceipt.codeOperation),
             operationCode = informationReceipt.codeOperation.toString(),
+            recipientName = informationReceipt.names
         )
         when (result) {
             is PAResult.Error -> {
