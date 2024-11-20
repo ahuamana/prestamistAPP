@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.data.utils
 
+import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.domain.notification.ReceiptParams
 
 class ReceiptHtmlTemplate {
@@ -74,7 +75,7 @@ class ReceiptHtmlTemplate {
                 font-weight: bold; 
                 color: #007bff; 
                 text-align: center;'>
-                $${params.amount}
+                ${PADataConstants.CURRENCY}${params.amount}
             </div>
             ${dateSection(params.date)}
             ${dividerSection()}

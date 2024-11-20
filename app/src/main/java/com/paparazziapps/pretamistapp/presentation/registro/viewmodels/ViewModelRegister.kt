@@ -34,7 +34,7 @@ class ViewModelRegister (
     private val _dailyStringMode : MutableStateFlow<String> = MutableStateFlow(LoanType.DAILY.description)
     val dailyStringMode : StateFlow<String> = _dailyStringMode.asStateFlow()
 
-    private val _state = MutableStateFlow<RegisterState>(RegisterState.Loading)
+    private val _state = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val state: StateFlow<RegisterState> = _state.asStateFlow()
 
     fun setDailyStringMode(value: String) {

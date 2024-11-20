@@ -2,6 +2,9 @@ package com.paparazziapps.pretamistapp.data
 
 object PADataConstants {
 
+    //currency
+    const val CURRENCY = "S/."
+
     //child branches
     const val BRANCHES = "sucusales"
     //collections
