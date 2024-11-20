@@ -103,6 +103,14 @@ class MyPreferences(private val context: Context) {
         return emailUser
     }
 
+    fun getToken(): String{
+        return prefs.getString("token", "")
+    }
+
+    fun setToken(token: String){
+        prefs.setString("token", token)
+    }
+
 
 
 }

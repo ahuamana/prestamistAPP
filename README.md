@@ -113,6 +113,25 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
   }
 }
 ```
+4. Configuración de Notificaciones Automáticas (OPCIONAL)
+
+    Para configurar notificaciones automáticas utilizando la API de Resend, sigue estos pasos:
+
+    1. Crear una cuenta en Resend
+    2. Configurar un nuevo proyecto en Resend
+    3. Configurar tu dominio en Resend
+    3. Obtener el API Key de Resend
+    4. Configurar el API Key en el local.properties del proyecto
+
+    ```bash
+    RESEND_API_KEY=<REPLACE_WITH_API_KEY>
+    ```
+    
+    Para configurar el recipient from en el envio de mensajes, debes configurar el archivo PADATAConstants.kt
+
+    ```bash
+    const val RECIPIENT_FROM = "PrestamistApp <info@paparazziteam.work>"
+    ```
 
 4. Sincronizar el proyecto y vincularlo con Firebase
 

@@ -8,6 +8,17 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+// In your build.gradle file
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { stream ->
+        localProperties.load(stream)
+    }
+}
+
+def resendApiKey = localProperties.getProperty('RESEND_API_KEY')
+
 android {
     compileSdk 34
 
@@ -36,12 +47,14 @@ android {
                     outputFileName = "prestamist-pa-${variant.name}-${variant.versionName}.apk"
                 }
             }
+            buildConfigField("String", "RESEND_API_KEY", "\"$resendApiKey\"")
         }
 
         debug {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "RESEND_API_KEY", "\"$resendApiKey\"")
         }
     }
     compileOptions {
@@ -133,4 +146,13 @@ dependencies {
     //Animation
     def lottieVersion = "6.6.0"
     implementation ("com.airbnb.android:lottie:$lottieVersion")
+
+    //Retrofit
+    def retrofit_version = "2.11.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    //Interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+
 }

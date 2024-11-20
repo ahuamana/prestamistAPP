@@ -58,7 +58,8 @@ data class LoanDomain (
     var quotasPaid:Int?=null,
     @SerialName("quotasPending")
     var quotasPending:Int?=null,
-
+    @SerialName("email")
+    val email:String?=null,
     )
 
 enum class TypePrestamo(val value: Int) {

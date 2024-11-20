@@ -1,13 +1,11 @@
 package com.paparazziapps.pretamistapp.presentation.registro.views
 
 import android.annotation.SuppressLint
-import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +20,8 @@ import java.util.*
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
@@ -31,6 +31,8 @@ import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.RegisterState
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -67,7 +69,7 @@ class RegistrarActivity : AppCompatActivity() {
         binding = ActivityRegistrarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        registerButton = binding.registrarButton
+
         toolbar         = binding.tool.toolbar
 
         layoutFecha         = binding.fechaLayout
@@ -93,12 +95,12 @@ class RegistrarActivity : AppCompatActivity() {
         //get intent
         getExtras()
         showCalendar()
-        validateFields()
-        registerPrestamo()
         setUpToolbarInitialize()
 
         //Observers
-        startObservers()
+        setupObservers()
+
+        setupButtons()
     }
 
     private fun fieldsSuperAdmin() {
@@ -109,13 +111,11 @@ class RegistrarActivity : AppCompatActivity() {
         }
     }
 
-    private fun startObservers() {
-        viewModel.getMessage().observe(this){ message ->  showMessage(message)}
-
+    private fun setupObservers() {
         _viewModelBranches.branches.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
-                var scrsales = mutableListOf<String>()
+                val scrsales = mutableListOf<String>()
                 it.forEach {
                     scrsales.add(it.name?:"")
                 }
@@ -130,6 +130,33 @@ class RegistrarActivity : AppCompatActivity() {
                 viewCurtainSucursal.isVisible = false
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle).collect(::stateHandler)
+        }
+    }
+
+    private fun stateHandler(state: RegisterState) {
+        when(state) {
+            RegisterState.Loading -> {
+                binding.cortina.isVisible = true
+            }
+            is RegisterState.Success -> {
+                binding.cortina.isVisible = false
+                viewModel.resetState()
+                createIntentSuccess(state.message)
+            }
+            is RegisterState.Error -> {
+                binding.cortina.isVisible = false
+                viewModel.resetState()
+                createIntentSuccess(state.message)
+            }
+
+            RegisterState.Idle -> {
+                binding.cortina.isVisible = false
+            }
+
+        }
     }
 
     private fun showMessage(message: String?) {
@@ -143,146 +170,105 @@ class RegistrarActivity : AppCompatActivity() {
         }
     }
 
-    private fun registerPrestamo() {
-
-        registerButton.apply {
-
-            setOnClickListener {
-                hideKeyboardActivity(this@RegistrarActivity)
-                isEnabled = false
-                binding.cortina.isVisible = true
-
-                val loanDomain = LoanDomain(
-                    names     = binding.nombres.text.toString().trim(),
-                    lastnames   = binding.apellidos.text.toString().trim(),
-                    dni         = binding.dni.text.toString().trim(),
-                    cellular     = binding.celular.text.toString().trim(),
-                    loanStartDateFormatted       = binding.fecha.text.toString().trim(),
-                    loanStartDateUnix    = fechaSelectedUnixtime,
-                    loanCreationDateUnix = getFechaActualNormalInUnixtime(),
-                    capital     = loanDomainReceived.capital,
-                    interest     = loanDomainReceived.interest,
-                    quotasPaid = 0,
-                    amountPerQuota = loanDomainReceived.amountPerQuota,
-                    totalAmountToPay = loanDomainReceived.totalAmountToPay,
-                    state = "ABIERTO",
-                    //fields new version 2.0
-                    typeLoan = loanDomainReceived.typeLoan,
-                    typeLoanDays = loanDomainReceived.typeLoanDays,
-                    typeLoanName = loanDomainReceived.typeLoanName,
-                    quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
-                )
-
-                var idSucursalSelected:Int = INT_DEFAULT
-
-                listaSucursales.forEach {
-                    if(it.name?.equals(sucursalTxt.text.toString().trim()) == true) idSucursalSelected = it.id?: INT_DEFAULT
-                }
-
-                //Register ViewModel
-                //Actualizar el idSucursal para crear un prestamo como superAdmin
-                viewModel.createPrestamo(loanDomain, idSucursal = idSucursalSelected){
-                        isCorrect, msj, result, isRefresh ->
-
-                    if(isCorrect)
-                    {
-                        //showMessage(msj)
-                        intent.putExtra("mensaje", msj)
-                        setResult(RESULT_OK, intent)
-                        finish()
-
-                    }else{
-                        binding.cortina.isVisible = false
-                        isEnabled = true
-                    }
-                }
-               //Fin click listener
-            }
-
-
-
+    private fun setupButtons() {
+        binding.registrarButton.setOnClickListener {
+           handledRegister()
         }
     }
 
-    private fun validateFields() {
+    private fun handledRegister() {
+        hideKeyboardActivity(this@RegistrarActivity)
 
-        binding.fecha.doAfterTextChanged {
-            showbutton()
+        val names = binding.nombres.text.toString().trim()
+
+        binding.nombresLayout.error = when {
+            names.isEmpty() -> "El nombre esta vacío"
+            names.count() < 4 -> "El nombre esta incompleto"
+            else -> null
         }
 
-        binding.nombres.doAfterTextChanged { input->
-            val names = input.toString()
-            layoutNombres.error = when {
-                names.isEmpty() -> "El nombre esta vacío"
-                names.count() < 4 -> "El nombre esta incompleto"
-                else -> null
-            }
-            showbutton()
+        val lastnames = binding.apellidos.text.toString().trim()
+
+        binding.apellidosLayout.error = when {
+            lastnames.isEmpty() -> "Los apellidos estan vacíos"
+            lastnames.count() < 4 -> "Los apellidos estan incompletos"
+            else -> null
         }
 
-        binding.apellidos.doAfterTextChanged { input->
-            val lastnames = input.toString()
-            layoutApellidos.error = when {
-                lastnames.isEmpty() -> "Los apellidos estan vacíos"
-                lastnames.count() < 4 -> "Los apellidos estan incompletos"
-                else -> null
-            }
-            showbutton()
+        val document = binding.dni.text.toString().trim()
+        val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
 
+        binding.dniLayout.error = when {
+            document.isEmpty() -> "Documento vacío"
+            document.count() in 1 until documentMaxLength -> "Documento incompleto"
+            else -> null
         }
 
-        binding.dni.doAfterTextChanged { input ->
-            val document = input.toString()
-            val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
-            layoutDNI.error = when {
-                document.isEmpty() -> getString(R.string.documento_vacío)
-                document.count() in 1 until documentMaxLength -> getString(R.string.documento_incompleto)
-                else -> null
-            }
-            showbutton()
+        val date = binding.fecha.text.toString().trim()
+
+        binding.fechaLayout.error = when {
+            date.isEmpty() -> "Fecha vacía"
+            else -> null
         }
 
-        binding.celular.doAfterTextChanged {
-            val cellular = it.toString()
-            layoutCelular.error = when {
-                cellular.isEmpty() -> "Celular vacío"
-                cellular.count() in 1..8 -> "Celular incompleto"
-                else -> null
-            }
-            showbutton()
+        val cellular = binding.celular.text.toString().trim()
+
+        binding.celularLayout.error = when {
+            cellular.isEmpty() -> "Celular vacío"
+            cellular.count() in 1..8 -> "Celular incompleto"
+            else -> null
         }
 
+        val email = binding.email.text.toString().trim()
 
+        binding.layoutEmail.error = when {
+            email.isEmpty() -> "Email vacío"
+            isValidEmail(email).not() -> "Email no válido"
+            else -> null
+        }
+
+        if(names.isEmpty() || lastnames.isEmpty() || document.isEmpty() || date.isEmpty() || cellular.isEmpty() || email.isEmpty()) return
+        if (names.count() < 4 || lastnames.count() < 4 || document.count() < documentMaxLength || cellular.count() < 9 || email.count() < 4) return
+        if (fechaSelectedUnixtime == null) return
+        if(isValidEmail(email).not()) return
+
+        //Finish validation
+
+        val loanDomain = LoanDomain(
+            names     = names,
+            lastnames   = lastnames,
+            dni         = document,
+            cellular     = cellular,
+            email = email,
+            loanStartDateFormatted       = date,
+            loanStartDateUnix    = fechaSelectedUnixtime,
+            loanCreationDateUnix = getFechaActualNormalInUnixtime(),
+            capital     = loanDomainReceived.capital,
+            interest     = loanDomainReceived.interest,
+            quotasPaid = 0,
+            amountPerQuota = loanDomainReceived.amountPerQuota,
+            totalAmountToPay = loanDomainReceived.totalAmountToPay,
+            state = "ABIERTO",
+            //fields new version 2.0
+            typeLoan = loanDomainReceived.typeLoan,
+            typeLoanDays = loanDomainReceived.typeLoanDays,
+            typeLoanName = loanDomainReceived.typeLoanName,
+            quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
+        )
+
+        var idSucursalSelected:Int = INT_DEFAULT
+
+        listaSucursales.forEach {
+            if(it.name?.equals(sucursalTxt.text.toString().trim()) == true) idSucursalSelected = it.id?: INT_DEFAULT
+        }
+
+        viewModel.createLoan(loanDomain, branchId = idSucursalSelected)
     }
 
-    private fun showbutton() {
-        if(!binding.nombres.text.toString().trim().isNullOrEmpty()          &&
-            binding.nombres.text.toString().trim().count() >= 4             &&
-            !binding.apellidos.text.toString().trim().isNullOrEmpty()       &&
-            binding.apellidos.text.toString().trim().count() >= 4           &&
-            !binding.celular.text.toString().trim().isNullOrEmpty()         &&
-            binding.celular.text.toString().trim().count() == 9             &&
-            !binding.dni.text.toString().trim().isNullOrEmpty()             &&
-            binding.dni.text.toString().trim().count() == resources.getInteger(R.integer.cantidad_documento_max)             &&
-            !binding.fecha.text.toString().trim().isNullOrEmpty())
-        {
-            //Registrar prestamo
-            registerButton.apply {
-                isEnabled = true
-                backgroundTintMode = PorterDuff.Mode.SCREEN
-                backgroundTintList= ContextCompat.getColorStateList(context,R.color.primary)
-                setTextColor(ContextCompat.getColor(context, R.color.white))
-            }
-        }else
-        {
-            registerButton.apply {
-                isEnabled = false
-                backgroundTintMode = PorterDuff.Mode.MULTIPLY
-                backgroundTintList= ContextCompat.getColorStateList(context,R.color.color_input_text)
-                setTextColor(ContextCompat.getColor(context, R.color.color_input_text))
-            }
-
-        }
+    private fun createIntentSuccess(msj:String) {
+        intent.putExtra("mensaje", msj)
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     private fun showCalendar() {
@@ -301,7 +287,7 @@ class RegistrarActivity : AppCompatActivity() {
         datePicker.show(supportFragmentManager, "Datepickerdialog");
 
         datePicker.addOnPositiveButtonClickListener {
-            println("UnixTime: ${it}")
+            Log.d("UNIXTIME","UnixTime: ${it}")
             fechaSelectedUnixtime = it
             SimpleDateFormat("dd/MM/yyyy").apply {
                 timeZone = TimeZone.getTimeZone("GMT")

@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class ViewModelDetailReceipt(
     private val stateHandle: SavedStateHandle,
-    private val analyticsRepository: PAAnalyticsRepository
+    private val analyticsRepository: PAAnalyticsRepository,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<DetailReceiptState> = MutableStateFlow(DetailReceiptState.Loading)
@@ -31,7 +32,8 @@ class ViewModelDetailReceipt(
         totalAmountToPay = 0.0,
         amountPerQuote = 0.0,
         typeLoan = 0,
-        loanStartDateUnix = 0
+        loanStartDateUnix = 0,
+        email = ""
     )
 
     fun getInformationReceipt() = viewModelScope.launch {
@@ -42,7 +44,6 @@ class ViewModelDetailReceipt(
         } catch (e: Exception) {
             _state.value = DetailReceiptState.Error
         }
-
     }
 
     fun logEvent(event: String, params: Map<String, String>) {

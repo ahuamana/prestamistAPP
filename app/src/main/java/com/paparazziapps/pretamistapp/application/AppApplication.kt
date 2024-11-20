@@ -11,6 +11,7 @@ import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import com.paparazziapps.pretamistapp.data.providers.RegisterProvider
 import com.paparazziapps.pretamistapp.data.providers.UserProvider
+import com.paparazziapps.pretamistapp.data.services.ServiceProviderImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteBranchDataSourceImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteBranchDataSource
@@ -22,11 +23,19 @@ import com.paparazziapps.pretamistapp.data.remote.RemoteLoginDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteLoginDataSourceImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSourceImpl
+import com.paparazziapps.pretamistapp.data.remote.RemoteEmailDataSourceImpl
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.data.repository.PARepositoryImpl
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepositoryImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSourceImpl
+import com.paparazziapps.pretamistapp.data.remote.RemoteEmailDataSource
+import com.paparazziapps.pretamistapp.data.repository.PAEmailRepositoryImpl
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
+import com.paparazziapps.pretamistapp.data.repository.PAEmailRepository
+import com.paparazziapps.pretamistapp.data.services.ServiceProvider
+import com.paparazziapps.pretamistapp.data.utils.ReceiptHtmlTemplate
+import com.paparazziapps.pretamistapp.frameworks.network.NetworkModule
+import com.paparazziapps.pretamistapp.frameworks.network.NetworkModuleImpl
 import com.paparazziapps.pretamistapp.helper.turnOffDarkModeInAllApp
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
@@ -75,6 +84,14 @@ class AppApplication : MultiDexApplication() {
         //Data Firebase
         singleOf(::RemoteAnalyticsDataSourceImpl) { bind<RemoteAnalyticsDataSource>() }
         singleOf(::PAAnalyticsRepositoryImpl) { bind<PAAnalyticsRepository>() }
+
+        //New Module notification with email
+        singleOf(::ReceiptHtmlTemplate) { bind<ReceiptHtmlTemplate>() }
+        singleOf(::NetworkModuleImpl) { bind<NetworkModule>() }
+        singleOf(::ServiceProviderImpl) { bind<ServiceProvider>() }
+        singleOf(::RemoteEmailDataSourceImpl) { bind<RemoteEmailDataSource>() }
+        singleOf(::PAEmailRepositoryImpl) { bind<PAEmailRepository>() }
+
     }
 
     private val uiModule = module {

@@ -467,10 +467,6 @@ class RegistrarFragment : Fragment() {
 
     private fun observers() {
 
-        viewModel.getMessage().observe(viewLifecycleOwner) { message ->
-            if(message!= null)  showMessage(message)
-        }
-
         viewModel.getMontoDiario().observe(viewLifecycleOwner){ montodiario ->
             if(montodiario !=null) {
                 Log.d(tag, "Monto Diario: $montodiario")

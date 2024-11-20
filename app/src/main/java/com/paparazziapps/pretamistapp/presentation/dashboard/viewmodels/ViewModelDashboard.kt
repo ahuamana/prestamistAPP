@@ -10,8 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
+import com.paparazziapps.pretamistapp.data.repository.PAEmailRepository
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
@@ -20,8 +22,10 @@ import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
 import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
 import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
+import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.TypePrestamo
+import com.paparazziapps.pretamistapp.domain.utils.convertUnixTimeToFormattedDate
 import com.paparazziapps.pretamistapp.helper.fromJson
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
@@ -35,7 +39,8 @@ import kotlinx.coroutines.launch
 class ViewModelDashboard (
     private val repository: PARepository,
     private val preferences: MyPreferences,
-    private val analyticsRepository: PAAnalyticsRepository
+    private val analyticsRepository: PAAnalyticsRepository,
+    private val paEmailRepository: PAEmailRepository,
 ) : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
@@ -330,13 +335,38 @@ class ViewModelDashboard (
                     totalAmountToPay = totalAmountToPay,
                     amountPerQuote = loanDomain.amountPerQuota ?: 0.0,
                     typeLoan = loanDomain.typeLoan ?: INT_DEFAULT,
-                    loanStartDateUnix = loanDomain.loanStartDateUnix ?: 0
+                    loanStartDateUnix = loanDomain.loanStartDateUnix ?: 0,
+                    email = loanDomain.email ?: ""
                 )
+                sendEmailReceipt(informationReceipt)
 
                 _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = newLoans, informationReceipt = informationReceipt)
             }
         }
     }
+
+    private fun sendEmailReceipt(informationReceipt: InformationReceiptDomain) = viewModelScope.launch {
+        val result = paEmailRepository.sendPaymentReceipt(
+            recipientEmail = informationReceipt.email,
+            amount = informationReceipt.totalAmountToPay,
+            date = convertUnixTimeToFormattedDate(informationReceipt.codeOperation),
+            operationCode = informationReceipt.codeOperation.toString(),
+            recipientName = informationReceipt.names
+        )
+        when (result) {
+            is PAResult.Error -> {
+                Log.d(tag, "ViewModelDashboard -->sendEmail: Error ${result.exception.message}")
+                analyticsRepository.logEvent(PADataConstants.EVENT_RESEND_EMAIL_ERROR)
+            }
+
+            is PAResult.Success -> {
+                Log.d(tag, "ViewModelDashboard -->sendEmail : Success ${result.data}")
+                analyticsRepository.logEvent(PADataConstants.EVENT_RESEND_EMAIL_SUCCESS)
+            }
+        }
+    }
+
+
 
     private fun handledPaymentDaily(
         loanDomain: LoanDomain,
