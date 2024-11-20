@@ -12,6 +12,7 @@ import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
+import com.paparazziapps.pretamistapp.data.repository.PAEmailRepository
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
@@ -35,7 +36,8 @@ import kotlinx.coroutines.launch
 class ViewModelDashboard (
     private val repository: PARepository,
     private val preferences: MyPreferences,
-    private val analyticsRepository: PAAnalyticsRepository
+    private val analyticsRepository: PAAnalyticsRepository,
+    private val paEmailRepository: PAEmailRepository,
 ) : ViewModel(){
 
     private val tag = ViewModelDashboard::class.java.simpleName
@@ -334,6 +336,27 @@ class ViewModelDashboard (
                 )
 
                 _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = newLoans, informationReceipt = informationReceipt)
+            }
+        }
+    }
+
+    private fun sendEmailReceipt(informationReceipt: InformationReceiptDomain) = viewModelScope.launch {
+
+        val result = paEmailRepository.sendPaymentReceipt(
+            recipientEmail = informationReceipt.,
+            amount = informationReceipt.totalAmountToPay,
+            date = informationReceipt.date ?: "",
+            operationCode = informationReceipt.codeOperation.toString(),
+        )
+        when (result) {
+            is PAResult.Error -> {
+                Log.d(tag, "ViewModelRegister --> : Error ${result.exception.message}")
+
+            }
+
+            is PAResult.Success -> {
+                Log.d(tag, "ViewModelRegister --> : Success ${result.data}")
+
             }
         }
     }

@@ -116,6 +116,28 @@
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutEmail"
+                    style="@style/CustomTextField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/apellidosLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/googlesans_regular"
+                        android:hint="Correo electrónico"
+                        android:inputType="textEmailAddress"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/dniLayout"
@@ -130,7 +152,7 @@
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toStartOf="@+id/celularLayout"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/apellidosLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/dni"
@@ -155,7 +177,7 @@
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/dniLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/apellidosLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/celular"
@@ -473,17 +495,16 @@
                     android:id="@+id/registrar_button"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:enabled="false"
-                    android:textColor="@color/color_input_text"
+                    android:textColor="@color/white"
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/corner_boton_outline"
-                    app:backgroundTint="@color/color_input_text"
+                    android:background="@drawable/buttom_corners"
+                    app:backgroundTint="@color/primary"
                     android:text="Registrar"
                     app:layout_constraintTop_toBottomOf="@+id/capitalLayout"
                     style="?android:textAppearanceSmall"/>
 
-                <Space
+                <androidx.legacy.widget.Space
                     android:id="@+id/space_bottom"
                     android:layout_width="match_parent"
                     app:layout_constraintTop_toBottomOf="@+id/registrar_button"

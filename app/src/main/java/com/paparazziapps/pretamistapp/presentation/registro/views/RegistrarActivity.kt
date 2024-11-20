@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -67,7 +68,7 @@ class RegistrarActivity : AppCompatActivity() {
         binding = ActivityRegistrarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        registerButton = binding.registrarButton
+
         toolbar         = binding.tool.toolbar
 
         layoutFecha         = binding.fechaLayout
@@ -93,12 +94,12 @@ class RegistrarActivity : AppCompatActivity() {
         //get intent
         getExtras()
         showCalendar()
-        validateFields()
-        registerPrestamo()
         setUpToolbarInitialize()
 
         //Observers
         startObservers()
+
+        setupButtons()
     }
 
     private fun fieldsSuperAdmin() {
@@ -115,7 +116,7 @@ class RegistrarActivity : AppCompatActivity() {
         _viewModelBranches.branches.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
-                var scrsales = mutableListOf<String>()
+                val scrsales = mutableListOf<String>()
                 it.forEach {
                     scrsales.add(it.name?:"")
                 }
@@ -143,115 +144,115 @@ class RegistrarActivity : AppCompatActivity() {
         }
     }
 
-    private fun registerPrestamo() {
-
-        registerButton.apply {
-
-            setOnClickListener {
-                hideKeyboardActivity(this@RegistrarActivity)
-                isEnabled = false
-                binding.cortina.isVisible = true
-
-                val loanDomain = LoanDomain(
-                    names     = binding.nombres.text.toString().trim(),
-                    lastnames   = binding.apellidos.text.toString().trim(),
-                    dni         = binding.dni.text.toString().trim(),
-                    cellular     = binding.celular.text.toString().trim(),
-                    loanStartDateFormatted       = binding.fecha.text.toString().trim(),
-                    loanStartDateUnix    = fechaSelectedUnixtime,
-                    loanCreationDateUnix = getFechaActualNormalInUnixtime(),
-                    capital     = loanDomainReceived.capital,
-                    interest     = loanDomainReceived.interest,
-                    quotasPaid = 0,
-                    amountPerQuota = loanDomainReceived.amountPerQuota,
-                    totalAmountToPay = loanDomainReceived.totalAmountToPay,
-                    state = "ABIERTO",
-                    //fields new version 2.0
-                    typeLoan = loanDomainReceived.typeLoan,
-                    typeLoanDays = loanDomainReceived.typeLoanDays,
-                    typeLoanName = loanDomainReceived.typeLoanName,
-                    quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
-                )
-
-                var idSucursalSelected:Int = INT_DEFAULT
-
-                listaSucursales.forEach {
-                    if(it.name?.equals(sucursalTxt.text.toString().trim()) == true) idSucursalSelected = it.id?: INT_DEFAULT
-                }
-
-                //Register ViewModel
-                //Actualizar el idSucursal para crear un prestamo como superAdmin
-                viewModel.createPrestamo(loanDomain, idSucursal = idSucursalSelected){
-                        isCorrect, msj, result, isRefresh ->
-
-                    if(isCorrect)
-                    {
-                        //showMessage(msj)
-                        intent.putExtra("mensaje", msj)
-                        setResult(RESULT_OK, intent)
-                        finish()
-
-                    }else{
-                        binding.cortina.isVisible = false
-                        isEnabled = true
-                    }
-                }
-               //Fin click listener
-            }
-
-
-
+    private fun setupButtons() {
+        binding.registrarButton.setOnClickListener {
+           handledRegister()
         }
     }
 
-    private fun validateFields() {
+    private fun handledRegister() {
+        hideKeyboardActivity(this@RegistrarActivity)
 
-        binding.fecha.doAfterTextChanged {
-            showbutton()
+        val names = binding.nombres.text.toString().trim()
+
+        binding.nombresLayout.error = when {
+            names.isEmpty() -> "El nombre esta vacío"
+            names.count() < 4 -> "El nombre esta incompleto"
+            else -> null
         }
 
-        binding.nombres.doAfterTextChanged { input->
-            val names = input.toString()
-            layoutNombres.error = when {
-                names.isEmpty() -> "El nombre esta vacío"
-                names.count() < 4 -> "El nombre esta incompleto"
-                else -> null
+        val lastnames = binding.apellidos.text.toString().trim()
+
+        binding.apellidosLayout.error = when {
+            lastnames.isEmpty() -> "Los apellidos estan vacíos"
+            lastnames.count() < 4 -> "Los apellidos estan incompletos"
+            else -> null
+        }
+
+        val document = binding.dni.text.toString().trim()
+        val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
+
+        binding.dniLayout.error = when {
+            document.isEmpty() -> "Documento vacío"
+            document.count() in 1 until documentMaxLength -> "Documento incompleto"
+            else -> null
+        }
+
+        val date = binding.fecha.text.toString().trim()
+
+        binding.fechaLayout.error = when {
+            date.isEmpty() -> "Fecha vacía"
+            else -> null
+        }
+
+        val cellular = binding.celular.text.toString().trim()
+
+        binding.celularLayout.error = when {
+            cellular.isEmpty() -> "Celular vacío"
+            cellular.count() in 1..8 -> "Celular incompleto"
+            else -> null
+        }
+
+        val email = binding.email.text.toString().trim()
+
+        binding.layoutEmail.error = when {
+            email.isEmpty() -> "Email vacío"
+            isValidEmail(email).not() -> "Email no válido"
+            else -> null
+        }
+
+        if(names.isEmpty() || lastnames.isEmpty() || document.isEmpty() || date.isEmpty() || cellular.isEmpty() || email.isEmpty()) return
+        if (names.count() < 4 || lastnames.count() < 4 || document.count() < documentMaxLength || cellular.count() < 9 || email.count() < 4) return
+        if (fechaSelectedUnixtime == null) return
+        if(isValidEmail(email).not()) return
+
+        //Finish validation
+
+        val loanDomain = LoanDomain(
+            names     = names,
+            lastnames   = lastnames,
+            dni         = document,
+            cellular     = cellular,
+            email = email,
+            loanStartDateFormatted       = date,
+            loanStartDateUnix    = fechaSelectedUnixtime,
+            loanCreationDateUnix = getFechaActualNormalInUnixtime(),
+            capital     = loanDomainReceived.capital,
+            interest     = loanDomainReceived.interest,
+            quotasPaid = 0,
+            amountPerQuota = loanDomainReceived.amountPerQuota,
+            totalAmountToPay = loanDomainReceived.totalAmountToPay,
+            state = "ABIERTO",
+            //fields new version 2.0
+            typeLoan = loanDomainReceived.typeLoan,
+            typeLoanDays = loanDomainReceived.typeLoanDays,
+            typeLoanName = loanDomainReceived.typeLoanName,
+            quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
+        )
+
+        var idSucursalSelected:Int = INT_DEFAULT
+
+        listaSucursales.forEach {
+            if(it.name?.equals(sucursalTxt.text.toString().trim()) == true) idSucursalSelected = it.id?: INT_DEFAULT
+        }
+
+        //Register ViewModel
+        //Actualizar el idSucursal para crear un prestamo como superAdmin
+        viewModel.createPrestamo(loanDomain, idSucursal = idSucursalSelected){
+                isCorrect, msj, result, isRefresh ->
+
+            if(isCorrect)
+            {
+                //showMessage(msj)
+                intent.putExtra("mensaje", msj)
+                setResult(RESULT_OK, intent)
+                finish()
+
+            }else{
+                binding.cortina.isVisible = false
             }
-            showbutton()
         }
-
-        binding.apellidos.doAfterTextChanged { input->
-            val lastnames = input.toString()
-            layoutApellidos.error = when {
-                lastnames.isEmpty() -> "Los apellidos estan vacíos"
-                lastnames.count() < 4 -> "Los apellidos estan incompletos"
-                else -> null
-            }
-            showbutton()
-
-        }
-
-        binding.dni.doAfterTextChanged { input ->
-            val document = input.toString()
-            val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
-            layoutDNI.error = when {
-                document.isEmpty() -> getString(R.string.documento_vacío)
-                document.count() in 1 until documentMaxLength -> getString(R.string.documento_incompleto)
-                else -> null
-            }
-            showbutton()
-        }
-
-        binding.celular.doAfterTextChanged {
-            val cellular = it.toString()
-            layoutCelular.error = when {
-                cellular.isEmpty() -> "Celular vacío"
-                cellular.count() in 1..8 -> "Celular incompleto"
-                else -> null
-            }
-            showbutton()
-        }
-
+        //Fin click listener
 
     }
 
@@ -301,7 +302,7 @@ class RegistrarActivity : AppCompatActivity() {
         datePicker.show(supportFragmentManager, "Datepickerdialog");
 
         datePicker.addOnPositiveButtonClickListener {
-            println("UnixTime: ${it}")
+            Log.d("UNIXTIME","UnixTime: ${it}")
             fechaSelectedUnixtime = it
             SimpleDateFormat("dd/MM/yyyy").apply {
                 timeZone = TimeZone.getTimeZone("GMT")

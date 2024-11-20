@@ -315,7 +315,7 @@ fun isConnected(context:Context):Boolean {
             val caps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 cm.getNetworkCapabilities(cm.activeNetwork)
             } else {
-
+                return false
             }
         }
     } catch (e: Exception) {
