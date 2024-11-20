@@ -354,12 +354,12 @@ class ViewModelDashboard (
         )
         when (result) {
             is PAResult.Error -> {
-                Log.d(tag, "ViewModelRegister --> : Error ${result.exception.message}")
+                Log.d(tag, "ViewModelDashboard -->sendEmail: Error ${result.exception.message}")
                 analyticsRepository.logEvent(PADataConstants.EVENT_RESEND_EMAIL_ERROR)
             }
 
             is PAResult.Success -> {
-                Log.d(tag, "ViewModelRegister --> : Success ${result.data}")
+                Log.d(tag, "ViewModelDashboard -->sendEmail : Success ${result.data}")
                 analyticsRepository.logEvent(PADataConstants.EVENT_RESEND_EMAIL_SUCCESS)
             }
         }

@@ -34,6 +34,7 @@ import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.data.repository.PAEmailRepository
 import com.paparazziapps.pretamistapp.data.services.ServiceProvider
 import com.paparazziapps.pretamistapp.data.utils.ReceiptHtmlTemplate
+import com.paparazziapps.pretamistapp.frameworks.network.NetworkModule
 import com.paparazziapps.pretamistapp.frameworks.network.NetworkModuleImpl
 import com.paparazziapps.pretamistapp.helper.turnOffDarkModeInAllApp
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
@@ -86,7 +87,7 @@ class AppApplication : MultiDexApplication() {
 
         //New Module notification with email
         singleOf(::ReceiptHtmlTemplate) { bind<ReceiptHtmlTemplate>() }
-        singleOf(::NetworkModuleImpl) { bind<NetworkModuleImpl>() }
+        singleOf(::NetworkModuleImpl) { bind<NetworkModule>() }
         singleOf(::ServiceProviderImpl) { bind<ServiceProvider>() }
         singleOf(::RemoteEmailDataSourceImpl) { bind<RemoteEmailDataSource>() }
         singleOf(::PAEmailRepositoryImpl) { bind<PAEmailRepository>() }

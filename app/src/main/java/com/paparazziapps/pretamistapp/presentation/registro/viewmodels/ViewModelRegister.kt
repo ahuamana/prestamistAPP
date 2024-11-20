@@ -21,7 +21,7 @@ import java.lang.Exception
 
 class ViewModelRegister (
     private val repository: PARepository,
-    val handle: SavedStateHandle
+    private val handle: SavedStateHandle
 ) : ViewModel(){
 
     private val tag = ViewModelRegister::class.java.simpleName
@@ -29,20 +29,18 @@ class ViewModelRegister (
     //PAConstants.EXTRA_LOAN_JSON
     private val loanDomain = getLoanDomainFromExtras()
 
-    var _message = MutableLiveData<String>()
-    var _montoDiario = MutableLiveData<Double>()
+    val _montoDiario = MutableLiveData<Double>()
 
     private val _dailyStringMode : MutableStateFlow<String> = MutableStateFlow(LoanType.DAILY.description)
     val dailyStringMode : StateFlow<String> = _dailyStringMode.asStateFlow()
+
+    private val _state = MutableStateFlow<RegisterState>(RegisterState.Loading)
+    val state: StateFlow<RegisterState> = _state.asStateFlow()
 
     fun setDailyStringMode(value: String) {
         //split between spaces and get the first element handle the case of the string having a space at the end
         val description = value.trim().split(" ").firstOrNull()?:LoanType.DAILY.description
         _dailyStringMode.value = description
-    }
-
-    fun getMessage() :LiveData<String>{
-        return  _message
     }
 
     fun getMontoDiario() : LiveData<Double> {
@@ -71,27 +69,32 @@ class ViewModelRegister (
         }
     }
 
-    fun createPrestamo(loanDomain: LoanDomain, idSucursal:Int, onComplete: (Boolean, String, String?, Boolean) -> Unit)  = viewModelScope.launch {
-        var isCorrect = false
-        val result = repository.createLoan(loanDomain, idBranch = idSucursal)
+    fun createLoan(loanDomain: LoanDomain, branchId:Int)  = viewModelScope.launch {
+        _state.value = RegisterState.Loading
+        val result = repository.createLoan(loanDomain, idBranch = branchId)
 
         when (result) {
             is PAResult.Error -> {
-                isCorrect = false
-                _message.value = "La solicitud no se pudo procesar, intentalo otra vez"
-                onComplete(
-                    isCorrect,
-                    "La solicitud no se pudo procesar, intentalo otra vez",
-                    "",
-                    false)
+                val msg = "La solicitud no se pudo procesar, intentalo otra vez"
+                _state.value = RegisterState.Error(msg)
             }
 
             is PAResult.Success -> {
-                _message.value = "El prestamo se registro correctamente"
-                isCorrect = true
-                onComplete(isCorrect, "El prestamo se registro correctamente", "", false)
+                val msg = "El prestamo se registro correctamente"
+                _state.value = RegisterState.Success(msg)
             }
         }
     }
 
+    fun resetState() {
+        _state.value = RegisterState.Idle
+    }
+
+}
+
+sealed class RegisterState {
+    data object Idle : RegisterState()
+    data object Loading : RegisterState()
+    data class Success(val message:String) : RegisterState()
+    data class Error(val message:String) : RegisterState()
 }

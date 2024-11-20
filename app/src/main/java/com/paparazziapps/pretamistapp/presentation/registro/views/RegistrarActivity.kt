@@ -1,14 +1,11 @@
 package com.paparazziapps.pretamistapp.presentation.registro.views
 
 import android.annotation.SuppressLint
-import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -23,6 +20,8 @@ import java.util.*
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
@@ -32,6 +31,8 @@ import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.RegisterState
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -97,7 +98,7 @@ class RegistrarActivity : AppCompatActivity() {
         setUpToolbarInitialize()
 
         //Observers
-        startObservers()
+        setupObservers()
 
         setupButtons()
     }
@@ -110,9 +111,7 @@ class RegistrarActivity : AppCompatActivity() {
         }
     }
 
-    private fun startObservers() {
-        viewModel.getMessage().observe(this){ message ->  showMessage(message)}
-
+    private fun setupObservers() {
         _viewModelBranches.branches.observe(this){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
@@ -130,6 +129,33 @@ class RegistrarActivity : AppCompatActivity() {
                 viewDotsSucursal.isVisible = false
                 viewCurtainSucursal.isVisible = false
             }
+        }
+
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle).collect(::stateHandler)
+        }
+    }
+
+    private fun stateHandler(state: RegisterState) {
+        when(state) {
+            RegisterState.Loading -> {
+                binding.cortina.isVisible = true
+            }
+            is RegisterState.Success -> {
+                binding.cortina.isVisible = false
+                viewModel.resetState()
+                createIntentSuccess(state.message)
+            }
+            is RegisterState.Error -> {
+                binding.cortina.isVisible = false
+                viewModel.resetState()
+                createIntentSuccess(state.message)
+            }
+
+            RegisterState.Idle -> {
+                binding.cortina.isVisible = false
+            }
+
         }
     }
 
@@ -236,54 +262,13 @@ class RegistrarActivity : AppCompatActivity() {
             if(it.name?.equals(sucursalTxt.text.toString().trim()) == true) idSucursalSelected = it.id?: INT_DEFAULT
         }
 
-        //Register ViewModel
-        //Actualizar el idSucursal para crear un prestamo como superAdmin
-        viewModel.createPrestamo(loanDomain, idSucursal = idSucursalSelected){
-                isCorrect, msj, result, isRefresh ->
-
-            if(isCorrect)
-            {
-                //showMessage(msj)
-                intent.putExtra("mensaje", msj)
-                setResult(RESULT_OK, intent)
-                finish()
-
-            }else{
-                binding.cortina.isVisible = false
-            }
-        }
-        //Fin click listener
-
+        viewModel.createLoan(loanDomain, branchId = idSucursalSelected)
     }
 
-    private fun showbutton() {
-        if(!binding.nombres.text.toString().trim().isNullOrEmpty()          &&
-            binding.nombres.text.toString().trim().count() >= 4             &&
-            !binding.apellidos.text.toString().trim().isNullOrEmpty()       &&
-            binding.apellidos.text.toString().trim().count() >= 4           &&
-            !binding.celular.text.toString().trim().isNullOrEmpty()         &&
-            binding.celular.text.toString().trim().count() == 9             &&
-            !binding.dni.text.toString().trim().isNullOrEmpty()             &&
-            binding.dni.text.toString().trim().count() == resources.getInteger(R.integer.cantidad_documento_max)             &&
-            !binding.fecha.text.toString().trim().isNullOrEmpty())
-        {
-            //Registrar prestamo
-            registerButton.apply {
-                isEnabled = true
-                backgroundTintMode = PorterDuff.Mode.SCREEN
-                backgroundTintList= ContextCompat.getColorStateList(context,R.color.primary)
-                setTextColor(ContextCompat.getColor(context, R.color.white))
-            }
-        }else
-        {
-            registerButton.apply {
-                isEnabled = false
-                backgroundTintMode = PorterDuff.Mode.MULTIPLY
-                backgroundTintList= ContextCompat.getColorStateList(context,R.color.color_input_text)
-                setTextColor(ContextCompat.getColor(context, R.color.color_input_text))
-            }
-
-        }
+    private fun createIntentSuccess(msj:String) {
+        intent.putExtra("mensaje", msj)
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     private fun showCalendar() {
