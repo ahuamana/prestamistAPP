@@ -35,6 +35,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - Genera voucher de pago
 - Opciones para compartir voucher por dispositivo
 - Redondeo de préstamos
+- Automatización de envio de bouchers por email con RESEND.com (Opcional - V4.1.0)
 
 ## 🛠 Tech Stack & Open-source libraries
 
