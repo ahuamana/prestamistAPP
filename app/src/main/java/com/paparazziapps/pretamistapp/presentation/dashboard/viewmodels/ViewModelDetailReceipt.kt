@@ -31,7 +31,8 @@ class ViewModelDetailReceipt(
         totalAmountToPay = 0.0,
         amountPerQuote = 0.0,
         typeLoan = 0,
-        loanStartDateUnix = 0
+        loanStartDateUnix = 0,
+        email = ""
     )
 
     fun getInformationReceipt() = viewModelScope.launch {

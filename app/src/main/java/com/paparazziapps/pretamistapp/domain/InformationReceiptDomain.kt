@@ -15,5 +15,6 @@ data class InformationReceiptDomain(
     val quotesPaidNew:Int,
     val amountPerQuote:Double,
     val typeLoan:Int,
-    val loanStartDateUnix:Long
+    val loanStartDateUnix:Long,
+    val email:String,
 ) : java.io.Serializable
