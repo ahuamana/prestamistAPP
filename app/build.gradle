@@ -75,10 +75,15 @@ android {
     }
 
     productFlavors {
+        free {
+            dimension "version"
+            //applicationIdSuffix ".free"
+            //versionNameSuffix "-free"
+        }
         dev {
             dimension "version"
-            applicationIdSuffix ".dev"
-            versionNameSuffix "-dev"
+            //applicationIdSuffix ".dev"
+            //versionNameSuffix "-dev"
         }
     }
 

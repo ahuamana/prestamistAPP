@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "126125039252",
+    "firebase_url": "https://piura-prestamist-app-maxwell-default-rtdb.firebaseio.com",
+    "project_id": "piura-prestamist-app-maxwell",
+    "storage_bucket": "piura-prestamist-app-maxwell.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126125039252:android:901ae5f47e49cec240de81",
+        "android_client_info": {
+          "package_name": "com.paparazziapps.pretamistapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4Wb6-vReHXtzrJ7nfc_rYZZqDpbtyfh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
