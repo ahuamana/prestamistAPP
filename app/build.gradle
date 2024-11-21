@@ -71,9 +71,22 @@ android {
 
     buildFeatures {
         buildConfig = true
+        flavorDimensions = ["version"]
     }
 
+    productFlavors {
+        dev {
+            dimension "version"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+    }
+
+
+
     namespace 'com.paparazziapps.pretamistapp'
+
+
 
 }
 
