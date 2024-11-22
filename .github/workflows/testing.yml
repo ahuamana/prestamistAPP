@@ -13,8 +13,11 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Unit Tests
-        run: ./gradlew testDebugUnitTest
+      - name: Dev Flavor Unit Tests
+        run: ./gradlew testDevDebugUnitTest
+
+      - name: Free Flavor Unit Tests
+        run: ./gradlew testFreeDebugUnitTest
 
       - name: Android Tests Reports
         uses: asadmansr/android-test-report-action@v1.2.0
