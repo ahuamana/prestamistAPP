@@ -7,42 +7,42 @@ on:
     branches: [ main ]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v3
-        - name: Set up JDK 17
-          uses: actions/setup-java@v3
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-            cache: gradle
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
 
-        - name: Setup Gradle
-          uses: gradle/gradle-build-action@v2
-        - name: Build with Gradle
-          run: ./gradlew assembleDebug
-    apk:
-        name: Generate APK
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
-          - name: Set up JDK 17
-            uses: actions/setup-java@v3
-            with:
-              java-version: '17'
-              distribution: 'temurin'
-          - name: Build APK
-            run: bash ./gradlew assembleDebug --stacktrace
-          - name: Get version name
-            id: get_version_name
-            run: echo "VERSION_NAME=$(./gradlew -q printVersionName)" >> $GITHUB_ENV
-          - name: Upload APK
-            uses: actions/upload-artifact@v3
-            with:
-              name: resources
-              path: app/build/outputs/apk/debug/prestamist-pa-debug-${{ env.VERSION_NAME }}.apk
-              if-no-files-found: error
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug
+  apk:
+    name: Generate APK
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build APK
+        run: bash ./gradlew assembleDevDebug --stacktrace
+      - name: Get version name
+        id: get_version_name
+        run: echo "VERSION_NAME=$(./gradlew -q printVersionName)" >> $GITHUB_ENV
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: resources
+          path: app/build/outputs/apk/dev/debug/prestamist-pa-devDebug-${{ env.VERSION_NAME }}.apk
+          if-no-files-found: error
 
