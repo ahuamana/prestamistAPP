@@ -53,6 +53,8 @@
     <string name="type_percentage">%1$s%% completado</string>
     <string name="type_remaining_payments">%1$s de %2$s</string>
     <string name="type_no_more_payments">No hay más pagos</string>
+    <string name="add_client_message_button">+ Agregar Cliente</string>
+    <string name="save_message_button">Guardar</string>
 
 
 </resources>

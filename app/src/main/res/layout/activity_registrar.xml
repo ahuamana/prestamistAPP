@@ -20,11 +20,12 @@
                 android:layout_height="wrap_content"
                 layout="@layout/toolbar_child"/>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/linearLayoutTop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tool">
@@ -49,10 +50,11 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/sucursal_txt_input_lyt"
                     style="@style/CustomDropDown"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:endIconMode="custom"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
                     android:layout_marginTop="16dp"
                     app:errorEnabled="true"
@@ -70,6 +72,30 @@
                         android:hint="Sucursal"
                         android:lines="1"
                         android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dniLayout"
+                    style="@style/CustomTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10"
+                    android:layout_marginTop="6dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dni"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/tipo_documento"
+                        android:inputType="number"
+                        android:lines="1"
+                        android:maxLength="10" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -119,7 +145,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutEmail"
                     style="@style/CustomTextField"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     app:errorEnabled="true"
@@ -138,45 +164,18 @@
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/dniLayout"
-                    style="@style/CustomTextField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="10"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginRight="10dp"
-                    app:errorEnabled="true"
-                    app:layout_constraintEnd_toStartOf="@+id/celularLayout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/dni"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/tipo_documento"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="10" />
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/celularLayout"
                     style="@style/CustomTextField"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="6dp"
                     android:layout_weight="1"
                     app:counterEnabled="true"
                     app:counterMaxLength="9"
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dniLayout"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -203,8 +202,8 @@
                     app:endIconMode="custom"
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="@+id/celularLayout"
-                    app:layout_constraintStart_toStartOf="@+id/dniLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/dniLayout">
+                    app:layout_constraintStart_toStartOf="@+id/celularLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/celularLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/fecha"
@@ -552,7 +551,7 @@
 
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

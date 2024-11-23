@@ -1,20 +1,10 @@
 package com.paparazziapps.pretamistapp.presentation.principal.views
 
-import android.content.Intent
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.View
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -34,7 +24,6 @@ import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment.Companion.setOnClickedLoanHome
-import com.paparazziapps.pretamistapp.presentation.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
@@ -47,11 +36,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PrincipalActivity : AppCompatActivity(){
     private lateinit var binding:ActivityPrincipalBinding
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var toolbar: Toolbar
     private lateinit var layout_detalle_prestamo: BottomsheetDetallePrestamoBinding
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
     private val preferences: MyPreferences by inject()
-    private var isEnabledCheck = true
     private val viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
 
@@ -62,9 +49,8 @@ class PrincipalActivity : AppCompatActivity(){
         setContentView(binding.root)
 
         bottomNavigationView = binding.navView
-        toolbar              = binding.tool.toolbar
         isFreeTrial()
-        setUpInicialToolbar()
+        setupToolbar()
         observers()
     }
 
@@ -160,9 +146,15 @@ class PrincipalActivity : AppCompatActivity(){
 
     }
 
-    private fun setUpInicialToolbar() {
-        toolbar.title = "Dashboard"
-        setSupportActionBar(toolbar)
+    private fun setupToolbar() {
+        with(binding.tool){
+            toolbar.title = "Dashboard"
+            setSupportActionBar(toolbar)
+            ivAvatar.setOnClickListener {
+                toolbar.title = "Perfil"
+                findNavController(R.id.nav_host_fragment_activity_main).navigate(R.id.navigation_profile)
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -183,30 +175,32 @@ class PrincipalActivity : AppCompatActivity(){
 
             when(item.itemId) {
                 R.id.navigation_finanzas -> {
-                    println("Mostraste finanzas")
                     navController.navigate(R.id.navigation_finanzas)
-                    toolbar.title = "Finanzas"
+                    binding.tool.toolbar.title = "Finanzas"
                     true
                 }
 
                 R.id.navigation_home -> {
-                    println("Mostraste home")
                     navController.navigate(R.id.navigation_home)
-                    toolbar.title = "Dashboard"
+                    binding.tool.toolbar.title = "Dashboard"
                     true
                 }
 
                 R.id.navigation_registrar -> {
-                    println("Mostraste registrar")
                     navController.navigate(R.id.navigation_registrar)
-                    toolbar.title = "Registrar"
+                    binding.tool.toolbar.title = "Registrar"
                     true
                 }
 
                 R.id.navigation_profile -> {
-                    println("Mostraste perfil")
                     navController.navigate(R.id.navigation_profile)
-                    toolbar.title = "Perfil"
+                    binding.tool.toolbar.title = "Perfil"
+                    true
+                }
+
+                R.id.clients_menu -> {
+                    navController.navigate(R.id.clients_menu)
+                    binding.tool.toolbar.title = "Clientes"
                     true
                 }
 

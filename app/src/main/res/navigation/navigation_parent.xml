@@ -31,6 +31,12 @@
         tools:layout="@layout/fragment_detail_receipt" />
 
     <fragment
+        android:id="@+id/clients_menu"
+        android:name="com.paparazziapps.pretamistapp.presentation.clients.ClientsParentFragment"
+        android:label="fragment_clients"
+        tools:layout="@layout/fragment_clients_parent" />
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.paparazziapps.pretamistapp.presentation.profile.views.ProfileFragment"
         android:label="fragment_profile"
