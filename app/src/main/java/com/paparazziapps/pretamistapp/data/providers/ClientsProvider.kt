@@ -30,7 +30,10 @@ class ClientsProvider(
 
     suspend fun searchClientByEmailV2(email: String): PAResult<DocumentSnapshot> {
         return NetworkOperation.safeApiCall {
-            mCollection.document(email).get().await()
+            mCollection
+                .document(email)
+                .get()
+                .await()
         }
     }
 
