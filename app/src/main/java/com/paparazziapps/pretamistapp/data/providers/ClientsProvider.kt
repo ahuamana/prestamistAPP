@@ -24,7 +24,7 @@ class ClientsProvider(
         val form = clientDomain.toClientsRequest()
 
         return NetworkOperation.safeApiCall {
-            mCollection.document(form.id).set(form).await()
+            mCollection.document(clientDomain.id).set(form).await()
         }
     }
 
