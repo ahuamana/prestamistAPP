@@ -1,17 +1,26 @@
 package com.paparazziapps.pretamistapp.presentation.clients
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.common.api.Api.Client
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentClientsAddBinding
+import com.paparazziapps.pretamistapp.helper.PADialogFactory
+import com.paparazziapps.pretamistapp.helper.base.BaseViewModel
 import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
 import com.paparazziapps.pretamistapp.helper.isValidEmail
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -21,6 +30,28 @@ class ClientsAddFragment : Fragment() {
 
     private var _binding: FragmentClientsAddBinding? = null
     private val binding get() = _binding!!
+
+    private val loadingDialog by lazy {
+        PADialogFactory(requireContext()).createLoadingDialog()
+    }
+
+    private val generalErrorDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralErrorDialog(
+            onRetryClick = {
+                viewModel.processIntent(ClientsAddViewModel.ClientsAddIntent.None)
+            }
+        )
+    }
+
+    private val generalSuccessDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralSuccessDialog(
+            successMessage = getString(R.string.operation_success_message),
+            buttonTitle = getString(R.string.continue_button_message),
+            onConfirmClick = {
+                viewModel.processIntent(ClientsAddViewModel.ClientsAddIntent.None)
+            }
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +65,34 @@ class ClientsAddFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //Code
         setupButtons()
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            viewModel.uiState.flowWithLifecycle(lifecycle).collectLatest { uiState ->
+                when(uiState){
+                    is BaseViewModel.UiState.Error -> {
+                        loadingDialog.dismiss()
+                        generalErrorDialog.show()
+                    }
+                    BaseViewModel.UiState.GenericError -> {
+                        loadingDialog.dismiss()
+                        generalErrorDialog.show()
+                    }
+                    BaseViewModel.UiState.Idle -> {
+                        //Do nothing
+                    }
+                    BaseViewModel.UiState.Loading -> {
+                        loadingDialog.show()
+                    }
+                    is BaseViewModel.UiState.Success<*> -> {
+                        loadingDialog.dismiss()
+                        generalSuccessDialog.show()
+                    }
+                }
+            }
+        }
     }
 
     private fun setupButtons() {
@@ -41,6 +100,7 @@ class ClientsAddFragment : Fragment() {
             hideKeyboardActivity(requireActivity())
             handledSaveMessage()
         }
+
     }
 
     private fun handledSaveMessage() {
@@ -62,7 +122,7 @@ class ClientsAddFragment : Fragment() {
             email.isEmpty() -> {
                 getString(R.string.error_email_empty)
             }
-            isValidEmail(email) -> {
+            !isValidEmail(email) -> {
                 getString(R.string.error_email_invalid)
             }
             else -> null
@@ -95,15 +155,19 @@ class ClientsAddFragment : Fragment() {
             && lastName.isNotEmpty()
             && document.isNotEmpty()
             && phone.isNotEmpty()
-            && !isValidEmail(email)
+            && isValidEmail(email)
             ) {
-            viewModel.saveClient(
-                document = document,
-                name = name,
-                email = email,
-                phone = phone,
-                lastName = lastName
+            viewModel.processIntent(
+                ClientsAddViewModel.ClientsAddIntent.SaveClientIntent(
+                    document = document,
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    lastName = lastName
+                )
             )
+        } else {
+            Log.d("ClientsAddFragment", "Error in the form")
         }
 
 

@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentClientsParentBinding
 import com.paparazziapps.pretamistapp.domain.clients.ClientDomain
 import com.paparazziapps.pretamistapp.helper.base.BaseViewModel
+import com.paparazziapps.pretamistapp.presentation.clients.adater.ClientAdapter
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,6 +23,8 @@ class ClientsParentFragment : Fragment() {
 
     private var _binding: FragmentClientsParentBinding? = null
     private val binding get() = _binding!!
+
+    private val clientsAdapter: ClientAdapter by lazy { ClientAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +38,20 @@ class ClientsParentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //Code
         setupButtons()
+        setupRecyclerView()
         setupObservers()
 
+
         viewModel.getClients()
+    }
+
+    private fun setupRecyclerView() {
+        binding.clientsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = clientsAdapter
+        }
+        binding.clientsRecyclerView.setHasFixedSize(true)
+        binding.clientsRecyclerView.setItemViewCacheSize(20)
     }
 
     private fun setupObservers() {
@@ -57,7 +72,7 @@ class ClientsParentFragment : Fragment() {
                     }
                     is BaseViewModel.UiState.Success<*> -> {
                         val clients:List<ClientDomain> = uiState.data as List<ClientDomain> // Replace Client with your actual data type
-                        Log.e("ClientsParentFragment", "Success $clients")
+                        clientsAdapter.setClients(clients)
                     }
                 }
             }
