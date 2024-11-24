@@ -34,7 +34,17 @@
         android:id="@+id/clients_menu"
         android:name="com.paparazziapps.pretamistapp.presentation.clients.ClientsParentFragment"
         android:label="fragment_clients"
-        tools:layout="@layout/fragment_clients_parent" />
+        tools:layout="@layout/fragment_clients_parent" >
+        <action
+            android:id="@+id/action_clients_menu_to_clients_add"
+            app:destination="@id/clients_add" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/clients_add"
+        android:name="com.paparazziapps.pretamistapp.presentation.clients.ClientsAddFragment"
+        android:label="fragment_clients_add"
+        tools:layout="@layout/fragment_clients_add" />
 
     <fragment
         android:id="@+id/navigation_profile"

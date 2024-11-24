@@ -10,6 +10,7 @@ import com.google.android.gms.common.api.Api.Client
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentClientsAddBinding
 import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
+import com.paparazziapps.pretamistapp.helper.isValidEmail
 import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -50,13 +51,63 @@ class ClientsAddFragment : Fragment() {
         val phone = binding.phoneEditText.text.toString()
 
 
-        viewModel.saveClient(
-            document = document,
-            name = name,
-            email = email,
-            phone = phone,
-            lastName = lastName
-        )
+        binding.namesLayout.error = when {
+            name.isEmpty() -> {
+                getString(R.string.error_name_empty)
+            }
+            else -> null
+        }
+
+        binding.emailLayout.error = when {
+            email.isEmpty() -> {
+                getString(R.string.error_email_empty)
+            }
+            isValidEmail(email) -> {
+                getString(R.string.error_email_invalid)
+            }
+            else -> null
+        }
+
+        binding.lastNameLayout.error = when {
+            lastName.isEmpty() -> {
+                getString(R.string.error_last_name_empty)
+            }
+            else -> null
+        }
+
+        binding.documentLayout.error = when {
+            document.isEmpty() -> {
+                getString(R.string.error_document_empty)
+            }
+            else -> null
+        }
+
+        binding.phoneLayout.error = when {
+            phone.isEmpty() -> {
+                getString(R.string.error_phone_empty)
+            }
+            else -> null
+        }
+
+
+        if (name.isNotEmpty()
+            && email.isNotEmpty()
+            && lastName.isNotEmpty()
+            && document.isNotEmpty()
+            && phone.isNotEmpty()
+            && !isValidEmail(email)
+            ) {
+            viewModel.saveClient(
+                document = document,
+                name = name,
+                email = email,
+                phone = phone,
+                lastName = lastName
+            )
+        }
+
+
+
     }
 
     override fun onDestroy() {

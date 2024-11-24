@@ -63,7 +63,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/lastNamesLayout"
+            android:id="@+id/lastNameLayout"
             style="@style/CustomTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
