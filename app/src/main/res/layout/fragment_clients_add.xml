@@ -13,8 +13,35 @@
         android:orientation="vertical"
         android:layout_margin="16dp"
         android:layout_height="wrap_content">
+
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nombresLayout"
+            android:id="@+id/documentLayout"
+            style="@style/CustomTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            android:layout_marginTop="6dp"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/documentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tipo_documento"
+                android:inputType="number"
+                android:lines="1"
+                android:maxLength="10" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/namesLayout"
             style="@style/CustomTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,17 +53,17 @@
             app:layout_constraintTop_toBottomOf="@+id/sucursal_txt_input_lyt">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nombres"
+                android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre(s)"
+                android:hint="Nombre(s) *"
                 android:inputType="textNoSuggestions"
                 android:lines="1"
                 android:maxLength="50" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/apellidosLayout"
+            android:id="@+id/lastNamesLayout"
             style="@style/CustomTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,17 +74,17 @@
             app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/apellidos"
+                android:id="@+id/lastNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Apellidos"
+                android:hint="Apellidos *"
                 android:inputType="textNoSuggestions"
                 android:lines="1"
                 android:maxLength="50" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutEmail"
+            android:id="@+id/emailLayout"
             style="@style/CustomTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,18 +95,18 @@
             app:layout_constraintTop_toBottomOf="@+id/apellidosLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email"
+                android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/googlesans_regular"
-                android:hint="Correo electrónico"
+                android:hint="Correo electrónico *"
                 android:inputType="textEmailAddress"
                 android:lines="1"
                 android:maxLength="50" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/celularLayout"
+            android:id="@+id/phoneLayout"
             style="@style/CustomTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,18 +120,18 @@
             app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/celular"
+                android:id="@+id/phoneEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Celular"
+                android:hint="Celular *"
                 android:inputType="number"
                 android:lines="1"
                 android:maxLength="9" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/registrar_button"
+            android:id="@+id/saveMessageButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textColor="@color/white"

@@ -12,7 +12,7 @@ data class ClientsRequest(
 
 data class ClientDomain(
     val id: String,
-    val dni: String,
+    val document: String,
     val name: String,
     val lastName: String,
     val email: String,
@@ -22,7 +22,7 @@ data class ClientDomain(
 fun ClientsRequest.toClientDomain(): ClientDomain {
     return ClientDomain(
         id = id,
-        dni = dni,
+        document = dni,
         name = name,
         lastName = lastName,
         email = email,
@@ -33,7 +33,7 @@ fun ClientsRequest.toClientDomain(): ClientDomain {
 fun ClientDomain.toClientsRequest(): ClientsRequest {
     return ClientsRequest(
         id = id,
-        dni = dni,
+        dni = document,
         name = name,
         lastName = lastName,
         email = email,
