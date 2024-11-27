@@ -25,4 +25,7 @@ object PADataConstants {
     //resend email events
     const val EVENT_RESEND_EMAIL_SUCCESS = "resend_email_success"
     const val EVENT_RESEND_EMAIL_ERROR = "resend_email_error"
+
+    //client
+    const val CLIENT_DOCUMENT = "document"
 }

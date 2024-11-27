@@ -17,6 +17,10 @@ class RemoteClientsDataSourceImpl(
         return clientsProvider.searchClientByEmailV2(email)
     }
 
+    override suspend fun searchByClientName(name: String): PAResult<List<ClientDomain>> {
+        return clientsProvider.searchByClientName(name)
+    }
+
     override suspend fun getClientsOnlyFirst20(): PAResult<List<ClientDomain>> {
         return clientsProvider.getClientsOnlyFirst20()
     }

@@ -46,4 +46,13 @@ class ClientsProvider(
         }
     }
 
+    suspend fun searchByClientName(document: String): PAResult<List<ClientDomain>> {
+        return NetworkOperation.safeApiCall {
+            mCollection
+                .whereEqualTo(PADataConstants.CLIENT_DOCUMENT, document)
+                .get()
+                .await().toObjects(ClientsRequest::class.java).map { it.toClientDomain() }
+        }
+    }
+
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,9 +41,26 @@ class ClientsParentFragment : Fragment() {
         setupButtons()
         setupRecyclerView()
         setupObservers()
-
-
+        setupSearchView()
         viewModel.getClients()
+    }
+
+    private fun setupSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    viewModel.searchClients(it)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText.isNullOrEmpty()) {
+                    viewModel.getClients()
+                }
+                return true
+            }
+        })
     }
 
     private fun setupRecyclerView() {
@@ -71,8 +89,8 @@ class ClientsParentFragment : Fragment() {
                         Log.e("ClientsParentFragment", "Loading")
                     }
                     is BaseViewModel.UiState.Success<*> -> {
-                        val clients:List<ClientDomain> = uiState.data as List<ClientDomain> // Replace Client with your actual data type
-                        clientsAdapter.setClients(clients)
+                        val clients:List<ClientDomain>? = uiState.data as? List<ClientDomain> // Replace Client with your actual data type
+                        clientsAdapter.setClients(clients?: emptyList())
                     }
                 }
             }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ClientsRequest(
     val id: String? = null,
-    val dni: String?= null,
+    val document: String?= null,
     val name: String?= null,
     val lastName: String?= null,
     val email: String?= null,
@@ -25,7 +25,7 @@ data class ClientDomain(
 fun ClientsRequest.toClientDomain(): ClientDomain {
     return ClientDomain(
         id = id ?: "",
-        document = dni ?: "",
+        document = document ?: "",
         name = name ?: "",
         lastName = lastName ?: "",
         email = email ?: "",
@@ -36,7 +36,7 @@ fun ClientsRequest.toClientDomain(): ClientDomain {
 fun ClientDomain.toClientsRequest(): ClientsRequest {
     return ClientsRequest(
         id = id,
-        dni = document,
+        document = document,
         name = name,
         lastName = lastName,
         email = email,

@@ -32,9 +32,11 @@
            android:layout_height="10dp"/>
 
        <androidx.appcompat.widget.SearchView
+           android:id="@+id/searchView"
            android:layout_width="match_parent"
            android:background="@drawable/rounded_corner_background"
            app:queryHint="Buscar cliente"
+           android:queryHint="@string/app_name"
            android:backgroundTint="@color/sand_color"
            android:layout_height="wrap_content"/>
 
