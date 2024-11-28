@@ -55,10 +55,15 @@ class SelectUserViewModel(
     }
 
     private fun updateClientSelected(client: ClientDomainSelect) {
-        listClients = listClients?.map { domain->
-            domain.isSelected = domain.id == client.id
-            domain
+        // Create a new list with updated selection
+        listClients = listClients?.map { domain ->
+            // Create a new object to ensure immutability
+            domain.copy(isSelected = domain.id == client.id)
         }
+
+        // Update UI state
+
+        Log.d("SelectUserViewModel", "Clients: $listClients")
         _uiState.value = UiState.Success(listClients)
     }
 }

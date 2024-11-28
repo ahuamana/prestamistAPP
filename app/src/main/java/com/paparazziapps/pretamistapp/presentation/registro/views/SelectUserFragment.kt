@@ -44,6 +44,16 @@ class SelectUserFragment : Fragment(), OnClientSelectListener {
         setupObservers()
         setupSearchView()
         setupButtons()
+        setupAdapter()
+        viewModel.getClients()
+    }
+
+    private fun setupAdapter() {
+        binding.clientsRecyclerView.apply {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+            adapter = clientsAdapter
+        }
+
     }
 
     private fun setupButtons() {
