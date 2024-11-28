@@ -53,6 +53,7 @@ import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewMode
 import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
 import com.paparazziapps.pretamistapp.presentation.clients.ClientsAddViewModel
 import com.paparazziapps.pretamistapp.presentation.clients.ClientsParentViewModel
+import com.paparazziapps.pretamistapp.presentation.registro.views.SelectUserViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -119,6 +120,7 @@ class AppApplication : MultiDexApplication() {
         viewModelOf(::ProfileViewModel)
         viewModelOf(::ClientsAddViewModel)
         viewModelOf(::ClientsParentViewModel)
+        viewModelOf(::SelectUserViewModel)
     }
 
     override fun onCreate() {

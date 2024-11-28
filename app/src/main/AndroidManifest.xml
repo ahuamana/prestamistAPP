@@ -45,7 +45,7 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
-            android:name=".presentation.registro.views.RegistrarActivity"
+            android:name=".presentation.registro.views.RegistrarLoanFragment"
             android:exported="true"
             android:theme="@style/Theme.noActionBar" />
 

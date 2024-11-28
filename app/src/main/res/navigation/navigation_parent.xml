@@ -8,7 +8,11 @@
         android:id="@+id/navigation_registrar"
         android:name="com.paparazziapps.pretamistapp.presentation.registro.views.RegistrarFragment"
         android:label="fragment_registrar"
-        tools:layout="@layout/fragment_registrar" />
+        tools:layout="@layout/fragment_registrar" >
+        <action
+            android:id="@+id/action_navigation_registrar_to_navigation_select_user"
+            app:destination="@id/navigation_select_user" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_finanzas"
         android:name="com.paparazziapps.pretamistapp.presentation.tesoreria.views.FinanzasFragment"
@@ -51,5 +55,21 @@
         android:name="com.paparazziapps.pretamistapp.presentation.profile.views.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/navigation_select_user"
+        android:name="com.paparazziapps.pretamistapp.presentation.registro.views.SelectUserFragment"
+        android:label="fragment_select_user"
+        tools:layout="@layout/fragment_select_user" >
+        <action
+            android:id="@+id/action_navigation_select_user_to_navigation_register_loan"
+            app:destination="@id/navigation_register_loan" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_register_loan"
+        android:name="com.paparazziapps.pretamistapp.presentation.registro.views.RegistrarLoanFragment"
+        android:label="fragment_register_loan"
+        tools:layout="@layout/fragment_registrar_loan" />
 
 </navigation>

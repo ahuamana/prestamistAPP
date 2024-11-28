@@ -22,6 +22,31 @@ data class ClientDomain(
     val phone: String,
 )
 
+data class ClientDomainSelect(
+    val id: String,
+    val document: String,
+    val name: String,
+    val lastName: String,
+    val email: String,
+    val phone: String,
+    var isSelected: Boolean = false,
+)
+
+fun ClientDomain.toClientDomainSelect(): ClientDomainSelect {
+    return ClientDomainSelect(
+        id = id,
+        document = document,
+        name = name,
+        lastName = lastName,
+        email = email,
+        phone = phone,
+    )
+}
+
+fun List<ClientDomain>.toClientDomainSelect(): List<ClientDomainSelect> {
+    return map { it.toClientDomainSelect() }
+}
+
 fun ClientsRequest.toClientDomain(): ClientDomain {
     return ClientDomain(
         id = id ?: "",

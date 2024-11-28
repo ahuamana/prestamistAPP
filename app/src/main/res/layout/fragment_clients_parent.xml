@@ -35,7 +35,7 @@
            android:id="@+id/searchView"
            android:layout_width="match_parent"
            android:background="@drawable/rounded_corner_background"
-           app:queryHint="Buscar cliente"
+           app:queryHint="Buscar cliente por documento"
            android:queryHint="@string/app_name"
            android:backgroundTint="@color/sand_color"
            android:layout_height="wrap_content"/>

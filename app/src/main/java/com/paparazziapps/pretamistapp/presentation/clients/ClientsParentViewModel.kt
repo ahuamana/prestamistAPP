@@ -12,8 +12,6 @@ class ClientsParentViewModel (
     private val clientsRepository: PAClientsRepository
 ) : BaseViewModel() {
 
-
-
     fun getClients() = launchDataLoad {
             _uiState.value = UiState.Loading
             val clients = clientsRepository.getClientsOnlyFirst20()

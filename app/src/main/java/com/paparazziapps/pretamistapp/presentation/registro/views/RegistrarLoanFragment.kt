@@ -4,22 +4,23 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.paparazziapps.pretamistapp.helper.*
@@ -27,6 +28,7 @@ import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarLoanBinding
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
@@ -37,21 +39,16 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class RegistrarActivity : AppCompatActivity() {
+class RegistrarLoanFragment : Fragment() {
 
     private val viewModel by viewModel<ViewModelRegister>()
     val _viewModelBranches: ViewModelBranches  by viewModel()
 
-    lateinit var binding: ActivityRegistrarBinding
+    private var _binding: FragmentRegistrarLoanBinding? = null
+    private val binding get() = _binding!!
     var loanDomainReceived = LoanDomain()
     lateinit var layoutFecha:TextInputLayout
-    lateinit var layoutNombres:TextInputLayout
-    lateinit var layoutApellidos:TextInputLayout
     lateinit var layoutDNI:TextInputLayout
-    lateinit var layoutCelular:TextInputLayout
-
-    lateinit var registerButton:MaterialButton
-    lateinit var toolbar: Toolbar
     var fechaSelectedUnixtime:Long? = null
 
     private val preferences: MyPreferences by inject()
@@ -64,19 +61,19 @@ class RegistrarActivity : AppCompatActivity() {
     lateinit var viewCurtainSucursal: View
     lateinit var viewDotsSucursal: View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityRegistrarBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentRegistrarLoanBinding.inflate(inflater,container,false)
+        return binding.root
+    }
 
-
-        toolbar         = binding.tool.toolbar
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         layoutFecha         = binding.fechaLayout
-        layoutNombres       = binding.nombresLayout
-        layoutApellidos     = binding.apellidosLayout
         layoutDNI           = binding.dniLayout
-        layoutCelular       = binding.celularLayout
 
         //SuperAdmin
         sucursalTxt         = binding.edtSucursal
@@ -95,13 +92,14 @@ class RegistrarActivity : AppCompatActivity() {
         //get intent
         getExtras()
         showCalendar()
-        setUpToolbarInitialize()
 
         //Observers
         setupObservers()
 
         setupButtons()
     }
+
+
 
     private fun fieldsSuperAdmin() {
         if(preferences.isSuperAdmin){
@@ -112,7 +110,7 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        _viewModelBranches.branches.observe(this){
+        _viewModelBranches.branches.observe(viewLifecycleOwner){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 val scrsales = mutableListOf<String>()
@@ -120,7 +118,7 @@ class RegistrarActivity : AppCompatActivity() {
                     scrsales.add(it.name?:"")
                 }
 
-                val adapterSucursales= ArrayAdapter(this,R.layout.select_items, scrsales)
+                val adapterSucursales= ArrayAdapter(requireContext(),R.layout.select_items, scrsales)
                 sucursalTxt.setAdapter(adapterSucursales)
                 sucursalTxt.setOnClickListener { sucursalTxt.showDropDown() }
                 sucursalTxtLayout.setEndIconOnClickListener { sucursalTxt.showDropDown() }
@@ -163,13 +161,6 @@ class RegistrarActivity : AppCompatActivity() {
         Snackbar.make(binding.root,"${message}",Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun setUpToolbarInitialize() {
-        toolbar.title = "Registrar"
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
-    }
-
     private fun setupButtons() {
         binding.registrarButton.setOnClickListener {
            handledRegister()
@@ -177,23 +168,9 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun handledRegister() {
-        hideKeyboardActivity(this@RegistrarActivity)
+        hideKeyboardActivity(requireActivity())
 
-        val names = binding.nombres.text.toString().trim()
 
-        binding.nombresLayout.error = when {
-            names.isEmpty() -> "El nombre esta vacío"
-            names.count() < 4 -> "El nombre esta incompleto"
-            else -> null
-        }
-
-        val lastnames = binding.apellidos.text.toString().trim()
-
-        binding.apellidosLayout.error = when {
-            lastnames.isEmpty() -> "Los apellidos estan vacíos"
-            lastnames.count() < 4 -> "Los apellidos estan incompletos"
-            else -> null
-        }
 
         val document = binding.dni.text.toString().trim()
         val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
@@ -211,35 +188,18 @@ class RegistrarActivity : AppCompatActivity() {
             else -> null
         }
 
-        val cellular = binding.celular.text.toString().trim()
 
-        binding.celularLayout.error = when {
-            cellular.isEmpty() -> "Celular vacío"
-            cellular.count() in 1..8 -> "Celular incompleto"
-            else -> null
-        }
-
-        val email = binding.email.text.toString().trim()
-
-        binding.layoutEmail.error = when {
-            email.isEmpty() -> "Email vacío"
-            isValidEmail(email).not() -> "Email no válido"
-            else -> null
-        }
-
-        if(names.isEmpty() || lastnames.isEmpty() || document.isEmpty() || date.isEmpty() || cellular.isEmpty() || email.isEmpty()) return
-        if (names.count() < 4 || lastnames.count() < 4 || document.count() < documentMaxLength || cellular.count() < 9 || email.count() < 4) return
         if (fechaSelectedUnixtime == null) return
-        if(isValidEmail(email).not()) return
+
 
         //Finish validation
 
         val loanDomain = LoanDomain(
-            names     = names,
-            lastnames   = lastnames,
+            names     = "names",
+            lastnames   = "lastnames",
             dni         = document,
-            cellular     = cellular,
-            email = email,
+            cellular     = "cellular",
+            email = "email",
             loanStartDateFormatted       = date,
             loanStartDateUnix    = fechaSelectedUnixtime,
             loanCreationDateUnix = getFechaActualNormalInUnixtime(),
@@ -266,9 +226,10 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun createIntentSuccess(msj:String) {
-        intent.putExtra("mensaje", msj)
+        /*intent.putExtra("mensaje", msj)
         setResult(RESULT_OK, intent)
-        finish()
+        finish()*/
+        TODO("Not yet implemented")
     }
 
     private fun showCalendar() {
@@ -284,7 +245,7 @@ class RegistrarActivity : AppCompatActivity() {
                 .setTitleText("Seleciona una fecha")
                 .build()
 
-        datePicker.show(supportFragmentManager, "Datepickerdialog");
+        datePicker.show(requireActivity().supportFragmentManager, "Datepickerdialog");
 
         datePicker.addOnPositiveButtonClickListener {
             Log.d("UNIXTIME","UnixTime: ${it}")
@@ -299,6 +260,7 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun getExtras() {
+        val intent = requireActivity().intent //TODO: Revisar si se debe cambiar por requireActivity().intent
         if(intent.extras != null) {
            val extras  = intent.getStringExtra(PAConstants.EXTRA_LOAN_JSON)
            val gson = Gson()
