@@ -28,7 +28,7 @@ import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.application.MyPreferences
-import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarLoanBinding
+import com.paparazziapps.pretamistapp.databinding.FragmentLoanRegistrarBinding
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
@@ -44,7 +44,7 @@ class RegistrarLoanFragment : Fragment() {
     private val viewModel by viewModel<ViewModelRegister>()
     val _viewModelBranches: ViewModelBranches  by viewModel()
 
-    private var _binding: FragmentRegistrarLoanBinding? = null
+    private var _binding: FragmentLoanRegistrarBinding? = null
     private val binding get() = _binding!!
     var loanDomainReceived = LoanDomain()
     lateinit var layoutFecha:TextInputLayout
@@ -66,7 +66,7 @@ class RegistrarLoanFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRegistrarLoanBinding.inflate(inflater,container,false)
+        _binding = FragmentLoanRegistrarBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -191,16 +191,15 @@ class RegistrarLoanFragment : Fragment() {
 
         if (fechaSelectedUnixtime == null) return
 
-
-        //Finish validation
+        val client = viewModel.getClientSelected()
 
         val loanDomain = LoanDomain(
-            names     = "names",
-            lastnames   = "lastnames",
+            names     = client?.name,
+            lastnames   = client?.lastName,
             dni         = document,
-            cellular     = "cellular",
-            email = "email",
-            loanStartDateFormatted       = date,
+            cellular     = client?.phone,
+            email = client?.email,
+            loanStartDateFormatted = date,
             loanStartDateUnix    = fechaSelectedUnixtime,
             loanCreationDateUnix = getFechaActualNormalInUnixtime(),
             capital     = loanDomainReceived.capital,
