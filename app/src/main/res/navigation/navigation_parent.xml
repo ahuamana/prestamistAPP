@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/navigation_registrar"
         android:name="com.paparazziapps.pretamistapp.presentation.registro.views.RegistrarFragment"
-        android:label="fragment_registrar"
+        android:label="Préstamos"
         tools:layout="@layout/fragment_registrar" >
         <action
             android:id="@+id/action_navigation_registrar_to_navigation_select_user"
@@ -16,12 +16,12 @@
     <fragment
         android:id="@+id/navigation_finanzas"
         android:name="com.paparazziapps.pretamistapp.presentation.tesoreria.views.FinanzasFragment"
-        android:label="fragment_finanzas"
+        android:label="Finanzas"
         tools:layout="@layout/fragment_finanzas" />
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment"
-        android:label="fragment_home2"
+        android:label="Inicio"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_navigation_home_to_action_detail_receipt"
@@ -31,13 +31,13 @@
     <fragment
         android:id="@+id/action_detail_receipt"
         android:name="com.paparazziapps.pretamistapp.presentation.dashboard.views.DetailReceiptFragment"
-        android:label="fragment_detail_receipt"
+        android:label="Detalle de recibo"
         tools:layout="@layout/fragment_detail_receipt" />
 
     <fragment
         android:id="@+id/clients_menu"
         android:name="com.paparazziapps.pretamistapp.presentation.clients.ClientsParentFragment"
-        android:label="fragment_clients"
+        android:label="Clientes"
         tools:layout="@layout/fragment_clients_parent" >
         <action
             android:id="@+id/action_clients_menu_to_clients_add"
@@ -47,19 +47,19 @@
     <fragment
         android:id="@+id/clients_add"
         android:name="com.paparazziapps.pretamistapp.presentation.clients.ClientsAddFragment"
-        android:label="fragment_clients_add"
+        android:label="Agregar cliente"
         tools:layout="@layout/fragment_clients_add" />
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.paparazziapps.pretamistapp.presentation.profile.views.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="Perfil"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_select_user"
         android:name="com.paparazziapps.pretamistapp.presentation.registro.views.SelectUserFragment"
-        android:label="fragment_select_user"
+        android:label="Seleccionar usuario"
         tools:layout="@layout/fragment_select_user" >
         <action
             android:id="@+id/action_navigation_select_user_to_navigation_register_loan"
@@ -69,7 +69,7 @@
     <fragment
         android:id="@+id/navigation_register_loan"
         android:name="com.paparazziapps.pretamistapp.presentation.registro.views.RegistrarLoanFragment"
-        android:label="fragment_register_loan"
+        android:label="Registrar préstamo"
         tools:layout="@layout/fragment_registrar_loan" />
 
 </navigation>

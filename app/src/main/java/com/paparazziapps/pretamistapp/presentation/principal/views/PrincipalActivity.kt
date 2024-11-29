@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -12,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -35,7 +38,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PrincipalActivity : AppCompatActivity(){
     private lateinit var binding:ActivityPrincipalBinding
-    private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var layout_detalle_prestamo: BottomsheetDetallePrestamoBinding
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
     private val preferences: MyPreferences by inject()
@@ -47,8 +49,6 @@ class PrincipalActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityPrincipalBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        bottomNavigationView = binding.navView
         isFreeTrial()
         setupToolbar()
         observers()
@@ -157,57 +157,28 @@ class PrincipalActivity : AppCompatActivity(){
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        moveTaskToBack(true)
-    }
-
     private fun setUpBottomNav() {
-
-        val navController =findNavController(R.id.nav_host_fragment_activity_main)
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_registrar, R.id.navigation_finanzas, R.id.navigation_home
+                R.id.navigation_registrar, R.id.navigation_finanzas, R.id.navigation_home, R.id.clients_menu
             )
         )
-        bottomNavigationView.setupWithNavController(navController)
-        bottomNavigationView.setOnItemSelectedListener { item ->
+        binding.navView.setupWithNavController(navController)
+        NavigationUI.setupWithNavController(binding.tool.toolbar, navController,appBarConfiguration)
 
-            when(item.itemId) {
-                R.id.navigation_finanzas -> {
-                    navController.navigate(R.id.navigation_finanzas)
-                    binding.tool.toolbar.title = "Finanzas"
-                    true
-                }
-
-                R.id.navigation_home -> {
+        //
+        // Integrate OnBackPressedDispatcher
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle the back button event for navView
+                if (navController.currentDestination?.id != R.id.navigation_home) {
                     navController.navigate(R.id.navigation_home)
-                    binding.tool.toolbar.title = "Dashboard"
-                    true
+                } else {
+                    finish()
                 }
-
-                R.id.navigation_registrar -> {
-                    navController.navigate(R.id.navigation_registrar)
-                    binding.tool.toolbar.title = "Registrar"
-                    true
-                }
-
-                R.id.navigation_profile -> {
-                    navController.navigate(R.id.navigation_profile)
-                    binding.tool.toolbar.title = "Perfil"
-                    true
-                }
-
-                R.id.clients_menu -> {
-                    navController.navigate(R.id.clients_menu)
-                    binding.tool.toolbar.title = "Clientes"
-                    true
-                }
-
-                else -> false
             }
-
-        }
+        })
     }
 
 
