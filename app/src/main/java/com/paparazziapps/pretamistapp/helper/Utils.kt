@@ -31,6 +31,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
+import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import kotlinx.serialization.decodeFromString
@@ -304,15 +305,12 @@ inline fun <reified T> T.toJson(): String {
     return json.encodeToString(this)
 }
 
+inline fun <reified T> fromJson(gson: String) : T {
+    return json.decodeFromString(gson)
+}
 
-
-
-
-inline fun <reified T> fromJson(json: String) : T {
-    return Json{
-        ignoreUnknownKeys = true
-        isLenient = true
-    }.decodeFromString(json)
+inline fun <reified T> String.fromGson(): T {
+    return Gson().fromJson(this, T::class.java)
 }
 
 fun isConnected(context:Context):Boolean {

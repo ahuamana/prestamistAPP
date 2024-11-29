@@ -13,6 +13,9 @@ import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDoubl
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.PAConstants
+import com.paparazziapps.pretamistapp.domain.clients.ClientDomainSelect
+import com.paparazziapps.pretamistapp.helper.fromGson
+import com.paparazziapps.pretamistapp.helper.fromJson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +30,8 @@ class ViewModelRegister (
     private val tag = ViewModelRegister::class.java.simpleName
 
     //PAConstants.EXTRA_LOAN_JSON
-    private val loanDomain = getLoanDomainFromExtras()
+    private val loanDomain =  handle.get<String>(PAConstants.EXTRA_LOAN_JSON)?.fromGson<LoanDomain>()
+    private val clientSelected = handle.get<String>(PAConstants.EXTRA_CLIENT_JSON)?.fromGson<ClientDomainSelect>()
 
     val _montoDiario = MutableLiveData<Double>()
 
@@ -47,12 +51,17 @@ class ViewModelRegister (
         return _montoDiario
     }
 
-    private fun getLoanDomainFromExtras(): LoanDomain? {
-        val extrasLoan = handle.get<String>(PAConstants.EXTRA_LOAN_JSON)
-        Log.d(tag, "EXTRAS: $extrasLoan")
-        return extrasLoan?.let {
-            Gson().fromJson(it, LoanDomain::class.java)
-        }
+    fun getLoanDomain(): LoanDomain? {
+        return loanDomain
+    }
+
+    fun getClientSelected(): ClientDomainSelect? {
+        return clientSelected
+    }
+
+    init {
+        Log.d(tag, "Loan: ${loanDomain}")
+        Log.d(tag, "Client: ${clientSelected}")
     }
 
     fun calcularMontoDiario(capital:Int, interes:Int, dias:Int) {
