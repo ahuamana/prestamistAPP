@@ -35,14 +35,14 @@ import java.util.*
 
 class FinanzasFragment : Fragment() {
 
-    val _viewModel by viewModel<ViewModelFinance>()
-    val _viewModelBranches:ViewModelBranches  by viewModel()
+    private val _viewModel by viewModel<ViewModelFinance>()
+    private val _viewModelBranches:ViewModelBranches  by viewModel()
     private val preferences: MyPreferences by inject()
 
     var _binding:FragmentFinanzasBinding?= null
     private val binding get() = _binding!!
 
-    val loanDetailAdapter = LoanDetailAdapter()
+    private val loanDetailAdapter = LoanDetailAdapter()
 
 
     //Components LAyout
@@ -64,19 +64,16 @@ class FinanzasFragment : Fragment() {
     lateinit var viewCurtainSucursal: View
     lateinit var viewDotsSucursal: View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         _binding = FragmentFinanzasBinding.inflate(inflater, container,false)
-        var view = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
             cardViewCajaAdmin   = cardviewCaja
@@ -103,9 +100,6 @@ class FinanzasFragment : Fragment() {
             layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false)
             adapter = loanDetailAdapter
         }
-
-
-        return view
     }
 
     private fun superAdminComponentes() {
