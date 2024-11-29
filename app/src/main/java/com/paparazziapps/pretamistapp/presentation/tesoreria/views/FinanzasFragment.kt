@@ -91,7 +91,7 @@ class FinanzasFragment : Fragment() {
         }
 
         //all code here
-        initialCode()
+
         superAdminComponentes()
         otherComponents()
         observers()
@@ -100,6 +100,8 @@ class FinanzasFragment : Fragment() {
             layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false)
             adapter = loanDetailAdapter
         }
+
+        initialCode()
     }
 
     private fun superAdminComponentes() {
@@ -247,9 +249,7 @@ class FinanzasFragment : Fragment() {
     private fun initialCode() {
 
         _viewModel.getLoansSize { isCorrect, msj, result, isRefresh ->
-
-            if(isCorrect)
-            {
+            if(isCorrect && isAdded) {
                 binding.apply {
                     lblPrestamosActivos.text = "$result activos"
                 }
@@ -257,7 +257,7 @@ class FinanzasFragment : Fragment() {
         }
 
         _viewModel.getPaymentsToday { isCorrect, msj, result, isRefresh ->
-            if (isCorrect) {
+            if (isCorrect && isAdded) {
                 Log.d("FinanzasFragment", "getPaymentsToday: $result")
                 binding.apply {
                     lblCajaHoy.text = "${getString(R.string.tipo_moneda)} $result"
@@ -268,9 +268,8 @@ class FinanzasFragment : Fragment() {
 
         }
 
-        _viewModel.getPaymentsYesterday() { isCorrect, msj, result, isRefresh ->
-
-            if (isCorrect) {
+        _viewModel.getPaymentsYesterday{ isCorrect, msj, result, isRefresh ->
+            if (isCorrect && isAdded) {
                 binding.apply {
                     lblCajaAyer.text = "${getString(R.string.tipo_moneda)} $result"
                 }
