@@ -42,7 +42,7 @@ class LoginProvider(
 
             //Save branches
             if(branches.isNotEmpty()) {
-                preferences.branches = toJson(branches)
+                preferences.branches = branches.toJson()
             }
 
             //not throwing exception, just returning a success result

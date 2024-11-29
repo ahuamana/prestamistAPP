@@ -3,8 +3,8 @@ package com.paparazziapps.pretamistapp.presentation.principal.views
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityPrincipalBinding
@@ -79,7 +78,7 @@ class PrincipalActivity : AppCompatActivity(){
 
                 setUpBottomNav()
                 setupBottomSheetDetallePrestamo()
-                setNavGraphProgramaticatly()
+                setNavGraphProgrammatically()
                 binding.navHostFragmentActivityMain
 
             }
@@ -94,7 +93,7 @@ class PrincipalActivity : AppCompatActivity(){
         }
     }
 
-    private fun setNavGraphProgramaticatly() {
+    private fun setNavGraphProgrammatically() {
         val navHostFragment: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
 
@@ -107,21 +106,15 @@ class PrincipalActivity : AppCompatActivity(){
     }
 
     private fun isFreeTrial() {
-        if(resources.getBoolean(R.bool.isFreeTrail))
-        {
-            var fecha7Dias:Long = 1652651285000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
+        if(resources.getBoolean(R.bool.isFreeTrail)) {
+            val fecha7Dias:Long = 1652651285000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
 
-            if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0)
-            {
+            if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0) {
                 println("Fecha actual normal: ${getFechaActualNormalInUnixtime().minus(fecha7Dias)}")
                 binding.cortinaFreeTrial.beVisible()
             }
         }
 
-    }
-
-    private fun testCrashlytics() {
-        throw RuntimeException("Test Crash") // Force a crash
     }
 
     private fun setupBottomSheetDetallePrestamo() {
@@ -132,12 +125,8 @@ class PrincipalActivity : AppCompatActivity(){
 
         bottomSheetDetallePrestamo.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                //Ocultar cortina cuando se oculta bottomsheet
-                binding.cortinaBottomSheet.isVisible = newState < 4
-
-            }
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
+                binding.cortinaBottomSheet.isVisible = newState < 4 }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
         layout_detalle_prestamo.root.setOnClickListener {
@@ -148,10 +137,9 @@ class PrincipalActivity : AppCompatActivity(){
 
     private fun setupToolbar() {
         with(binding.tool){
-            toolbar.title = "Dashboard"
             setSupportActionBar(toolbar)
+            toolbar.navigationIcon?.setTint(getColor(R.color.white))
             ivAvatar.setOnClickListener {
-                toolbar.title = "Perfil"
                 findNavController(R.id.nav_host_fragment_activity_main).navigate(R.id.navigation_profile)
             }
         }
@@ -161,9 +149,32 @@ class PrincipalActivity : AppCompatActivity(){
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_registrar, R.id.navigation_finanzas, R.id.navigation_home, R.id.clients_menu
+                R.id.navigation_registrar, R.id.navigation_finanzas,
+                R.id.navigation_home, R.id.clients_menu,
+                R.id.navigation_profile
             )
         )
+
+        //Change color of back arrow
+        navController.addOnDestinationChangedListener{ _, destination, _ ->
+            Log.d("NavigationDebug", "Current Destination: ${destination.label}")
+            Log.d("NavigationDebug", "Destination ID: ${destination.id}")
+            val isTopLevelDestination = destination.id !in appBarConfiguration.topLevelDestinations
+            if (isTopLevelDestination) {
+                Log.d("isNotTopLevel", destination.id.toString())
+                binding.tool.toolbar.apply {
+                    setNavigationIcon(R.drawable.ic_arrow_back_white)
+                    navigationIcon?.setTint(getColor(R.color.white))
+                }
+            }else{
+                binding.tool.toolbar.navigationIcon = null
+                Log.d("IsTopLevel", destination.id.toString())
+            }
+            invalidateOptionsMenu()
+        }
+
+
+
         binding.navView.setupWithNavController(navController)
         NavigationUI.setupWithNavController(binding.tool.toolbar, navController,appBarConfiguration)
 
@@ -179,6 +190,16 @@ class PrincipalActivity : AppCompatActivity(){
                 }
             }
         })
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        Log.d("onPrepareOptionsMenu", "onPrepareOptionsMenu")
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun invalidateOptionsMenu() {
+        Log.d("invalidateOptionsMenu", "invalidateOptionsMenu")
+        super.invalidateOptionsMenu()
     }
 
 

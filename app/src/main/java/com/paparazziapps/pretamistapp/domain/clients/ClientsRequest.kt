@@ -22,6 +22,7 @@ data class ClientDomain(
     val phone: String,
 )
 
+@Serializable
 data class ClientDomainSelect(
     val id: String,
     val document: String,
@@ -30,7 +31,7 @@ data class ClientDomainSelect(
     val email: String,
     val phone: String,
     var isSelected: Boolean = false,
-)
+):java.io.Serializable
 
 fun ClientDomain.toClientDomainSelect(): ClientDomainSelect {
     return ClientDomainSelect(

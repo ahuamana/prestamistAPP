@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentSelectUserBinding
+import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.domain.clients.ClientDomain
 import com.paparazziapps.pretamistapp.domain.clients.ClientDomainSelect
 import com.paparazziapps.pretamistapp.domain.clients.toClientDomainSelect
@@ -58,7 +59,20 @@ class SelectUserFragment : Fragment(), OnClientSelectListener {
 
     private fun setupButtons() {
         binding.continueButton.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_select_user_to_navigation_register_loan)
+
+            if(viewModel.getClientSelectedJson().isEmpty()) {
+                return@setOnClickListener
+            }
+
+            val bundle = Bundle().apply {
+                putString(PAConstants.EXTRA_LOAN_JSON, viewModel.getExtraLoanJson())
+                putString(PAConstants.EXTRA_CLIENT_JSON, viewModel.getClientSelectedJson())
+            }
+
+            findNavController().navigate(
+                R.id.action_navigation_select_user_to_navigation_register_loan,
+                bundle
+            )
         }
     }
 

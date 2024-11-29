@@ -292,11 +292,19 @@ fun setColorToStatusBar(
     window.statusBarColor = darkColor //Define color
 }
 
-inline fun <reified T> toJson(value : T) = Json{
+
+
+val json = Json {
     encodeDefaults = true
     ignoreUnknownKeys = true
     isLenient = true
-}.encodeToString(value)
+}
+
+inline fun <reified T> T.toJson(): String {
+    return json.encodeToString(this)
+}
+
+
 
 
 

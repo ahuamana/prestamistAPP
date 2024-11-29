@@ -169,11 +169,13 @@ class RegistrarFragment : Fragment() {
             val gson = Gson()
             val loanJson = gson.toJson(loanDomain)
 
-            //Show next activity - Register pagos
-            /*val intent = Intent(context, RegistrarLoanFragment::class.java).apply {
-                putExtra(PAConstants.EXTRA_LOAN_JSON,loanJson)
-            }*/
-            findNavController().navigate(RegistrarFragmentDirections.actionNavigationRegistrarToNavigationSelectUser())
+            val bundle = Bundle()
+            bundle.putString(PAConstants.EXTRA_LOAN_JSON,loanJson)
+            findNavController()
+                .navigate(
+                    R.id.action_navigation_registrar_to_navigation_select_user,
+                    bundle
+                )
         }
     }
 
