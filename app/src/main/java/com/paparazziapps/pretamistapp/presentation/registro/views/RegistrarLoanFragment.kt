@@ -46,7 +46,6 @@ class RegistrarLoanFragment : Fragment() {
 
     private var _binding: FragmentLoanRegistrarBinding? = null
     private val binding get() = _binding!!
-    var loanDomainReceived = LoanDomain()
     lateinit var layoutFecha:TextInputLayout
     var fechaSelectedUnixtime:Long? = null
 
@@ -202,6 +201,7 @@ class RegistrarLoanFragment : Fragment() {
         if (fechaSelectedUnixtime == null) return
 
         val client = viewModel.getClientSelected()
+        val loanInfo = viewModel.getLoanInformationDomain()
 
         val loanDomain = LoanDomain(
             names     = client?.name,
@@ -212,17 +212,17 @@ class RegistrarLoanFragment : Fragment() {
             loanStartDateFormatted = date,
             loanStartDateUnix    = fechaSelectedUnixtime,
             loanCreationDateUnix = getFechaActualNormalInUnixtime(),
-            capital     = loanDomainReceived.capital,
-            interest     = loanDomainReceived.interest,
+            capital     = loanInfo?.capital,
+            interest     = loanInfo?.interest,
             quotasPaid = 0,
-            amountPerQuota = loanDomainReceived.amountPerQuota,
-            totalAmountToPay = loanDomainReceived.totalAmountToPay,
+            amountPerQuota = loanInfo?.amountPerQuota,
+            totalAmountToPay = loanInfo?.totalAmountToPay,
             state = "ABIERTO",
             //fields new version 2.0
-            typeLoan = loanDomainReceived.typeLoan,
-            typeLoanDays = loanDomainReceived.typeLoanDays,
-            typeLoanName = loanDomainReceived.typeLoanName,
-            quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
+            typeLoan = loanInfo?.typeLoan,
+            typeLoanDays = loanInfo?.typeLoanDays,
+            typeLoanName = loanInfo?.typeLoanName,
+            quotas = loanInfo?.quotas // Only for other type of loans like weekly, biweekly, monthly
         )
 
         var idSucursalSelected:Int = INT_DEFAULT
@@ -269,33 +269,28 @@ class RegistrarLoanFragment : Fragment() {
     }
 
     private fun getExtras() {
-        val intent = requireActivity().intent //TODO: Revisar si se debe cambiar por requireActivity().intent
-        if(intent.extras != null) {
-           val extras  = intent.getStringExtra(PAConstants.EXTRA_LOAN_JSON)
-           val gson = Gson()
+        val loanInfo = viewModel.getLoanInformationDomain()
 
-            if(!extras.isNullOrEmpty()) {
-                loanDomainReceived = gson.fromJson(extras, LoanDomain::class.java)
-                binding.capital.setText("${getString(R.string.tipo_moneda)} ${loanDomainReceived.capital!!.toInt()}")
-                val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(loanDomainReceived.typeLoan?: INT_DEFAULT).displayName
-                binding.typeLoan.setText(typeLoanDisplayName)
+        loanInfo?.let { loan->
+            binding.capital.setText("${getString(R.string.tipo_moneda)} ${loan.capital}")
+            val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(loan.typeLoan?: INT_DEFAULT).displayName
+            binding.typeLoan.setText(typeLoanDisplayName)
 
-                //New fields for the new version 2.0
-                val typeLoan = PaymentScheduled.getPaymentScheduledById(loanDomainReceived.typeLoan?: INT_DEFAULT)
-                when(typeLoan) {
-                    PaymentScheduledEnum.DAILY -> {
-                        binding.containerDaily.beVisible()
-                        binding.containerOther.beGone()
-                        binding.plazosEnDias.setText("${loanDomainReceived.quotas.toString()} dias")
-                        binding.interes.setText("${loanDomainReceived.interest!!.toInt()}%")
+            //New fields for the new version 2.0
+            val typeLoan = PaymentScheduled.getPaymentScheduledById(loan.typeLoan?: INT_DEFAULT)
+            when(typeLoan) {
+                PaymentScheduledEnum.DAILY -> {
+                    binding.containerDaily.beVisible()
+                    binding.containerOther.beGone()
+                    binding.plazosEnDias.setText("${loan.quotas.toString()} dias")
+                    binding.interes.setText("${loan.interest!!.toInt()}%")
 
-                    }
-                    else -> {
-                        binding.containerDaily.beGone()
-                        binding.containerOther.beVisible()
-                        binding.interesOther.setText("${loanDomainReceived.interest!!.toInt()}%")
-                        binding.quotasOther.setText(loanDomainReceived.quotas.toString())
-                    }
+                }
+                else -> {
+                    binding.containerDaily.beGone()
+                    binding.containerOther.beVisible()
+                    binding.interesOther.setText("${loan.interest!!.toInt()}%")
+                    binding.quotasOther.setText(loan.quotas.toString())
                 }
             }
         }

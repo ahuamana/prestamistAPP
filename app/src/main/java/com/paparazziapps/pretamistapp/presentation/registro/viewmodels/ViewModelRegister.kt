@@ -59,6 +59,10 @@ class ViewModelRegister (
         }
     }
 
+    fun getLoanInformationDomain(): LoanDomain? {
+        return loanDomain
+    }
+
     fun setDailyStringMode(value: String) {
         //split between spaces and get the first element handle the case of the string having a space at the end
         val description = value.trim().split(" ").firstOrNull()?:LoanType.DAILY.description
@@ -67,10 +71,6 @@ class ViewModelRegister (
 
     fun getMontoDiario() : LiveData<Double> {
         return _montoDiario
-    }
-
-    fun getLoanDomain(): LoanDomain? {
-        return loanDomain
     }
 
     fun getClientSelected(): ClientDomainSelect? {
