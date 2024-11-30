@@ -50,6 +50,15 @@ class ViewModelRegister (
         initialValue = null
     )
 
+    init {
+        Log.d(tag, "Loan: ${loanDomain}")
+        Log.d(tag, "Client: ${clientSelected}")
+
+        if (clientSelected != null) {
+            _stateUserInfo.value = clientSelected
+        }
+    }
+
     fun setDailyStringMode(value: String) {
         //split between spaces and get the first element handle the case of the string having a space at the end
         val description = value.trim().split(" ").firstOrNull()?:LoanType.DAILY.description

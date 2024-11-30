@@ -110,6 +110,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Nombre(s)"
+                        android:enabled="false"
                         android:inputType="textNoSuggestions"
                         android:lines="1"
                         android:maxLength="50" />
@@ -131,6 +132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Apellidos"
+                        android:enabled="false"
                         android:inputType="textNoSuggestions"
                         android:lines="1"
                         android:maxLength="50" />
@@ -153,6 +155,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/googlesans_regular"
                         android:hint="Correo electrónico"
+                        android:enabled="false"
                         android:inputType="textEmailAddress"
                         android:lines="1"
                         android:maxLength="50" />
@@ -178,6 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="Celular"
+                        android:enabled="false"
                         android:inputType="number"
                         android:lines="1"
                         android:maxLength="9" />
