@@ -110,6 +110,10 @@ class ViewModelRegister (
                 val msg = "El prestamo se registro correctamente"
                 _state.value = RegisterState.Success(msg)
             }
+
+            else -> {
+                Log.d(tag, "Error desconocido")
+            }
         }
     }
 
