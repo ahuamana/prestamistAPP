@@ -48,7 +48,6 @@ class RegistrarLoanFragment : Fragment() {
     private val binding get() = _binding!!
     var loanDomainReceived = LoanDomain()
     lateinit var layoutFecha:TextInputLayout
-    lateinit var layoutDNI:TextInputLayout
     var fechaSelectedUnixtime:Long? = null
 
     private val preferences: MyPreferences by inject()
@@ -73,7 +72,6 @@ class RegistrarLoanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutFecha         = binding.fechaLayout
-        layoutDNI           = binding.dniLayout
 
         //SuperAdmin
         sucursalTxt         = binding.edtSucursal
@@ -86,8 +84,8 @@ class RegistrarLoanFragment : Fragment() {
         fieldsSuperAdmin()
 
         //Set max lengh Document
-        binding.dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
-        layoutDNI.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
+        binding.document.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
+        binding.documentLayout.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
 
         //get intent
         getExtras()
@@ -132,6 +130,18 @@ class RegistrarLoanFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.state.flowWithLifecycle(lifecycle).collect(::stateHandler)
         }
+
+        lifecycleScope.launch {
+            viewModel.stateUserInfo.collect { client ->
+                client?.let {
+                    binding.names.setText(it.name)
+                    binding.lastNames.setText(it.lastName)
+                    binding.document.setText(it.document)
+                    binding.celular.setText(it.phone)
+                    binding.email.setText(it.email)
+                }
+            }
+        }
     }
 
     private fun stateHandler(state: RegisterState) {
@@ -172,10 +182,10 @@ class RegistrarLoanFragment : Fragment() {
 
 
 
-        val document = binding.dni.text.toString().trim()
+        val document = binding.document.text.toString().trim()
         val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
 
-        binding.dniLayout.error = when {
+        binding.documentLayout.error = when {
             document.isEmpty() -> "Documento vacío"
             document.count() in 1 until documentMaxLength -> "Documento incompleto"
             else -> null

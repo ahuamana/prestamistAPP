@@ -69,7 +69,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/dniLayout"
+                    android:id="@+id/documentLayout"
                     style="@style/CustomTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/dni"
+                        android:id="@+id/document"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/tipo_documento"
@@ -94,7 +94,7 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/nombresLayout"
+                    android:id="@+id/namesLayout"
                     style="@style/CustomTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/sucursal_txt_input_lyt">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/nombres"
+                        android:id="@+id/names"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Nombre(s)"
@@ -116,7 +116,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/apellidosLayout"
+                    android:id="@+id/lastNamesLayout"
                     style="@style/CustomTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/apellidos"
+                        android:id="@+id/lastNames"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Apellidos"

@@ -17,8 +17,10 @@ import com.paparazziapps.pretamistapp.domain.clients.ClientDomainSelect
 import com.paparazziapps.pretamistapp.helper.fromGson
 import com.paparazziapps.pretamistapp.helper.fromJson
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -40,6 +42,13 @@ class ViewModelRegister (
 
     private val _state = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val state: StateFlow<RegisterState> = _state.asStateFlow()
+
+    private val _stateUserInfo: MutableStateFlow<ClientDomainSelect?> = MutableStateFlow(null)
+    val stateUserInfo = _stateUserInfo.stateIn(
+        scope =viewModelScope,
+        started= SharingStarted.WhileSubscribed(5000,1),
+        initialValue = null
+    )
 
     fun setDailyStringMode(value: String) {
         //split between spaces and get the first element handle the case of the string having a space at the end
