@@ -46,7 +46,6 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - [JetPack](https://developer.android.com/jetpack)
     - Lifecycle - Observe Android lifecycles and handle UI states
     - ViewModel - UI related data holder, lifecycle aware
-    - Room - Construct database
     - Navigation Component - Handle everything needed for in-app navigation
 - [Koin](https://insert-koin.io/) - Dependency Injection framework
 - [Firebase](https://firebase.google.com/) - Backend platform for authentication and realtime database
