@@ -175,19 +175,27 @@ class PrincipalActivity : AppCompatActivity(){
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            Log.d("addOnDestinationChangedListener", "addOnDestinationChangedListener ${destination.id}")
+            Log.d("addOnDestinationChangedListener", "addOnDestinationChangedListener ${destination.id} -- ${destination.label}")
             when (destination.id) {
                 R.id.navigation_profile -> {
                     binding.tool.toolbar.beVisible()
                     binding.tool.ivAvatar.beGone()
                     //reset navigation selected item
-                    binding.navView.menu.findItem(R.id.navigation_profile)?.isChecked = true
+                    binding.navView.selectedItemId = R.id.navigation_profile
+                }
+
+                R.id.clients_add, R.id.action_detail_receipt,
+                R.id.navigation_select_user, R.id.navigation_register_loan -> {
+                    binding.tool.toolbar.beVisible()
+                    binding.tool.ivAvatar.beGone()
+
+                    //configure icon back
+                    binding.tool.toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
                 }
 
                 else -> {
                     binding.tool.toolbar.beVisible()
                     binding.tool.ivAvatar.beVisible()
-                    Log.d("navController", "addOnDestinationChangedListener ${destination.id} -- ${destination.label}")
                 }
             }
         }
