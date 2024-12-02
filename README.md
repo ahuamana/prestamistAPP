@@ -21,7 +21,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 
 ## 🚀 Features
 
-- Menus (Dashboard / Finanzas / Registro)
+- Menus (Dashboard / Finanzas / Registro, Perfil, Registro)
 - Géstion de todos los préstamos (días retrasados - días faltantes por pagar)
 - Múltiples Sucursales
 - Admin Panel / Cashier
@@ -35,6 +35,7 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 - Genera voucher de pago
 - Opciones para compartir voucher por dispositivo
 - Redondeo de préstamos
+- Modulo de cliente
 - Automatización de envio de bouchers por email con RESEND.com (Opcional - V4.1.0)
 
 ## 🛠 Tech Stack & Open-source libraries
