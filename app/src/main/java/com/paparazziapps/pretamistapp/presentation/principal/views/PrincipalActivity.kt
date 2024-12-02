@@ -10,6 +10,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -140,14 +143,22 @@ class PrincipalActivity : AppCompatActivity(){
             setSupportActionBar(toolbar)
             toolbar.navigationIcon?.setTint(getColor(R.color.white))
             ivAvatar.setOnClickListener {
-                findNavController(R.id.nav_host_fragment_activity_main).navigate(R.id.navigation_profile)
+                binding.navView.menu.findItem(R.id.navigation_profile)?.isChecked = true
+                with(findNavController(R.id.nav_host_fragment_activity_main)) {
+                    navigate(
+                        R.id.navigation_profile, null, NavOptions.Builder()
+                            .setPopUpTo(this.currentDestination?.id ?: R.id.navigation_home, inclusive = true)
+                            .setLaunchSingleTop(true)
+                            .build()
+                    )
+                }
             }
         }
     }
 
     private fun setUpBottomNav() {
         Log.d("setUpBottomNav", "setUpBottomNav")
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_registrar, R.id.navigation_finanzas,
@@ -159,15 +170,30 @@ class PrincipalActivity : AppCompatActivity(){
         binding.tool.toolbar.beVisible()
         binding.navView.beVisible()
 
-        binding.navView.setOnItemSelectedListener { item ->
-            NavigationUI.onNavDestinationSelected(item, navController)
-            true
-        }
-
         binding.navView.setupWithNavController(navController)
         NavigationUI.setupWithNavController(binding.tool.toolbar, navController,appBarConfiguration)
 
-        //
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.d("addOnDestinationChangedListener", "addOnDestinationChangedListener ${destination.id}")
+            when (destination.id) {
+                R.id.navigation_profile -> {
+                    binding.tool.toolbar.beVisible()
+                    binding.tool.ivAvatar.beGone()
+                    //reset navigation selected item
+                    binding.navView.menu.findItem(R.id.navigation_profile)?.isChecked = true
+                }
+
+                else -> {
+                    binding.tool.toolbar.beVisible()
+                    binding.tool.ivAvatar.beVisible()
+                    Log.d("navController", "addOnDestinationChangedListener ${destination.id} -- ${destination.label}")
+                }
+            }
+        }
+
+
+
         // Integrate OnBackPressedDispatcher
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

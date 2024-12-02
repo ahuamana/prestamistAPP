@@ -54,7 +54,28 @@
         android:id="@+id/navigation_profile"
         android:name="com.paparazziapps.pretamistapp.presentation.profile.views.ProfileFragment"
         android:label="Perfil"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_finanzas"
+            app:destination="@id/navigation_finanzas"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_registrar"
+            app:destination="@id/navigation_registrar"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_profile_to_clients_menu"
+            app:destination="@id/clients_menu"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_select_user"
