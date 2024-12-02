@@ -91,6 +91,13 @@
         android:id="@+id/navigation_register_loan"
         android:name="com.paparazziapps.pretamistapp.presentation.registro.views.RegistrarLoanFragment"
         android:label="Registrar préstamo"
-        tools:layout="@layout/fragment_loan_registrar" />
+        tools:layout="@layout/fragment_loan_registrar" >
+        <action
+            android:id="@+id/action_navigation_register_loan_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="false" />
+    </fragment>
 
 </navigation>
