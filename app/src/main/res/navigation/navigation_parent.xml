@@ -70,6 +70,6 @@
         android:id="@+id/navigation_register_loan"
         android:name="com.paparazziapps.pretamistapp.presentation.registro.views.RegistrarLoanFragment"
         android:label="Registrar préstamo"
-        tools:layout="@layout/fragment_registrar_loan" />
+        tools:layout="@layout/fragment_loan_registrar" />
 
 </navigation>

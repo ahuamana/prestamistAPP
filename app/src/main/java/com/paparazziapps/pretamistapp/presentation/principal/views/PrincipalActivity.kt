@@ -146,6 +146,7 @@ class PrincipalActivity : AppCompatActivity(){
     }
 
     private fun setUpBottomNav() {
+        Log.d("setUpBottomNav", "setUpBottomNav")
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -155,25 +156,13 @@ class PrincipalActivity : AppCompatActivity(){
             )
         )
 
-        //Change color of back arrow
-        navController.addOnDestinationChangedListener{ _, destination, _ ->
-            Log.d("NavigationDebug", "Current Destination: ${destination.label}")
-            Log.d("NavigationDebug", "Destination ID: ${destination.id}")
-            val isTopLevelDestination = destination.id !in appBarConfiguration.topLevelDestinations
-            if (isTopLevelDestination) {
-                Log.d("isNotTopLevel", destination.id.toString())
-                binding.tool.toolbar.apply {
-                    setNavigationIcon(R.drawable.ic_arrow_back_white)
-                    navigationIcon?.setTint(getColor(R.color.white))
-                }
-            }else{
-                binding.tool.toolbar.navigationIcon = null
-                Log.d("IsTopLevel", destination.id.toString())
-            }
-            invalidateOptionsMenu()
+        binding.tool.toolbar.beVisible()
+        binding.navView.beVisible()
+
+        binding.navView.setOnItemSelectedListener { item ->
+            NavigationUI.onNavDestinationSelected(item, navController)
+            true
         }
-
-
 
         binding.navView.setupWithNavController(navController)
         NavigationUI.setupWithNavController(binding.tool.toolbar, navController,appBarConfiguration)
