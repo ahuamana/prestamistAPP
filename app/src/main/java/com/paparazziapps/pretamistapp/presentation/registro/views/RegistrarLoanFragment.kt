@@ -23,6 +23,7 @@ import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
@@ -33,6 +34,8 @@ import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.presentation.clients.ClientsAddViewModel
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.RegisterState
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -50,6 +53,28 @@ class RegistrarLoanFragment : Fragment() {
     var fechaSelectedUnixtime:Long? = null
 
     private val preferences: MyPreferences by inject()
+
+    private val generalErrorDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralErrorDialog(
+            onRetryClick = {
+                handledErrorDialog()
+            }
+        )
+    }
+
+    private fun handledErrorDialog() {
+        generalErrorDialog.dismiss()
+    }
+
+    private val generalSuccessDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralSuccessDialog(
+            successMessage = getString(R.string.operation_success_message),
+            buttonTitle = getString(R.string.continue_button_message),
+            onConfirmClick = {
+                findNavController().navigate(R.id.action_navigation_register_loan_to_navigation_home)
+            }
+        )
+    }
 
     //Sucursales Supér Admin
     var listaSucursales = mutableListOf<Sucursales>()
@@ -151,12 +176,12 @@ class RegistrarLoanFragment : Fragment() {
             is RegisterState.Success -> {
                 binding.cortina.isVisible = false
                 viewModel.resetState()
-                createIntentSuccess(state.message)
+                generalSuccessDialog.show()
             }
             is RegisterState.Error -> {
                 binding.cortina.isVisible = false
                 viewModel.resetState()
-                createIntentSuccess(state.message)
+                generalErrorDialog.show()
             }
 
             RegisterState.Idle -> {
@@ -232,13 +257,6 @@ class RegistrarLoanFragment : Fragment() {
         }
 
         viewModel.createLoan(loanDomain, branchId = idSucursalSelected)
-    }
-
-    private fun createIntentSuccess(msj:String) {
-        /*intent.putExtra("mensaje", msj)
-        setResult(RESULT_OK, intent)
-        finish()*/
-        TODO("Not yet implemented")
     }
 
     private fun showCalendar() {
