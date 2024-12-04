@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.clients.ClientsParentFragment">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:orientation="vertical"
+       android:layout_margin="16dp"
+       android:layout_height="wrap_content">
+
+       <com.google.android.material.button.MaterialButton
+           android:id="@+id/addClientButton"
+           android:layout_width="wrap_content"
+           android:layout_height="50dp"
+           android:textColor="@color/white"
+           android:layout_gravity="start"
+           android:layout_marginTop="8dp"
+           android:background="@drawable/buttom_corners"
+           app:backgroundTint="@color/primary"
+           android:textAllCaps="false"
+           android:letterSpacing="0.01"
+           android:text="@string/add_client_message_button"
+           app:layout_constraintTop_toBottomOf="@+id/capitalLayout"
+           style="?android:textAppearanceSmall"/>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="10dp"/>
+
+       <androidx.appcompat.widget.SearchView
+           android:id="@+id/searchView"
+           android:layout_width="match_parent"
+           android:background="@drawable/rounded_corner_background"
+           app:queryHint="Buscar cliente por documento"
+           android:queryHint="@string/app_name"
+           android:backgroundTint="@color/sand_color"
+           android:layout_height="wrap_content"/>
+
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="10dp"/>
+
+       <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/clientsRecyclerView"
+           android:layout_width="match_parent"
+           tools:listitem="@layout/client_item"
+           tools:itemCount="4"
+           android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+</ScrollView>

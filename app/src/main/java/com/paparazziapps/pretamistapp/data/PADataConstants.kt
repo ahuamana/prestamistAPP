@@ -10,10 +10,12 @@ object PADataConstants {
 
     //child branches
     const val BRANCHES = "sucusales"
+
     //collections
     const val DETAIL_LOAN_COLLECTION = "DetallePrestamo"
     const val USERS_COLLECTION = "Users"
     const val LOAN_COLLECTION = "Prestamos"
+    const val CLIENTS_COLLECTION = "Clientes"
 
     //analytics events
     const val EVENT_SHARE_RECEIPT_OTHER_APPS = "share_receipt_other_apps"
@@ -23,4 +25,7 @@ object PADataConstants {
     //resend email events
     const val EVENT_RESEND_EMAIL_SUCCESS = "resend_email_success"
     const val EVENT_RESEND_EMAIL_ERROR = "resend_email_error"
+
+    //client
+    const val CLIENT_DOCUMENT = "document"
 }

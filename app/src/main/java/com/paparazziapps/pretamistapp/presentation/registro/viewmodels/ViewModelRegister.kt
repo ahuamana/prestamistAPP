@@ -13,9 +13,14 @@ import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDoubl
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.PAConstants
+import com.paparazziapps.pretamistapp.domain.clients.ClientDomainSelect
+import com.paparazziapps.pretamistapp.helper.fromGson
+import com.paparazziapps.pretamistapp.helper.fromJson
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -27,7 +32,8 @@ class ViewModelRegister (
     private val tag = ViewModelRegister::class.java.simpleName
 
     //PAConstants.EXTRA_LOAN_JSON
-    private val loanDomain = getLoanDomainFromExtras()
+    private val loanDomain =  handle.get<String>(PAConstants.EXTRA_LOAN_JSON)?.fromGson<LoanDomain>()
+    private val clientSelected = handle.get<String>(PAConstants.EXTRA_CLIENT_JSON)?.fromGson<ClientDomainSelect>()
 
     val _montoDiario = MutableLiveData<Double>()
 
@@ -36,6 +42,26 @@ class ViewModelRegister (
 
     private val _state = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val state: StateFlow<RegisterState> = _state.asStateFlow()
+
+    private val _stateUserInfo: MutableStateFlow<ClientDomainSelect?> = MutableStateFlow(null)
+    val stateUserInfo = _stateUserInfo.stateIn(
+        scope =viewModelScope,
+        started= SharingStarted.WhileSubscribed(5000,1),
+        initialValue = null
+    )
+
+    init {
+        Log.d(tag, "Loan: ${loanDomain}")
+        Log.d(tag, "Client: ${clientSelected}")
+
+        if (clientSelected != null) {
+            _stateUserInfo.value = clientSelected
+        }
+    }
+
+    fun getLoanInformationDomain(): LoanDomain? {
+        return loanDomain
+    }
 
     fun setDailyStringMode(value: String) {
         //split between spaces and get the first element handle the case of the string having a space at the end
@@ -47,12 +73,13 @@ class ViewModelRegister (
         return _montoDiario
     }
 
-    private fun getLoanDomainFromExtras(): LoanDomain? {
-        val extrasLoan = handle.get<String>(PAConstants.EXTRA_LOAN_JSON)
-        Log.d(tag, "EXTRAS: $extrasLoan")
-        return extrasLoan?.let {
-            Gson().fromJson(it, LoanDomain::class.java)
-        }
+    fun getClientSelected(): ClientDomainSelect? {
+        return clientSelected
+    }
+
+    init {
+        Log.d(tag, "Loan: ${loanDomain}")
+        Log.d(tag, "Client: ${clientSelected}")
     }
 
     fun calcularMontoDiario(capital:Int, interes:Int, dias:Int) {
@@ -82,6 +109,10 @@ class ViewModelRegister (
             is PAResult.Success -> {
                 val msg = "El prestamo se registro correctamente"
                 _state.value = RegisterState.Success(msg)
+            }
+
+            else -> {
+                Log.d(tag, "Error desconocido")
             }
         }
     }

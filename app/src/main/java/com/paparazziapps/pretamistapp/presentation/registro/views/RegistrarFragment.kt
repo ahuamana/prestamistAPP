@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -122,7 +123,7 @@ class RegistrarFragment : Fragment() {
         setupSpinners()
         observers()
         validateAll()
-        continuar()
+        setupButtons()
 
         redondear()
 
@@ -140,7 +141,7 @@ class RegistrarFragment : Fragment() {
         }
     }
 
-    private fun continuar() {
+    private fun setupButtons() {
         btnContinuar.setOnClickListener {
 
             loanDomain.capital = binding.capitalprestadoEdt.text.toString().toInt()
@@ -168,11 +169,13 @@ class RegistrarFragment : Fragment() {
             val gson = Gson()
             val loanJson = gson.toJson(loanDomain)
 
-            //Show next activity - Register pagos
-            val intent = Intent(context, RegistrarActivity::class.java).apply {
-                putExtra(PAConstants.EXTRA_LOAN_JSON,loanJson)
-            }
-            startForResult.launch(intent)
+            val bundle = Bundle()
+            bundle.putString(PAConstants.EXTRA_LOAN_JSON,loanJson)
+            findNavController()
+                .navigate(
+                    R.id.action_navigation_registrar_to_navigation_select_user,
+                    bundle
+                )
         }
     }
 

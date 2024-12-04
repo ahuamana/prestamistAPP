@@ -5,6 +5,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.di.PAFirebaseAnalytics
 import com.paparazziapps.pretamistapp.data.providers.BranchesProvider
+import com.paparazziapps.pretamistapp.data.providers.ClientsProvider
 import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
 import com.paparazziapps.pretamistapp.data.providers.FirebaseProvider
 import com.paparazziapps.pretamistapp.data.providers.LoanProvider
@@ -26,11 +27,15 @@ import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSourceImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteEmailDataSourceImpl
 import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.data.repository.PARepositoryImpl
+import com.paparazziapps.pretamistapp.data.repository.PAClientsRepositoryImpl
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepositoryImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSourceImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteEmailDataSource
+import com.paparazziapps.pretamistapp.data.remote.clients.RemoteClientsDataSourceImpl
+import com.paparazziapps.pretamistapp.data.remote.clients.RemoteClientsDataSource
 import com.paparazziapps.pretamistapp.data.repository.PAEmailRepositoryImpl
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
+import com.paparazziapps.pretamistapp.data.repository.PAClientsRepository
 import com.paparazziapps.pretamistapp.data.repository.PAEmailRepository
 import com.paparazziapps.pretamistapp.data.services.ServiceProvider
 import com.paparazziapps.pretamistapp.data.utils.ReceiptHtmlTemplate
@@ -46,6 +51,9 @@ import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.ViewModel
 import com.paparazziapps.pretamistapp.presentation.tesoreria.viewmodels.ViewModelFinance
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDetailReceipt
 import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
+import com.paparazziapps.pretamistapp.presentation.clients.ClientsAddViewModel
+import com.paparazziapps.pretamistapp.presentation.clients.ClientsParentViewModel
+import com.paparazziapps.pretamistapp.presentation.registro.views.SelectUserViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -64,6 +72,7 @@ class AppApplication : MultiDexApplication() {
         single { LoanProvider(get(),get())} // Provide LoanProvider
         single { RegisterProvider(get()) } // Provide RegisterProvider
         single { UserProvider(get()) } // Provide UserProvider
+        single { ClientsProvider(get())}
         //DB
         single { MyPreferences(androidContext())} // Provide MyPreferences
 
@@ -92,6 +101,11 @@ class AppApplication : MultiDexApplication() {
         singleOf(::RemoteEmailDataSourceImpl) { bind<RemoteEmailDataSource>() }
         singleOf(::PAEmailRepositoryImpl) { bind<PAEmailRepository>() }
 
+        //New Clients Module
+        singleOf(::ClientsProvider) { bind<ClientsProvider>() }
+        singleOf(::RemoteClientsDataSourceImpl) { bind<RemoteClientsDataSource>() }
+        singleOf(::PAClientsRepositoryImpl) { bind<PAClientsRepository>() }
+
     }
 
     private val uiModule = module {
@@ -104,6 +118,9 @@ class AppApplication : MultiDexApplication() {
         viewModelOf(::ViewModelLogin)// viewModel { ViewModelLogin(get()) }
         viewModelOf(::ViewModelDetailReceipt)
         viewModelOf(::ProfileViewModel)
+        viewModelOf(::ClientsAddViewModel)
+        viewModelOf(::ClientsParentViewModel)
+        viewModelOf(::SelectUserViewModel)
     }
 
     override fun onCreate() {

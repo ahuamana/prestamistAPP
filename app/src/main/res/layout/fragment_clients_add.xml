@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".presentation.clients.ClientsAddFragment">
+
+
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+       <LinearLayout
+           android:id="@+id/bodyLayout"
+           android:layout_width="match_parent"
+           android:orientation="vertical"
+           android:layout_margin="16dp"
+           android:layout_height="wrap_content">
+
+
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/documentLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               app:counterEnabled="true"
+               app:counterMaxLength="10"
+               android:layout_marginTop="6dp"
+               app:errorEnabled="true"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/documentEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:hint="@string/tipo_documento"
+                   android:inputType="number"
+                   android:lines="1"
+                   android:maxLength="10" />
+           </com.google.android.material.textfield.TextInputLayout>
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/namesLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               app:errorEnabled="true"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintHorizontal_bias="0.0"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/sucursal_txt_input_lyt">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/nameEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:hint="Nombre(s) *"
+                   android:inputType="textNoSuggestions"
+                   android:lines="1"
+                   android:maxLength="50" />
+           </com.google.android.material.textfield.TextInputLayout>
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/lastNameLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:errorEnabled="true"
+               android:layout_marginTop="6dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/lastNameEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:hint="Apellidos *"
+                   android:inputType="textNoSuggestions"
+                   android:lines="1"
+                   android:maxLength="50" />
+           </com.google.android.material.textfield.TextInputLayout>
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/emailLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="16dp"
+               app:errorEnabled="true"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/apellidosLayout">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/emailEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:fontFamily="@font/googlesans_regular"
+                   android:hint="Correo electrónico *"
+                   android:inputType="textEmailAddress"
+                   android:lines="1"
+                   android:maxLength="50" />
+           </com.google.android.material.textfield.TextInputLayout>
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/phoneLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="6dp"
+               android:layout_weight="1"
+               app:counterEnabled="true"
+               app:counterMaxLength="9"
+               app:errorEnabled="true"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/phoneEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:hint="Celular *"
+                   android:inputType="number"
+                   android:lines="1"
+                   android:maxLength="9" />
+           </com.google.android.material.textfield.TextInputLayout>
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/saveMessageButton"
+               android:layout_width="match_parent"
+               android:layout_height="50dp"
+               android:textColor="@color/white"
+               android:layout_gravity="start"
+               android:gravity="center"
+               android:layout_marginTop="8dp"
+               android:background="@drawable/buttom_corners"
+               app:backgroundTint="@color/primary"
+               android:text="@string/save_message_button"
+               app:layout_constraintTop_toBottomOf="@+id/capitalLayout"
+               style="?android:textAppearanceSmall"/>
+       </LinearLayout>
+   </ScrollView>
+
+</LinearLayout>

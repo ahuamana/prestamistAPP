@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.registro.views.RegistrarActivity">
+    android:layout_height="match_parent">
 
 
     <ScrollView
@@ -14,20 +13,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/tool"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/toolbar_child"/>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/linearLayoutTop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tool">
+                app:layout_constraintTop_toTopOf="parent">
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -49,10 +44,11 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/sucursal_txt_input_lyt"
                     style="@style/CustomDropDown"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:endIconMode="custom"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
                     android:layout_marginTop="16dp"
                     app:errorEnabled="true"
@@ -72,124 +68,6 @@
                         android:maxLength="50" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/nombresLayout"
-                    style="@style/CustomTextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:errorEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sucursal_txt_input_lyt">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/nombres"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Nombre(s)"
-                        android:inputType="textNoSuggestions"
-                        android:lines="1"
-                        android:maxLength="50" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/apellidosLayout"
-                    style="@style/CustomTextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:errorEnabled="true"
-                    android:layout_marginTop="6dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/apellidos"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Apellidos"
-                        android:inputType="textNoSuggestions"
-                        android:lines="1"
-                        android:maxLength="50" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutEmail"
-                    style="@style/CustomTextField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:errorEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/apellidosLayout">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/googlesans_regular"
-                        android:hint="Correo electrónico"
-                        android:inputType="textEmailAddress"
-                        android:lines="1"
-                        android:maxLength="50" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/dniLayout"
-                    style="@style/CustomTextField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="10"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginRight="10dp"
-                    app:errorEnabled="true"
-                    app:layout_constraintEnd_toStartOf="@+id/celularLayout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/dni"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/tipo_documento"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="10" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/celularLayout"
-                    style="@style/CustomTextField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_weight="1"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="9"
-                    app:errorEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dniLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/celular"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="Celular"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="9" />
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/fechaLayout"
                     style="@style/CustomTextField"
@@ -203,8 +81,8 @@
                     app:endIconMode="custom"
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="@+id/celularLayout"
-                    app:layout_constraintStart_toStartOf="@+id/dniLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/dniLayout">
+                    app:layout_constraintStart_toStartOf="@+id/celularLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/celularLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/fecha"
@@ -217,6 +95,126 @@
                         android:inputType="number"
                         android:lines="1"
                         android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/documentLayout"
+                    style="@style/CustomTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10"
+                    android:layout_marginTop="6dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/document"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/tipo_documento"
+                        android:enabled="false"
+                        android:inputType="number"
+                        android:lines="1"
+                        android:maxLength="10" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/namesLayout"
+                    style="@style/CustomTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sucursal_txt_input_lyt">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/names"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Nombre(s)"
+                        android:enabled="false"
+                        android:inputType="textNoSuggestions"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lastNamesLayout"
+                    style="@style/CustomTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/lastNames"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Apellidos"
+                        android:enabled="false"
+                        android:inputType="textNoSuggestions"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutEmail"
+                    style="@style/CustomTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/apellidosLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/googlesans_regular"
+                        android:hint="Correo electrónico"
+                        android:enabled="false"
+                        android:inputType="textEmailAddress"
+                        android:lines="1"
+                        android:maxLength="50" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/celularLayout"
+                    style="@style/CustomTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="1"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="9"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/celular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Celular"
+                        android:enabled="false"
+                        android:inputType="number"
+                        android:lines="1"
+                        android:maxLength="9" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -552,7 +550,7 @@
 
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

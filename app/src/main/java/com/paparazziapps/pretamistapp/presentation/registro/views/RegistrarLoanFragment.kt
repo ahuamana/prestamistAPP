@@ -4,57 +4,77 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.databinding.ActivityRegistrarBinding
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.ViewModelRegister
 import java.text.SimpleDateFormat
 import java.util.*
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.databinding.FragmentLoanRegistrarBinding
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.presentation.clients.ClientsAddViewModel
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.RegisterState
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class RegistrarActivity : AppCompatActivity() {
+class RegistrarLoanFragment : Fragment() {
 
     private val viewModel by viewModel<ViewModelRegister>()
     val _viewModelBranches: ViewModelBranches  by viewModel()
 
-    lateinit var binding: ActivityRegistrarBinding
-    var loanDomainReceived = LoanDomain()
+    private var _binding: FragmentLoanRegistrarBinding? = null
+    private val binding get() = _binding!!
     lateinit var layoutFecha:TextInputLayout
-    lateinit var layoutNombres:TextInputLayout
-    lateinit var layoutApellidos:TextInputLayout
-    lateinit var layoutDNI:TextInputLayout
-    lateinit var layoutCelular:TextInputLayout
-
-    lateinit var registerButton:MaterialButton
-    lateinit var toolbar: Toolbar
     var fechaSelectedUnixtime:Long? = null
 
     private val preferences: MyPreferences by inject()
+
+    private val generalErrorDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralErrorDialog(
+            onRetryClick = {
+                handledErrorDialog()
+            }
+        )
+    }
+
+    private fun handledErrorDialog() {
+        generalErrorDialog.dismiss()
+    }
+
+    private val generalSuccessDialog by lazy {
+        PADialogFactory(requireContext()).createGeneralSuccessDialog(
+            successMessage = getString(R.string.operation_success_message),
+            buttonTitle = getString(R.string.continue_button_message),
+            onConfirmClick = {
+                findNavController().navigate(R.id.action_navigation_register_loan_to_navigation_home)
+            }
+        )
+    }
 
     //Sucursales Supér Admin
     var listaSucursales = mutableListOf<Sucursales>()
@@ -64,19 +84,18 @@ class RegistrarActivity : AppCompatActivity() {
     lateinit var viewCurtainSucursal: View
     lateinit var viewDotsSucursal: View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityRegistrarBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLoanRegistrarBinding.inflate(inflater,container,false)
+        return binding.root
+    }
 
-
-        toolbar         = binding.tool.toolbar
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         layoutFecha         = binding.fechaLayout
-        layoutNombres       = binding.nombresLayout
-        layoutApellidos     = binding.apellidosLayout
-        layoutDNI           = binding.dniLayout
-        layoutCelular       = binding.celularLayout
 
         //SuperAdmin
         sucursalTxt         = binding.edtSucursal
@@ -89,19 +108,20 @@ class RegistrarActivity : AppCompatActivity() {
         fieldsSuperAdmin()
 
         //Set max lengh Document
-        binding.dni.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
-        layoutDNI.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
+        binding.document.setMaxLength(resources.getInteger(R.integer.cantidad_documento_max))
+        binding.documentLayout.counterMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
 
         //get intent
         getExtras()
         showCalendar()
-        setUpToolbarInitialize()
 
         //Observers
         setupObservers()
 
         setupButtons()
     }
+
+
 
     private fun fieldsSuperAdmin() {
         if(preferences.isSuperAdmin){
@@ -112,7 +132,7 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        _viewModelBranches.branches.observe(this){
+        _viewModelBranches.branches.observe(viewLifecycleOwner){
             if(it.isNotEmpty()) {
                 listaSucursales = it.toMutableList()
                 val scrsales = mutableListOf<String>()
@@ -120,7 +140,7 @@ class RegistrarActivity : AppCompatActivity() {
                     scrsales.add(it.name?:"")
                 }
 
-                val adapterSucursales= ArrayAdapter(this,R.layout.select_items, scrsales)
+                val adapterSucursales= ArrayAdapter(requireContext(),R.layout.select_items, scrsales)
                 sucursalTxt.setAdapter(adapterSucursales)
                 sucursalTxt.setOnClickListener { sucursalTxt.showDropDown() }
                 sucursalTxtLayout.setEndIconOnClickListener { sucursalTxt.showDropDown() }
@@ -134,6 +154,18 @@ class RegistrarActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.state.flowWithLifecycle(lifecycle).collect(::stateHandler)
         }
+
+        lifecycleScope.launch {
+            viewModel.stateUserInfo.collect { client ->
+                client?.let {
+                    binding.names.setText(it.name)
+                    binding.lastNames.setText(it.lastName)
+                    binding.document.setText(it.document)
+                    binding.celular.setText(it.phone)
+                    binding.email.setText(it.email)
+                }
+            }
+        }
     }
 
     private fun stateHandler(state: RegisterState) {
@@ -144,12 +176,12 @@ class RegistrarActivity : AppCompatActivity() {
             is RegisterState.Success -> {
                 binding.cortina.isVisible = false
                 viewModel.resetState()
-                createIntentSuccess(state.message)
+                generalSuccessDialog.show()
             }
             is RegisterState.Error -> {
                 binding.cortina.isVisible = false
                 viewModel.resetState()
-                createIntentSuccess(state.message)
+                generalErrorDialog.show()
             }
 
             RegisterState.Idle -> {
@@ -163,13 +195,6 @@ class RegistrarActivity : AppCompatActivity() {
         Snackbar.make(binding.root,"${message}",Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun setUpToolbarInitialize() {
-        toolbar.title = "Registrar"
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
-    }
-
     private fun setupButtons() {
         binding.registrarButton.setOnClickListener {
            handledRegister()
@@ -177,28 +202,14 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun handledRegister() {
-        hideKeyboardActivity(this@RegistrarActivity)
+        hideKeyboardActivity(requireActivity())
 
-        val names = binding.nombres.text.toString().trim()
 
-        binding.nombresLayout.error = when {
-            names.isEmpty() -> "El nombre esta vacío"
-            names.count() < 4 -> "El nombre esta incompleto"
-            else -> null
-        }
 
-        val lastnames = binding.apellidos.text.toString().trim()
-
-        binding.apellidosLayout.error = when {
-            lastnames.isEmpty() -> "Los apellidos estan vacíos"
-            lastnames.count() < 4 -> "Los apellidos estan incompletos"
-            else -> null
-        }
-
-        val document = binding.dni.text.toString().trim()
+        val document = binding.document.text.toString().trim()
         val documentMaxLength = resources.getInteger(R.integer.cantidad_documento_max)
 
-        binding.dniLayout.error = when {
+        binding.documentLayout.error = when {
             document.isEmpty() -> "Documento vacío"
             document.count() in 1 until documentMaxLength -> "Documento incompleto"
             else -> null
@@ -211,49 +222,32 @@ class RegistrarActivity : AppCompatActivity() {
             else -> null
         }
 
-        val cellular = binding.celular.text.toString().trim()
 
-        binding.celularLayout.error = when {
-            cellular.isEmpty() -> "Celular vacío"
-            cellular.count() in 1..8 -> "Celular incompleto"
-            else -> null
-        }
-
-        val email = binding.email.text.toString().trim()
-
-        binding.layoutEmail.error = when {
-            email.isEmpty() -> "Email vacío"
-            isValidEmail(email).not() -> "Email no válido"
-            else -> null
-        }
-
-        if(names.isEmpty() || lastnames.isEmpty() || document.isEmpty() || date.isEmpty() || cellular.isEmpty() || email.isEmpty()) return
-        if (names.count() < 4 || lastnames.count() < 4 || document.count() < documentMaxLength || cellular.count() < 9 || email.count() < 4) return
         if (fechaSelectedUnixtime == null) return
-        if(isValidEmail(email).not()) return
 
-        //Finish validation
+        val client = viewModel.getClientSelected()
+        val loanInfo = viewModel.getLoanInformationDomain()
 
         val loanDomain = LoanDomain(
-            names     = names,
-            lastnames   = lastnames,
+            names     = client?.name,
+            lastnames   = client?.lastName,
             dni         = document,
-            cellular     = cellular,
-            email = email,
-            loanStartDateFormatted       = date,
+            cellular     = client?.phone,
+            email = client?.email,
+            loanStartDateFormatted = date,
             loanStartDateUnix    = fechaSelectedUnixtime,
             loanCreationDateUnix = getFechaActualNormalInUnixtime(),
-            capital     = loanDomainReceived.capital,
-            interest     = loanDomainReceived.interest,
+            capital     = loanInfo?.capital,
+            interest     = loanInfo?.interest,
             quotasPaid = 0,
-            amountPerQuota = loanDomainReceived.amountPerQuota,
-            totalAmountToPay = loanDomainReceived.totalAmountToPay,
+            amountPerQuota = loanInfo?.amountPerQuota,
+            totalAmountToPay = loanInfo?.totalAmountToPay,
             state = "ABIERTO",
             //fields new version 2.0
-            typeLoan = loanDomainReceived.typeLoan,
-            typeLoanDays = loanDomainReceived.typeLoanDays,
-            typeLoanName = loanDomainReceived.typeLoanName,
-            quotas = loanDomainReceived.quotas // Only for other type of loans like weekly, biweekly, monthly
+            typeLoan = loanInfo?.typeLoan,
+            typeLoanDays = loanInfo?.typeLoanDays,
+            typeLoanName = loanInfo?.typeLoanName,
+            quotas = loanInfo?.quotas // Only for other type of loans like weekly, biweekly, monthly
         )
 
         var idSucursalSelected:Int = INT_DEFAULT
@@ -263,12 +257,6 @@ class RegistrarActivity : AppCompatActivity() {
         }
 
         viewModel.createLoan(loanDomain, branchId = idSucursalSelected)
-    }
-
-    private fun createIntentSuccess(msj:String) {
-        intent.putExtra("mensaje", msj)
-        setResult(RESULT_OK, intent)
-        finish()
     }
 
     private fun showCalendar() {
@@ -284,7 +272,7 @@ class RegistrarActivity : AppCompatActivity() {
                 .setTitleText("Seleciona una fecha")
                 .build()
 
-        datePicker.show(supportFragmentManager, "Datepickerdialog");
+        datePicker.show(requireActivity().supportFragmentManager, "Datepickerdialog");
 
         datePicker.addOnPositiveButtonClickListener {
             Log.d("UNIXTIME","UnixTime: ${it}")
@@ -299,32 +287,28 @@ class RegistrarActivity : AppCompatActivity() {
     }
 
     private fun getExtras() {
-        if(intent.extras != null) {
-           val extras  = intent.getStringExtra(PAConstants.EXTRA_LOAN_JSON)
-           val gson = Gson()
+        val loanInfo = viewModel.getLoanInformationDomain()
 
-            if(!extras.isNullOrEmpty()) {
-                loanDomainReceived = gson.fromJson(extras, LoanDomain::class.java)
-                binding.capital.setText("${getString(R.string.tipo_moneda)} ${loanDomainReceived.capital!!.toInt()}")
-                val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(loanDomainReceived.typeLoan?: INT_DEFAULT).displayName
-                binding.typeLoan.setText(typeLoanDisplayName)
+        loanInfo?.let { loan->
+            binding.capital.setText("${getString(R.string.tipo_moneda)} ${loan.capital}")
+            val typeLoanDisplayName = PaymentScheduled.getPaymentScheduledById(loan.typeLoan?: INT_DEFAULT).displayName
+            binding.typeLoan.setText(typeLoanDisplayName)
 
-                //New fields for the new version 2.0
-                val typeLoan = PaymentScheduled.getPaymentScheduledById(loanDomainReceived.typeLoan?: INT_DEFAULT)
-                when(typeLoan) {
-                    PaymentScheduledEnum.DAILY -> {
-                        binding.containerDaily.beVisible()
-                        binding.containerOther.beGone()
-                        binding.plazosEnDias.setText("${loanDomainReceived.quotas.toString()} dias")
-                        binding.interes.setText("${loanDomainReceived.interest!!.toInt()}%")
+            //New fields for the new version 2.0
+            val typeLoan = PaymentScheduled.getPaymentScheduledById(loan.typeLoan?: INT_DEFAULT)
+            when(typeLoan) {
+                PaymentScheduledEnum.DAILY -> {
+                    binding.containerDaily.beVisible()
+                    binding.containerOther.beGone()
+                    binding.plazosEnDias.setText("${loan.quotas.toString()} dias")
+                    binding.interes.setText("${loan.interest!!.toInt()}%")
 
-                    }
-                    else -> {
-                        binding.containerDaily.beGone()
-                        binding.containerOther.beVisible()
-                        binding.interesOther.setText("${loanDomainReceived.interest!!.toInt()}%")
-                        binding.quotasOther.setText(loanDomainReceived.quotas.toString())
-                    }
+                }
+                else -> {
+                    binding.containerDaily.beGone()
+                    binding.containerOther.beVisible()
+                    binding.interesOther.setText("${loan.interest!!.toInt()}%")
+                    binding.quotasOther.setText(loan.quotas.toString())
                 }
             }
         }

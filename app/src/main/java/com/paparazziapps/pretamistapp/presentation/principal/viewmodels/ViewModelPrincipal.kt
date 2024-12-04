@@ -85,7 +85,7 @@ class ViewModelPrincipal(
 
                 //Save the branches on the preferences
                 if(branchesServer.isNotEmpty()){
-                    preferences.branches = toJson(branchesServer)
+                    preferences.branches = branchesServer.toJson()
                 }
 
                 //Get Info from the user

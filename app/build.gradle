@@ -27,8 +27,8 @@ android {
         minSdk 26
         targetSdk 34
         multiDexEnabled true
-        versionCode 8
-        versionName "4.1.0"
+        versionCode 9
+        versionName "5.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,11 +42,7 @@ android {
                 strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
-            applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "prestamist-pa-${variant.name}-${variant.versionName}.apk"
-                }
-            }
+
             buildConfigField("String", "RESEND_API_KEY", "\"$resendApiKey\"")
         }
 

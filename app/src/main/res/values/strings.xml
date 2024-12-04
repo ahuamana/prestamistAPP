@@ -53,6 +53,14 @@
     <string name="type_percentage">%1$s%% completado</string>
     <string name="type_remaining_payments">%1$s de %2$s</string>
     <string name="type_no_more_payments">No hay más pagos</string>
+    <string name="add_client_message_button">+ Agregar Cliente</string>
+    <string name="save_message_button">Guardar</string>
+    <string name="error_name_empty">El nombre no puede estar vacío</string>
+    <string name="error_email_empty">El correo electrónico no puede estar vacío</string>
+    <string name="error_last_name_empty">El apellido no puede estar vacío</string>
+    <string name="error_document_empty">El documento no puede estar vacío</string>
+    <string name="error_phone_empty">El celular no puede estar vacío</string>
+    <string name="error_email_invalid">El correo electrónico no es válido</string>
 
 
 </resources>

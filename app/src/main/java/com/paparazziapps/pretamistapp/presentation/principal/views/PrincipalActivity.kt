@@ -1,29 +1,24 @@
 package com.paparazziapps.pretamistapp.presentation.principal.views
 
-import android.content.Intent
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.Toolbar
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.ActivityPrincipalBinding
@@ -34,7 +29,6 @@ import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment.Companion.setOnClickedLoanHome
-import com.paparazziapps.pretamistapp.presentation.login.views.LoginActivity
 import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
@@ -46,12 +40,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PrincipalActivity : AppCompatActivity(){
     private lateinit var binding:ActivityPrincipalBinding
-    private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var toolbar: Toolbar
     private lateinit var layout_detalle_prestamo: BottomsheetDetallePrestamoBinding
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
     private val preferences: MyPreferences by inject()
-    private var isEnabledCheck = true
     private val viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
 
@@ -60,11 +51,8 @@ class PrincipalActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityPrincipalBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        bottomNavigationView = binding.navView
-        toolbar              = binding.tool.toolbar
         isFreeTrial()
-        setUpInicialToolbar()
+        setupToolbar()
         observers()
     }
 
@@ -93,7 +81,7 @@ class PrincipalActivity : AppCompatActivity(){
 
                 setUpBottomNav()
                 setupBottomSheetDetallePrestamo()
-                setNavGraphProgramaticatly()
+                setNavGraphProgrammatically()
                 binding.navHostFragmentActivityMain
 
             }
@@ -108,7 +96,7 @@ class PrincipalActivity : AppCompatActivity(){
         }
     }
 
-    private fun setNavGraphProgramaticatly() {
+    private fun setNavGraphProgrammatically() {
         val navHostFragment: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
 
@@ -121,21 +109,15 @@ class PrincipalActivity : AppCompatActivity(){
     }
 
     private fun isFreeTrial() {
-        if(resources.getBoolean(R.bool.isFreeTrail))
-        {
-            var fecha7Dias:Long = 1652651285000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
+        if(resources.getBoolean(R.bool.isFreeTrail)) {
+            val fecha7Dias:Long = 1652651285000  // fechaPasado -> 1647147600000 o fechaSuperior -->1649826000000
 
-            if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0)
-            {
+            if(getFechaActualNormalInUnixtime().minus(fecha7Dias) > 0) {
                 println("Fecha actual normal: ${getFechaActualNormalInUnixtime().minus(fecha7Dias)}")
                 binding.cortinaFreeTrial.beVisible()
             }
         }
 
-    }
-
-    private fun testCrashlytics() {
-        throw RuntimeException("Test Crash") // Force a crash
     }
 
     private fun setupBottomSheetDetallePrestamo() {
@@ -146,12 +128,8 @@ class PrincipalActivity : AppCompatActivity(){
 
         bottomSheetDetallePrestamo.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                //Ocultar cortina cuando se oculta bottomsheet
-                binding.cortinaBottomSheet.isVisible = newState < 4
-
-            }
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
+                binding.cortinaBottomSheet.isVisible = newState < 4 }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
         layout_detalle_prestamo.root.setOnClickListener {
@@ -160,60 +138,91 @@ class PrincipalActivity : AppCompatActivity(){
 
     }
 
-    private fun setUpInicialToolbar() {
-        toolbar.title = "Dashboard"
-        setSupportActionBar(toolbar)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        moveTaskToBack(true)
+    private fun setupToolbar() {
+        with(binding.tool){
+            setSupportActionBar(toolbar)
+            toolbar.navigationIcon?.setTint(getColor(R.color.white))
+            ivAvatar.setOnClickListener {
+                binding.navView.menu.findItem(R.id.navigation_profile)?.isChecked = true
+                with(findNavController(R.id.nav_host_fragment_activity_main)) {
+                    navigate(
+                        R.id.navigation_profile, null, NavOptions.Builder()
+                            .setPopUpTo(this.currentDestination?.id ?: R.id.navigation_home, inclusive = true)
+                            .setLaunchSingleTop(true)
+                            .build()
+                    )
+                }
+            }
+        }
     }
 
     private fun setUpBottomNav() {
-
-        val navController =findNavController(R.id.nav_host_fragment_activity_main)
+        Log.d("setUpBottomNav", "setUpBottomNav")
+        val navController: NavController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_registrar, R.id.navigation_finanzas, R.id.navigation_home
+                R.id.navigation_registrar, R.id.navigation_finanzas,
+                R.id.navigation_home, R.id.clients_menu,
+                R.id.navigation_profile
             )
         )
-        bottomNavigationView.setupWithNavController(navController)
-        bottomNavigationView.setOnItemSelectedListener { item ->
 
-            when(item.itemId) {
-                R.id.navigation_finanzas -> {
-                    println("Mostraste finanzas")
-                    navController.navigate(R.id.navigation_finanzas)
-                    toolbar.title = "Finanzas"
-                    true
-                }
+        binding.tool.toolbar.beVisible()
+        binding.navView.beVisible()
 
-                R.id.navigation_home -> {
-                    println("Mostraste home")
-                    navController.navigate(R.id.navigation_home)
-                    toolbar.title = "Dashboard"
-                    true
-                }
+        binding.navView.setupWithNavController(navController)
+        NavigationUI.setupWithNavController(binding.tool.toolbar, navController,appBarConfiguration)
 
-                R.id.navigation_registrar -> {
-                    println("Mostraste registrar")
-                    navController.navigate(R.id.navigation_registrar)
-                    toolbar.title = "Registrar"
-                    true
-                }
 
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.d("addOnDestinationChangedListener", "addOnDestinationChangedListener ${destination.id} -- ${destination.label}")
+            when (destination.id) {
                 R.id.navigation_profile -> {
-                    println("Mostraste perfil")
-                    navController.navigate(R.id.navigation_profile)
-                    toolbar.title = "Perfil"
-                    true
+                    binding.tool.toolbar.beVisible()
+                    binding.tool.ivAvatar.beGone()
+                    //reset navigation selected item
+                    binding.navView.selectedItemId = R.id.navigation_profile
                 }
 
-                else -> false
-            }
+                R.id.clients_add, R.id.action_detail_receipt,
+                R.id.navigation_select_user, R.id.navigation_register_loan -> {
+                    binding.tool.toolbar.beVisible()
+                    binding.tool.ivAvatar.beGone()
 
+                    //configure icon back
+                    binding.tool.toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
+                }
+
+                else -> {
+                    binding.tool.toolbar.beVisible()
+                    binding.tool.ivAvatar.beVisible()
+                }
+            }
         }
+
+
+
+        // Integrate OnBackPressedDispatcher
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle the back button event for navView
+                if (navController.currentDestination?.id != R.id.navigation_home) {
+                    navController.navigate(R.id.navigation_home)
+                } else {
+                    finish()
+                }
+            }
+        })
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        Log.d("onPrepareOptionsMenu", "onPrepareOptionsMenu")
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun invalidateOptionsMenu() {
+        Log.d("invalidateOptionsMenu", "invalidateOptionsMenu")
+        super.invalidateOptionsMenu()
     }
 
 
