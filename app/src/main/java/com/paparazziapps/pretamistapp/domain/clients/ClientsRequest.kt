@@ -11,6 +11,7 @@ data class ClientsRequest(
     val email: String?= null,
     val phone: String?= null,
     val dateCreated: Long?= null,
+    val typeDocument: String?= null
 ) : java.io.Serializable
 
 data class ClientDomain(
@@ -57,6 +58,7 @@ fun ClientsRequest.toClientDomain(): ClientDomain {
         lastName = lastName ?: "",
         email = email ?: "",
         phone = phone ?: "",
+        typeDocument = typeDocument ?: ""
     )
 }
 
@@ -69,5 +71,6 @@ fun ClientDomain.toClientsRequest(): ClientsRequest {
         email = email,
         phone = phone,
         dateCreated = System.currentTimeMillis(),
+        typeDocument = typeDocument
     )
 }
