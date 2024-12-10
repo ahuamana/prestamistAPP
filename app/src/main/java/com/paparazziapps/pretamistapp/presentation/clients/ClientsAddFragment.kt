@@ -195,6 +195,7 @@ class ClientsAddFragment : Fragment() {
             ) {
             viewModel.processIntent(
                 ClientsAddViewModel.ClientsAddIntent.SaveClientIntent(
+                    typeDocument = typeDocument,
                     document = document,
                     name = name,
                     email = email,

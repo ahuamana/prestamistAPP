@@ -15,6 +15,7 @@ data class ClientsRequest(
 
 data class ClientDomain(
     val id: String,
+    val typeDocument: String,
     val document: String,
     val name: String,
     val lastName: String,
