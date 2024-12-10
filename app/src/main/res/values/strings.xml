@@ -61,6 +61,9 @@
     <string name="error_document_empty">El documento no puede estar vacío</string>
     <string name="error_phone_empty">El celular no puede estar vacío</string>
     <string name="error_email_invalid">El correo electrónico no es válido</string>
+    <string name="documento_title">Documento</string>
+    <string name="type_document_title">Tipo de documento</string>
+    <string name="error_type_document_empty">El tipo de documento no puede estar vacío</string>
 
 
 </resources>
