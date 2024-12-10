@@ -18,6 +18,32 @@
            android:layout_margin="16dp"
            android:layout_height="wrap_content">
 
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/typeDocumentLayout"
+               style="@style/CustomDropDown"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:layout_marginTop="6dp"
+               app:errorEnabled="true"
+               app:endIconMode="custom"
+               android:layout_marginBottom="8dp"
+               app:endIconDrawable="@drawable/ic_keyboard_arrow_down"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent">
+
+               <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                   android:id="@+id/typeDocumentEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:hint="@string/type_document_title"
+                   android:inputType="number"
+                   android:cursorVisible="false"
+                   android:focusable="false"
+                   android:lines="1"
+                   android:maxLength="10" />
+           </com.google.android.material.textfield.TextInputLayout>
 
            <com.google.android.material.textfield.TextInputLayout
                android:id="@+id/documentLayout"
@@ -37,7 +63,7 @@
                    android:id="@+id/documentEditText"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:hint="@string/tipo_documento"
+                   android:hint="@string/documento_title"
                    android:inputType="number"
                    android:lines="1"
                    android:maxLength="10" />

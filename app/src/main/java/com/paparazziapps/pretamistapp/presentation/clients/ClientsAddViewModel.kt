@@ -21,6 +21,7 @@ class ClientsAddViewModel(
         when(intent){
             is ClientsAddIntent.SaveClientIntent -> {
                 saveClient(
+                    typeDocument = intent.typeDocument,
                     document = intent.document,
                     name = intent.name,
                     email = intent.email,
@@ -36,6 +37,7 @@ class ClientsAddViewModel(
     }
 
     private fun saveClient(
+        typeDocument: String,
         document: String,
         name: String,
         email: String,
@@ -51,7 +53,8 @@ class ClientsAddViewModel(
             lastName = lastName,
             email = email,
             phone = phone,
-            document = document
+            document = document,
+            typeDocument = typeDocument
         )
 
         val result = clientsRepository.createClient(domain)
@@ -69,6 +72,7 @@ class ClientsAddViewModel(
 
     sealed class ClientsAddIntent{
         data class SaveClientIntent(
+            val typeDocument: String,
             val document: String,
             val name: String,
             val email: String,

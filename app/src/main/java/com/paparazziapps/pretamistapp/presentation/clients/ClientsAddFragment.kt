@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +31,8 @@ class ClientsAddFragment : Fragment() {
 
     private var _binding: FragmentClientsAddBinding? = null
     private val binding get() = _binding!!
+
+    private val typeDocuments = listOf("DNI", "CE", "PASSPORT", "OTHER")
 
     private val loadingDialog by lazy {
         PADialogFactory(requireContext()).createLoadingDialog()
@@ -66,6 +69,29 @@ class ClientsAddFragment : Fragment() {
         //Code
         setupButtons()
         setupObservers()
+        setupSpinners()
+    }
+
+    private fun setupSpinners() {
+        val adapter = ArrayAdapter(requireContext(), R.layout.select_items, typeDocuments)
+        with(binding.typeDocumentEditText) {
+            setAdapter(adapter)
+            setOnItemClickListener { _, _, position, _ ->
+                binding.typeDocumentEditText.showDropDown()
+            }
+        }
+
+        binding.typeDocumentLayout.apply {
+            setEndIconOnClickListener {
+                binding.typeDocumentEditText.showDropDown()
+            }
+            setErrorIconOnClickListener {
+                binding.typeDocumentEditText.showDropDown()
+            }
+        }
+
+
+
     }
 
     private fun setupObservers() {
@@ -110,6 +136,8 @@ class ClientsAddFragment : Fragment() {
         val document = binding.documentEditText.text.toString()
         val phone = binding.phoneEditText.text.toString()
 
+        val typeDocument = binding.typeDocumentEditText.text.toString()
+
 
         binding.namesLayout.error = when {
             name.isEmpty() -> {
@@ -149,6 +177,13 @@ class ClientsAddFragment : Fragment() {
             else -> null
         }
 
+        binding.typeDocumentLayout.error = when {
+            typeDocument.isEmpty() -> {
+                getString(R.string.error_type_document_empty)
+            }
+            else -> null
+        }
+
 
         if (name.isNotEmpty()
             && email.isNotEmpty()
@@ -156,9 +191,11 @@ class ClientsAddFragment : Fragment() {
             && document.isNotEmpty()
             && phone.isNotEmpty()
             && isValidEmail(email)
+            && typeDocument.isNotEmpty()
             ) {
             viewModel.processIntent(
                 ClientsAddViewModel.ClientsAddIntent.SaveClientIntent(
+                    typeDocument = typeDocument,
                     document = document,
                     name = name,
                     email = email,
