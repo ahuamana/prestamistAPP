@@ -28,18 +28,5 @@
         tools:itemCount="4"
         android:layout_height="wrap_content"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/continueButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cornerRadius="32dp"
-        android:backgroundTint="@color/primary"
-        android:text="@string/continue_button_message"
-        android:background="@drawable/rounded_corner_background"
-        app:backgroundTint="@color/primary"
-        android:textColor="@color/white"
-        android:layout_marginTop="16dp"/>
-
-
 
 </LinearLayout>

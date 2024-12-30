@@ -44,7 +44,6 @@ class SelectUserFragment : Fragment(), OnClientSelectListener {
 
         setupObservers()
         setupSearchView()
-        setupButtons()
         setupAdapter()
         viewModel.getClients()
     }
@@ -55,25 +54,6 @@ class SelectUserFragment : Fragment(), OnClientSelectListener {
             adapter = clientsAdapter
         }
 
-    }
-
-    private fun setupButtons() {
-        binding.continueButton.setOnClickListener {
-
-            if(viewModel.getClientSelectedJson().isEmpty()) {
-                return@setOnClickListener
-            }
-
-            val bundle = Bundle().apply {
-                putString(PAConstants.EXTRA_LOAN_JSON, viewModel.getExtraLoanJson())
-                putString(PAConstants.EXTRA_CLIENT_JSON, viewModel.getClientSelectedJson())
-            }
-
-            findNavController().navigate(
-                R.id.action_navigation_select_user_to_navigation_register_loan,
-                bundle
-            )
-        }
     }
 
     private fun setupObservers() {
@@ -119,6 +99,18 @@ class SelectUserFragment : Fragment(), OnClientSelectListener {
         })
     }
 
+    private fun onPerformClick(){
+        val bundle = Bundle().apply {
+            putString(PAConstants.EXTRA_LOAN_JSON, viewModel.getExtraLoanJson())
+            putString(PAConstants.EXTRA_CLIENT_JSON, viewModel.getClientSelectedJson())
+        }
+
+        findNavController().navigate(
+            R.id.action_navigation_select_user_to_navigation_register_loan,
+            bundle
+        )
+    }
+
     override fun onDestroy() {
         _binding = null
         super.onDestroy()
@@ -126,5 +118,6 @@ class SelectUserFragment : Fragment(), OnClientSelectListener {
 
     override fun onClientSelect(client: ClientDomainSelect) {
         viewModel.saveClient(client)
+        onPerformClick()
     }
 }

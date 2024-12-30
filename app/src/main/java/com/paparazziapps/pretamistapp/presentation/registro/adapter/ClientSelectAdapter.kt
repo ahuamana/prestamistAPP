@@ -39,7 +39,7 @@ class ClientSelectAdapter(
             val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
 
             binding.clientName.text = fullName
-            binding.clientDetails.text = client.phone
+            binding.clientDetails.text = client.document
             binding.clientSelectCheckbox.isChecked = client.isSelected
 
             binding.clientSelectCheckbox.setOnClickListener {
