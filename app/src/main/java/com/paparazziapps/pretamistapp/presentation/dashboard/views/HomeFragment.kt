@@ -276,11 +276,14 @@ class HomeFragment : Fragment(),SetOnClickedLoan {
             setOnClickListener {
                 dialog.dismiss()
 
-                val intent = ViewModelDashboard.DashboardIntent.UpdateLoan(
+
+
+                val intent = if(needToClose) ViewModelDashboard.DashboardIntent.CloseLoan(
+                    loanId = loanDomain.id ?: "",
+                ) else ViewModelDashboard.DashboardIntent.UpdateLoan(
                     loanDomain = loanDomain,
                     quotesToPay = quotesToPay
                 )
-
                 viewModel.processIntent(intent)
             }
         }
