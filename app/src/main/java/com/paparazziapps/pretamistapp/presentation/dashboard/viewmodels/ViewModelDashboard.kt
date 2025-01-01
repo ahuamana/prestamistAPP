@@ -396,18 +396,31 @@ class ViewModelDashboard (
         }
     }
 
-    private fun closeLoan(id:String) = viewModelScope.launch {
+    private fun closeLoan(idLoan:String) = viewModelScope.launch {
         _state.value = _state.value.copy(dialogState = DashboardDialogState.Loading)
-        val result = repository.closeLoan(id)
+        val result = repository.closeLoan(idLoan)
         when(result){
             is PAResult.Error -> {
                 Log.d(tag,"ViewModelRegister --> : Error ${result.exception.message}")
                 _state.value = _state.value.copy(dialogState = DashboardDialogState.ErrorCloseLoan)
+                removeItemFromListDeepCopy(idLoan)
             }
             is PAResult.Success -> {
                 _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessCloseLoan)
             }
         }
+    }
+    private fun removeItemFromListDeepCopy(loanId: String) {
+        val currentState = _state.value
+        val currentLoans = currentState.loans ?: return
+
+        // Create new list with completely new object instances
+        val newLoans = currentLoans
+            .filter { it.id != loanId }
+            .map { it.copy() } // Assuming Loan is a data class with copy()
+            .toList()
+
+        _state.value = currentState.copy(loans = newLoans)
     }
 
     fun getInformationReceipt(): InformationReceiptDomain? {
