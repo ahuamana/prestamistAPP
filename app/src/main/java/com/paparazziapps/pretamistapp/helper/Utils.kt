@@ -34,7 +34,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.domain.Sucursales
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.math.RoundingMode
@@ -75,7 +74,7 @@ fun getDoubleWithOneDecimalsReturnDouble (number:Double):Double? {
 fun getDiasRestantesFromStart(fecha_inicio:String, plazo_vto: Int): Int {
     val diasInUnixtime =  DiaUnixtime * plazo_vto!!.toLong()
     //println("Dias Unixtime $diasInUnixtime")
-    val fechaFinalUnixtime= (convertFechaActualNormalToUnixtime(fecha_inicio) + diasInUnixtime )
+    val fechaFinalUnixtime= (convertCurrentDateToUnixTime(fecha_inicio) + diasInUnixtime )
     //println("fechadinal Unixtime $fechaFinalUnixtime")
     val diasEnCuantoTerminado = (fechaFinalUnixtime - getFechaActualNormalInUnixtime()).div(DiaUnixtime)
     //println("diasEnCuantoTerminado Unixtime $diasEnCuantoTerminado")
@@ -100,7 +99,7 @@ fun convertUnixtimeToFechaNormal(unixtime_date:Long): String {
 }
 
 fun getFechaActualNormalInUnixtime(): Long {
-  return  convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar())
+  return  convertCurrentDateToUnixTime(getFechaActualNormalCalendar())
 }
 
 fun getFechaActualNormalCalendar() : String {
@@ -113,8 +112,9 @@ fun getFechaActualNormalCalendar() : String {
 }
 
 
-fun convertFechaActualNormalToUnixtime(fecha: String)  : Long {
-  return SimpleDateFormat("dd/MM/yyyy").parse(fecha).time
+fun convertCurrentDateToUnixTime(fecha: String)  : Long {
+    if(fecha.isEmpty()) return 0
+    return SimpleDateFormat("dd/MM/yyyy").parse(fecha).time
 }
 
 fun replaceFirstCharInSequenceToUppercase(text: String): String {
@@ -128,11 +128,11 @@ fun replaceFirstCharInSequenceToUppercase(text: String): String {
 }
 
 fun getDiasRestantesFromDateToNow(fecha: String):String {
-   return (convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar()).minus(convertFechaActualNormalToUnixtime(fecha))).div(86400000).toString()
+   return (convertCurrentDateToUnixTime(getFechaActualNormalCalendar()).minus(convertCurrentDateToUnixTime(fecha))).div(86400000).toString()
 }
 
 fun getDiasRestantesFromDateToNowMinusDiasPagados(fecha: String, diasPagados:Int):String {
-    return ((convertFechaActualNormalToUnixtime(getFechaActualNormalCalendar()).minus(convertFechaActualNormalToUnixtime(fecha))).div(86400000).toInt().minus(diasPagados)).toString()
+    return ((convertCurrentDateToUnixTime(getFechaActualNormalCalendar()).minus(convertCurrentDateToUnixTime(fecha))).div(86400000).toInt().minus(diasPagados)).toString()
 }
 
 
