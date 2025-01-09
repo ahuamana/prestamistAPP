@@ -28,8 +28,8 @@ class ProfileViewModel(
     fun getRole() = preferences.role
 
     fun getFullName():String {
-        val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(preferences.names)
-        val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(preferences.lastnames)
+        val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(preferences.names.lowercase())
+        val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(preferences.lastnames.lowercase())
         val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
         return fullName
     }
