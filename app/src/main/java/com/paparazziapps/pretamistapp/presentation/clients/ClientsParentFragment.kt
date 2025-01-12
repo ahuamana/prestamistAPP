@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,17 +16,18 @@ import com.paparazziapps.pretamistapp.databinding.FragmentClientsParentBinding
 import com.paparazziapps.pretamistapp.domain.clients.ClientDomain
 import com.paparazziapps.pretamistapp.helper.base.BaseViewModel
 import com.paparazziapps.pretamistapp.presentation.clients.adater.ClientAdapter
+import com.paparazziapps.pretamistapp.presentation.clients.adater.SetOnClickListenerClient
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ClientsParentFragment : Fragment() {
+class ClientsParentFragment : Fragment(), SetOnClickListenerClient {
 
     private val viewModel by viewModel<ClientsParentViewModel>()
 
     private var _binding: FragmentClientsParentBinding? = null
     private val binding get() = _binding!!
 
-    private val clientsAdapter: ClientAdapter by lazy { ClientAdapter() }
+    private val clientsAdapter: ClientAdapter by lazy { ClientAdapter(this@ClientsParentFragment) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,6 +108,13 @@ class ClientsParentFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClicked(client: ClientDomain) {
+        //Show toast that user dont have permission to edit the client in spanish
+        val message = "No tienes permisos para editar al cliente"
+        //Show toast
+       Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
 }

@@ -7,7 +7,9 @@ import com.paparazziapps.pretamistapp.databinding.ClientItemBinding
 import com.paparazziapps.pretamistapp.domain.clients.ClientDomain
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
 
-class ClientAdapter : RecyclerView.Adapter<ClientAdapter.ClientViewHolder>() {
+class ClientAdapter(
+    private val listener : SetOnClickListenerClient
+) : RecyclerView.Adapter<ClientAdapter.ClientViewHolder>() {
 
     private var clients: List<ClientDomain> = listOf()
 
@@ -19,6 +21,7 @@ class ClientAdapter : RecyclerView.Adapter<ClientAdapter.ClientViewHolder>() {
     override fun onBindViewHolder(holder: ClientViewHolder, position: Int) {
         holder.bind(clients[position])
     }
+
 
     override fun getItemCount(): Int = clients.size
 
@@ -37,6 +40,10 @@ class ClientAdapter : RecyclerView.Adapter<ClientAdapter.ClientViewHolder>() {
             binding.clientName.text = fullName
             binding.clientDetails.text = client.phone
             // Bind other client properties as needed
+
+            binding.root.setOnClickListener {
+                listener.onItemClicked(client)
+            }
         }
     }
 }

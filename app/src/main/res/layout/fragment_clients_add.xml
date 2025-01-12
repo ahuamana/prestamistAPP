@@ -15,7 +15,7 @@
            android:id="@+id/bodyLayout"
            android:layout_width="match_parent"
            android:orientation="vertical"
-           android:layout_margin="16dp"
+           android:padding="16dp"
            android:layout_height="wrap_content">
 
            <com.google.android.material.textfield.TextInputLayout
@@ -109,6 +109,30 @@
                    android:lines="1"
                    android:maxLength="50" />
            </com.google.android.material.textfield.TextInputLayout>
+
+
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/addressLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:errorEnabled="true"
+               android:layout_marginTop="6dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/addressEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:hint="Dirección "
+                   android:inputType="textNoSuggestions"
+                   android:lines="1"
+                   android:maxLength="50" />
+           </com.google.android.material.textfield.TextInputLayout>
+
+
            <com.google.android.material.textfield.TextInputLayout
                android:id="@+id/emailLayout"
                style="@style/CustomTextField"
@@ -154,6 +178,31 @@
                    android:lines="1"
                    android:maxLength="9" />
            </com.google.android.material.textfield.TextInputLayout>
+
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/noteLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="6dp"
+               android:layout_weight="1"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/noteEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:gravity="start"
+                   tools:text="@string/comments_example"
+                   android:hint="@string/fragment_clients_add_title_comments"
+                   android:inputType="textMultiLine"
+                   android:lines="5" />
+           </com.google.android.material.textfield.TextInputLayout>
+
+
            <com.google.android.material.button.MaterialButton
                android:id="@+id/saveMessageButton"
                android:layout_width="match_parent"
@@ -161,7 +210,7 @@
                android:textColor="@color/white"
                android:layout_gravity="start"
                android:gravity="center"
-               android:layout_marginTop="8dp"
+               android:layout_marginTop="18dp"
                android:background="@drawable/buttom_corners"
                app:backgroundTint="@color/primary"
                android:text="@string/save_message_button"

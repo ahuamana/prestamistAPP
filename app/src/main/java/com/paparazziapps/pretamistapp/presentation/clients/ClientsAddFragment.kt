@@ -184,6 +184,8 @@ class ClientsAddFragment : Fragment() {
             else -> null
         }
 
+        val note = binding.noteEditText.text.toString()
+        val address = binding.addressEditText.text.toString()
 
         if (name.isNotEmpty()
             && email.isNotEmpty()
@@ -200,7 +202,9 @@ class ClientsAddFragment : Fragment() {
                     name = name,
                     email = email,
                     phone = phone,
-                    lastName = lastName
+                    lastName = lastName,
+                    notes = note,
+                    address = address
                 )
             )
         } else {

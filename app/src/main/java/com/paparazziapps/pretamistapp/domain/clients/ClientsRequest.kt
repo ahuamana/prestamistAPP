@@ -11,7 +11,9 @@ data class ClientsRequest(
     val email: String?= null,
     val phone: String?= null,
     val dateCreated: Long?= null,
-    val typeDocument: String?= null
+    val typeDocument: String?= null,
+    val note: String?= null,
+    val address: String?= null
 ) : java.io.Serializable
 
 data class ClientDomain(
@@ -22,6 +24,8 @@ data class ClientDomain(
     val lastName: String,
     val email: String,
     val phone: String,
+    val note: String,
+    val address: String
 )
 
 @Serializable
@@ -58,7 +62,9 @@ fun ClientsRequest.toClientDomain(): ClientDomain {
         lastName = lastName ?: "",
         email = email ?: "",
         phone = phone ?: "",
-        typeDocument = typeDocument ?: ""
+        typeDocument = typeDocument ?: "",
+        note = note ?: "",
+        address = address ?: ""
     )
 }
 
