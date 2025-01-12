@@ -33,6 +33,7 @@ import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewMode
 import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
+import com.paparazziapps.pretamistapp.presentation.principal.BackPressHandler
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,6 +46,10 @@ class PrincipalActivity : AppCompatActivity(){
     private val preferences: MyPreferences by inject()
     private val viewModelPrincipal by viewModel<ViewModelPrincipal>()
 
+    //Handler back press
+    private val backPressHandler by lazy {
+        BackPressHandler(this)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -409,5 +414,11 @@ class PrincipalActivity : AppCompatActivity(){
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        backPressHandler.handleOnBackPressed {
+            super.onBackPressed()
+        }
     }
 }
