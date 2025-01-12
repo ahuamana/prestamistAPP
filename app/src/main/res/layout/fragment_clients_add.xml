@@ -109,6 +109,30 @@
                    android:lines="1"
                    android:maxLength="50" />
            </com.google.android.material.textfield.TextInputLayout>
+
+
+           <com.google.android.material.textfield.TextInputLayout
+               android:id="@+id/addressLayout"
+               style="@style/CustomTextField"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:errorEnabled="true"
+               android:layout_marginTop="6dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/nombresLayout">
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/addressEditText"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:hint="Dirección "
+                   android:inputType="textNoSuggestions"
+                   android:lines="1"
+                   android:maxLength="50" />
+           </com.google.android.material.textfield.TextInputLayout>
+
+
            <com.google.android.material.textfield.TextInputLayout
                android:id="@+id/emailLayout"
                style="@style/CustomTextField"

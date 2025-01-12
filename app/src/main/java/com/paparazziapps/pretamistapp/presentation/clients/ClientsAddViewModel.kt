@@ -27,7 +27,8 @@ class ClientsAddViewModel(
                     email = intent.email,
                     phone = intent.phone,
                     lastName = intent.lastName,
-                    notes = intent.notes
+                    notes = intent.notes,
+                    address = intent.address
                 )
             }
 
@@ -45,6 +46,7 @@ class ClientsAddViewModel(
         phone: String,
         lastName: String,
         notes: String,
+        address: String
     ) = viewModelScope.launch {
 
         _uiState.value = UiState.Loading
@@ -57,7 +59,8 @@ class ClientsAddViewModel(
             phone = phone,
             document = document,
             typeDocument = typeDocument,
-            note = notes
+            note = notes,
+            address = address
         )
 
         val result = clientsRepository.createClient(domain)
@@ -81,7 +84,8 @@ class ClientsAddViewModel(
             val email: String,
             val phone: String,
             val lastName: String,
-            val notes: String
+            val notes: String,
+            val address: String
         ):ClientsAddIntent()
 
         data object None:ClientsAddIntent()
