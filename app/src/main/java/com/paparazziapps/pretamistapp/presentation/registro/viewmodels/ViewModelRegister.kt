@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.domain.LoanType
 import com.paparazziapps.pretamistapp.helper.getDoubleWithOneDecimalsReturnDouble
@@ -15,7 +14,7 @@ import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.domain.clients.ClientDomainSelect
 import com.paparazziapps.pretamistapp.helper.fromGson
-import com.paparazziapps.pretamistapp.helper.fromJson
+import com.paparazziapps.pretamistapp.helper.getDoubleWithTwoDecimalsReturnDouble
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -69,7 +68,7 @@ class ViewModelRegister (
         _dailyStringMode.value = description
     }
 
-    fun getMontoDiario() : LiveData<Double> {
+    fun getAmountToPay() : LiveData<Double> {
         return _montoDiario
     }
 
@@ -82,19 +81,21 @@ class ViewModelRegister (
         Log.d(tag, "Client: ${clientSelected}")
     }
 
-    fun calcularMontoDiario(capital:Int, interes:Int, dias:Int) {
+    fun calcAmountToPay(capital:Int, interes:Int, quotes:Int) {
         try {
             val newCapital = capital.toDouble()
-            val newInteres = interes.toDouble()
+            val newInterest = interes.toDouble()
 
-            val interesFinal = newCapital * (newInteres/100)
-            val montodiario = (interesFinal + newCapital)/dias
-            _montoDiario.value = getDoubleWithOneDecimalsReturnDouble(montodiario)?:-9999.00
+            val finalInterest = newCapital * (newInterest/100)
+            val amountToPayDaily = (finalInterest + newCapital)/quotes
+            val amountDailyFinal = getDoubleWithOneDecimalsReturnDouble(amountToPayDaily)?:-9999.00
+            _montoDiario.value = amountDailyFinal
 
         }catch (e:Exception) {
             Log.d(tag,"ERROR: ${e.message}")
         }
     }
+
 
     fun createLoan(loanDomain: LoanDomain, branchId:Int)  = viewModelScope.launch {
         _state.value = RegisterState.Loading
