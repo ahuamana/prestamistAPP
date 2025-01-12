@@ -22,6 +22,7 @@ data class ClientDomain(
     val lastName: String,
     val email: String,
     val phone: String,
+    val note: String,
 )
 
 @Serializable
@@ -58,7 +59,8 @@ fun ClientsRequest.toClientDomain(): ClientDomain {
         lastName = lastName ?: "",
         email = email ?: "",
         phone = phone ?: "",
-        typeDocument = typeDocument ?: ""
+        typeDocument = typeDocument ?: "",
+        note = ""
     )
 }
 

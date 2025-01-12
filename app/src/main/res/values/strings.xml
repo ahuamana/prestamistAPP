@@ -64,6 +64,8 @@
     <string name="documento_title">Documento</string>
     <string name="type_document_title">Tipo de documento</string>
     <string name="error_type_document_empty">El tipo de documento no puede estar vacío</string>
+    <string name="comments_example">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac libero ultricies aliquam. Nullam nec purus ac libero ultricies aliquam.</string>
+    <string name="fragment_clients_add_title_comments">Comentarios</string>
 
 
 </resources>
