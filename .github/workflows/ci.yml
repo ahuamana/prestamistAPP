@@ -43,6 +43,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: resources
-          path: app/build/outputs/apk/dev/debug/prestamist-pa-devDebug-${{ env.VERSION_NAME }}.apk
+          path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
           if-no-files-found: error
 
