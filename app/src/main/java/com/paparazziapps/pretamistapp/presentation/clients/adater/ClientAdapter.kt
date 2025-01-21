@@ -38,7 +38,7 @@ class ClientAdapter(
             val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
 
             binding.clientName.text = fullName
-            binding.clientDetails.text = client.phone
+            binding.clientDetails.text = client.document
             // Bind other client properties as needed
 
             binding.root.setOnClickListener {
