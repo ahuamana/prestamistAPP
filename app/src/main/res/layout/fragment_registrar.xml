@@ -245,7 +245,7 @@ tools:context=".presentation.registro.views.RegistrarFragment">
                             android:hint="Plazo de vto en dias"
                             android:inputType="number"
                             android:lines="1"
-                            android:maxLength="50" />
+                            android:maxLength="2" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 

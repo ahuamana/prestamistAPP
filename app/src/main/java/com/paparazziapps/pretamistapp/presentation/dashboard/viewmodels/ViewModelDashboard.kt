@@ -31,6 +31,7 @@ import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
+import com.paparazziapps.pretamistapp.presentation.dashboard.views.LoanListHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -216,23 +217,10 @@ class ViewModelDashboard (
                 val loans = result.data.mapNotNull { document->
                     document.toObject<LoanDomain>()
                 }
+                val manager = LoanListHandler(preferences)
+                val processedLoans = manager.processLoans(loans)
 
-                if(preferences.isSuperAdmin){
-                    _state.value = DashboardState.success(loans)
-                    return@launch
-                }
-
-                //Include Title for the branch
-                val localBranches = fromJson<List<Sucursales>>(preferences.branches)
-                val newLoansWithTitles = localBranches.flatMap { branch ->
-                    listOf(
-                        LoanDomain(
-                            type = TypePrestamo.TITLE.value,
-                            title = branch.name
-                        )
-                    ) + loans.filter { it.branchId == branch.id }.distinct() // Elimina duplicados si los hay
-                }
-                _state.value = DashboardState.success(newLoansWithTitles)
+                _state.value = DashboardState.success(processedLoans)
             }
         }
     }

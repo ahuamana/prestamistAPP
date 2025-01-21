@@ -1,7 +1,6 @@
 package com.paparazziapps.pretamistapp.presentation.registro.views
 
 import android.app.Activity
-import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentRegistrarBinding
@@ -30,6 +28,7 @@ import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.domain.LoanDomain
+import com.paparazziapps.pretamistapp.domain.QuotaDomain
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.ViewModelRegister
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -56,8 +55,6 @@ class RegistrarFragment : Fragment() {
     lateinit var intereslayoutP: TextInputLayout
     lateinit var mesesP: TextInputEditText
     lateinit var meseslayoutP: TextInputLayout
-    lateinit var montoDiario: MaterialTextView
-    lateinit var montoTotal: MaterialTextView
 
     var isValidInteres = false
     var isValidInteresP = false
@@ -74,7 +71,7 @@ class RegistrarFragment : Fragment() {
 
     //Layout
     private val listaIntereses = arrayListOf<String>("8%","10%","20%","30%","40%","50%")
-    private val listaPlazos = arrayListOf<String>("30 dias","60 dias","90 dias","120 dias","180 dias")
+    private val listaPlazos = arrayListOf<String>("30 dias","60 dias","90 dias")
     private val listTypePaymentScheduled: ArrayList<String> = PaymentScheduled.getPaymentScheduledListString()
     private val listmode = arrayListOf(M_STANDAR, M_PERSONALIZADO)
 
@@ -105,8 +102,6 @@ class RegistrarFragment : Fragment() {
         plazos = binding.plazos
         plazosLayout = binding.plazosLayout
         capitalPrestado = binding.capitalprestadoEdt
-        montoDiario = binding.montoDiario
-        montoTotal = binding.montoTotal
 
         //Modo Personalizado
         intereslayoutP = binding.interesLayoutP
@@ -133,11 +128,11 @@ class RegistrarFragment : Fragment() {
     private fun redondear() {
         binding.cardviewMontoDiario.setOnClickListener {
             val newMontoDiario = Math.ceil(montoDiarioAPagar)
-            montoDiario.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario)}")
+            binding.montoDiario.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario)}")
             montoDiarioAPagar = getDoubleWithTwoDecimalsReturnDouble(newMontoDiario)?:0.0
 
             montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(newMontoDiario* mesesEntero)?:0.0
-            montoTotal.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario *mesesEntero)}")
+            binding.montoTotal.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario *mesesEntero)}")
         }
     }
 
@@ -447,20 +442,20 @@ class RegistrarFragment : Fragment() {
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = intereses.text.substring(0,intereses.text.length-1).toInt()
                 mesesEntero = plazos.text.substring(0,plazos.text.length-5).toInt()
-                viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
+                viewModel.calcAmountToPay(capitalEntero,interesEntero,mesesEntero)
             }
             M_PERSONALIZADO -> {
                 capitalEntero = capitalPrestado.text.toString().trim().toInt()
                 interesEntero = interesesP.text.toString().toInt()
                 mesesEntero = mesesP.text.toString().toInt()
-                viewModel.calcularMontoDiario(capitalEntero,interesEntero,mesesEntero)
+                viewModel.calcAmountToPay(capitalEntero,interesEntero,mesesEntero)
             }
 
             M_EXTRA -> {
                 val capitalInteger = binding.capitalprestadoEdt.text.toString().toInt()
                 val interestExtras = binding.interesExtras.text.toString().toInt()
                 val quotasExtras = binding.quotasTextExtras.text.toString().toInt()
-                viewModel.calcularMontoDiario(capitalInteger,interestExtras,quotasExtras)
+                viewModel.calcAmountToPay(capitalInteger,interestExtras,quotasExtras)
             }
 
             else -> showMessage("No se pudo procesar tu solicitud")
@@ -470,22 +465,26 @@ class RegistrarFragment : Fragment() {
 
     private fun observers() {
 
-        viewModel.getMontoDiario().observe(viewLifecycleOwner){ montodiario ->
+        viewModel.getAmountToPay().observe(viewLifecycleOwner){ montodiario ->
             if(montodiario !=null) {
                 Log.d(tag, "Monto Diario: $montodiario")
                 //Asginar datos a variables globales
                 val amountDaily = getDoubleWithTwoDecimalsReturnDouble(montodiario)
                 val amountTotal = calculateTotalAmountToPay(amountDaily)
+                val listPayments = calculateListOfQuotasWithTheAmountToPay(amountDaily)
                 montoDiarioAPagar = amountDaily
-
                 montoTotalAPagar = amountTotal
 
-                montoDiario.setText("${getString(R.string.tipo_moneda)} $amountDaily")
-                montoTotal.setText("${getString(R.string.tipo_moneda)} $amountTotal")
+                binding.montoDiario.setText("${getString(R.string.tipo_moneda)} $amountDaily")
+                binding.montoTotal.setText("${getString(R.string.tipo_moneda)} $amountTotal")
+
             }else {
                 Log.d(tag, "Monto diario es 0")
             }
         }
+
+
+
 
         lifecycleScope.launch{
             viewModel.dailyStringMode.collectLatest {
@@ -507,6 +506,25 @@ class RegistrarFragment : Fragment() {
         }
     }
 
+    //Calculate the list of payments include the QuotaDomain
+
+    private fun calculateListOfQuotasWithTheAmountToPay(dailyAmount: Double): List<QuotaDomain> {
+        val text = binding.modePaymentScheduled.text.toString()
+        val paymentScheduled = PaymentScheduled.getPaymentScheduledByName(text)
+        val quotas = if(paymentScheduled == PaymentScheduledEnum.DAILY) mesesEntero else binding.quotasTextExtras.text.toString().toInt()
+        val listQuotas = mutableListOf<QuotaDomain>()
+        for (i in 1..quotas) {
+            val quota = QuotaDomain(
+                id = "Quota $i",
+                paid = 0.0,
+                remaining = dailyAmount
+            )
+            listQuotas.add(quota)
+            Log.d(tag, "Quota $i: $quota")
+        }
+        return listQuotas
+    }
+
 
     private fun clearData() {
         mesesP.setText("")
@@ -516,8 +534,8 @@ class RegistrarFragment : Fragment() {
             plazosP.setText("")
             plazos.setText("")
         }
-        montoDiario.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
-        montoTotal.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
+        binding.montoDiario.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
+        binding.montoTotal.setText("${getString(R.string.tipo_moneda_defecto_cero)}")
 
     }
 

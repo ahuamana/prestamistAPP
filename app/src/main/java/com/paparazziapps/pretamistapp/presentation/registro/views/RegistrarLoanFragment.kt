@@ -247,7 +247,8 @@ class RegistrarLoanFragment : Fragment() {
             typeLoan = loanInfo?.typeLoan,
             typeLoanDays = loanInfo?.typeLoanDays,
             typeLoanName = loanInfo?.typeLoanName,
-            quotas = loanInfo?.quotas // Only for other type of loans like weekly, biweekly, monthly
+            quotas = loanInfo?.quotas // Only for other type of loans like weekly, biweekly, monthly,
+
         )
 
         var idSucursalSelected:Int = INT_DEFAULT

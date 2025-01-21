@@ -60,7 +60,22 @@ data class LoanDomain (
     var quotasPending:Int?=null,
     @SerialName("email")
     val email:String?=null,
+
+    //New fields for the new version v2.1 -- introduce a list of quotas Paid, reaming
+    @SerialName("quotasPaidList")
+    var quotasPaidList:List<QuotaDomain>?=null,
     )
+
+@Serializable
+data class QuotaDomain(
+    //include the number of quota and paid and remaining
+    @SerialName("id")
+    val id:String?=null,
+    @SerialName("paid")
+    val paid:Double?=null,
+    @SerialName("remaining")
+    val remaining:Double?=null,
+)
 
 enum class TypePrestamo(val value: Int) {
     TITLE(0),
