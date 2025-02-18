@@ -135,7 +135,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:30.0.0')
+    implementation platform('com.google.firebase:firebase-bom:30.5.0')
 
     // Declare the dependencies for the Crashlytics and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
