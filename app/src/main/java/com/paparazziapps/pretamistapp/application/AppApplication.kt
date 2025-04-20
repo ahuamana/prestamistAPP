@@ -1,6 +1,7 @@
 package com.paparazziapps.pretamistapp.application
 
 import androidx.multidex.MultiDexApplication
+import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.paparazziapps.pretamistapp.data.di.FirebaseService
 import com.paparazziapps.pretamistapp.data.di.PAFirebaseAnalytics
@@ -126,6 +127,7 @@ class AppApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         turnOffDarkModeInAllApp(resources)
+        FirebaseApp.initializeApp(this)
         FirebaseAnalytics.getInstance(this)
         initKoin()
     }
