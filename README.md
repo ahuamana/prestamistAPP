@@ -142,16 +142,16 @@ En resumen, Loan Manager App es una herramienta útil para cualquier empresa de 
 ## Demo
 
 Super Admin credentials
-- Username: demo3@gmail.com
+- Username: superadmin@gmail.com
 - Password: 123456
 
 Admin credentials
-- Username: 
-- Password: 
+- Username: admin@gmail.com
+- Password: 123456
 
 Cashier credentials
-- Username: 
-- Password: 
+- Username: cashier@gmail.com
+- Password: 123456
 
 ## Authors
 

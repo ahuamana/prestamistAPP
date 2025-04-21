@@ -340,7 +340,7 @@ fun Context.getVersionName(): String {
         versionName = applicationContext.packageManager.getPackageInfo(
             applicationContext.packageName,
             0
-        ).versionName
+        ).versionName?:""
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()
     }

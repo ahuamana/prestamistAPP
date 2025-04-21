@@ -20,15 +20,15 @@ if (localPropertiesFile.exists()) {
 def resendApiKey = localProperties.getProperty('RESEND_API_KEY')
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.paparazziapps.pretamistapp"
         minSdk 26
-        targetSdk 34
+        targetSdk 35
         multiDexEnabled true
         versionCode 9
-        versionName "5.0.1"
+        versionName "5.0.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
