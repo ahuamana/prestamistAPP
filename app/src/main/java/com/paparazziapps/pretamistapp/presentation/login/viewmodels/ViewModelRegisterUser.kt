@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.presentation.login.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,6 +46,7 @@ class ViewModelRegisterUser(
         when(result) {
             is PAResult.Error -> {
                 // If sign in fails, display a message to the user.
+                Log.e("tag","${result.exception.message}")
                 _message.setValue("Ah ocurrido un error al intentar crear un usuario nuevo")
                 _isLoading.setValue(false)
             }

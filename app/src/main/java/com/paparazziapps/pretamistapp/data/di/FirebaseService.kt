@@ -9,7 +9,7 @@ class FirebaseService {
     val firestore: FirebaseFirestore by lazy {
         val firestore = FirebaseFirestore.getInstance()
 
-        // Configure Firestore settings here
+        // Configure Fire store settings here
         val settings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true) // Enable offline persistence
             .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)

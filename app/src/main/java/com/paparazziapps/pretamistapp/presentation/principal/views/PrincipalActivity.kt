@@ -34,6 +34,7 @@ import com.paparazziapps.pretamistapp.application.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.presentation.principal.BackPressHandler
+import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,6 +46,8 @@ class PrincipalActivity : AppCompatActivity(){
     private lateinit var bottomSheetDetallePrestamo: BottomSheetBehavior<ConstraintLayout>
     private val preferences: MyPreferences by inject()
     private val viewModelPrincipal by viewModel<ViewModelPrincipal>()
+
+    private val viewModelProfile by viewModel<ProfileViewModel>()
 
     //Handler back press
     private val backPressHandler by lazy {
@@ -81,7 +84,6 @@ class PrincipalActivity : AppCompatActivity(){
                 binding.errorContainer.root.beGone()
                 binding.cortinaUserInactive.beGone()
                 binding.cortinaFreeTrial.beGone()
-
                 binding.navView.beVisible()
 
                 setUpBottomNav()
@@ -111,6 +113,12 @@ class PrincipalActivity : AppCompatActivity(){
 
     private fun isUserActivePrincipal() {
         binding.cortinaUserInactive.beVisible()
+
+        binding.apply {
+            userInactiveLayout.btnLogout.setOnClickListener {
+                viewModelProfile.logout(this@PrincipalActivity)
+            }
+        }
     }
 
     private fun isFreeTrial() {

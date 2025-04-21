@@ -95,6 +95,7 @@
             android:layout_height="match_parent"
             android:background="@color/colorCortina"
             android:visibility="gone"
+            tools:visibility="visible"
             android:gravity="center"
             android:clickable="true"
             android:focusable="true"
