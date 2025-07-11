@@ -120,20 +120,7 @@ class RegistrarFragment : Fragment() {
         validateAll()
         setupButtons()
 
-        redondear()
-
         return view
-    }
-
-    private fun redondear() {
-        binding.cardviewMontoDiario.setOnClickListener {
-            val newMontoDiario = Math.ceil(montoDiarioAPagar)
-            binding.montoDiario.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario)}")
-            montoDiarioAPagar = getDoubleWithTwoDecimalsReturnDouble(newMontoDiario)?:0.0
-
-            montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(newMontoDiario* mesesEntero)?:0.0
-            binding.montoTotal.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newMontoDiario *mesesEntero)}")
-        }
     }
 
     private fun setupButtons() {
@@ -171,6 +158,20 @@ class RegistrarFragment : Fragment() {
                     R.id.action_navigation_registrar_to_navigation_select_user,
                     bundle
                 )
+        }
+
+        handledRoundedQuota()
+    }
+
+    private fun handledRoundedQuota() {
+
+        binding.checkBoxRoundQuota.setOnCheckedChangeListener { buttonView, isChecked ->
+            val newDailyAmount = viewModel.getDailyAmount(isChecked)
+            binding.montoDiario.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newDailyAmount)}")
+            montoDiarioAPagar = getDoubleWithTwoDecimalsReturnDouble(newDailyAmount)?:0.0
+
+            montoTotalAPagar = getDoubleWithTwoDecimalsReturnDouble(newDailyAmount* mesesEntero)?:0.0
+            binding.montoTotal.setText("${getString(R.string.tipo_moneda)} ${getDoubleWithTwoDecimals(newDailyAmount *mesesEntero)}")
         }
     }
 
@@ -465,11 +466,11 @@ class RegistrarFragment : Fragment() {
 
     private fun observers() {
 
-        viewModel.getAmountToPay().observe(viewLifecycleOwner){ montodiario ->
-            if(montodiario !=null) {
-                Log.d(tag, "Monto Diario: $montodiario")
+        viewModel.amountDailyToPay.observe(viewLifecycleOwner){ amountToPayDaily ->
+            if(amountToPayDaily !=null) {
+                Log.d(tag, "Monto Diario: $amountToPayDaily")
                 //Asginar datos a variables globales
-                val amountDaily = getDoubleWithTwoDecimalsReturnDouble(montodiario)
+                val amountDaily = getDoubleWithTwoDecimalsReturnDouble(amountToPayDaily)
                 val amountTotal = calculateTotalAmountToPay(amountDaily)
                 val listPayments = calculateListOfQuotasWithTheAmountToPay(amountDaily)
                 montoDiarioAPagar = amountDaily

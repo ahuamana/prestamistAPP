@@ -5,16 +5,16 @@
     <string name="otra_conexion">ó</string>
 
     <!--Cambiar dependiendo el pais-->
-    <string name="tipo_documento">DNI</string>
-    <integer name="cantidad_documento_max">8</integer>
-    <string name="tipo_moneda">S./ </string>
-    <string name="type_money_with_amount">S./%1$s </string>
-    <string name="tipo_moneda_defecto">S./ 1000</string>
-    <string name="tipo_moneda_defecto_cero">S./ 0</string>
+    <string name="tipo_documento">RFC</string>
+    <integer name="cantidad_documento_max">10</integer>
+    <string name="tipo_moneda">$./ </string>
+    <string name="type_money_with_amount">$./%1$s </string>
+    <string name="tipo_moneda_defecto">$./ 1000</string>
+    <string name="tipo_moneda_defecto_cero">$./ 0</string>
 
-    <string name="documento_vacío">DNI vacío</string>
-    <string name="documento_incompleto">DNI incompleto</string>
-    <string name="codigo_pais">51</string>
+    <string name="documento_vacío">RFC vacío</string>
+    <string name="documento_incompleto">RFC incompleto</string>
+    <string name="codigo_pais">52</string>
 
     <!--App Settings-->
     <string name="terms_conditions_acepto">Al hacer click en el botón "Continuar" , Aceptas nuestras <b>políticas de privacidad</b> y <b>términos de condición</b>.</string>
@@ -66,6 +66,7 @@
     <string name="error_type_document_empty">El tipo de documento no puede estar vacío</string>
     <string name="comments_example">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac libero ultricies aliquam. Nullam nec purus ac libero ultricies aliquam.</string>
     <string name="fragment_clients_add_title_comments">Comentarios</string>
+    <string name="fragment_register_round_quota">Rendondear</string>
 
 
 </resources>

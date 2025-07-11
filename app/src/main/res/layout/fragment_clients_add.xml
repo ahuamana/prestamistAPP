@@ -162,7 +162,7 @@
                android:layout_marginTop="6dp"
                android:layout_weight="1"
                app:counterEnabled="true"
-               app:counterMaxLength="9"
+               app:counterMaxLength="15"
                app:errorEnabled="true"
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintStart_toStartOf="parent"
@@ -176,7 +176,7 @@
                    android:hint="Celular *"
                    android:inputType="number"
                    android:lines="1"
-                   android:maxLength="9" />
+                   android:maxLength="15" />
            </com.google.android.material.textfield.TextInputLayout>
 
            <com.google.android.material.textfield.TextInputLayout
