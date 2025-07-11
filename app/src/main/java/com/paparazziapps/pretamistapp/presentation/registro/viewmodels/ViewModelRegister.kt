@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import kotlin.math.ceil
 
 class ViewModelRegister (
     private val repository: PARepository,
@@ -34,7 +35,11 @@ class ViewModelRegister (
     private val loanDomain =  handle.get<String>(PAConstants.EXTRA_LOAN_JSON)?.fromGson<LoanDomain>()
     private val clientSelected = handle.get<String>(PAConstants.EXTRA_CLIENT_JSON)?.fromGson<ClientDomainSelect>()
 
-    val _montoDiario = MutableLiveData<Double>()
+    private val _montoDiario = MutableLiveData<Double>()
+    val amountDailyToPay: LiveData<Double> = _montoDiario
+
+    private val _amountRounded = MutableLiveData<Double>()
+    val amountRounded: LiveData<Double> = _amountRounded
 
     private val _dailyStringMode : MutableStateFlow<String> = MutableStateFlow(LoanType.DAILY.description)
     val dailyStringMode : StateFlow<String> = _dailyStringMode.asStateFlow()
@@ -48,6 +53,8 @@ class ViewModelRegister (
         started= SharingStarted.WhileSubscribed(5000,1),
         initialValue = null
     )
+
+
 
     init {
         Log.d(tag, "Loan: ${loanDomain}")
@@ -68,10 +75,6 @@ class ViewModelRegister (
         _dailyStringMode.value = description
     }
 
-    fun getAmountToPay() : LiveData<Double> {
-        return _montoDiario
-    }
-
     fun getClientSelected(): ClientDomainSelect? {
         return clientSelected
     }
@@ -90,6 +93,7 @@ class ViewModelRegister (
             val amountToPayDaily = (finalInterest + newCapital)/quotes
             val amountDailyFinal = getDoubleWithOneDecimalsReturnDouble(amountToPayDaily)?:-9999.00
             _montoDiario.value = amountDailyFinal
+            _amountRounded.value = getDoubleWithTwoDecimalsReturnDouble(amountToPayDaily)
 
         }catch (e:Exception) {
             Log.d(tag,"ERROR: ${e.message}")
@@ -121,6 +125,28 @@ class ViewModelRegister (
     fun resetState() {
         _state.value = RegisterState.Idle
     }
+
+    fun getDailyAmount(isCheckedRounded:Boolean):Double {
+
+        if(isCheckedRounded.not()){
+            return getDoubleWithOneDecimalsReturnDouble(_montoDiario.value ?: -9999.00) ?: 0.0
+        }
+
+        val dailyAmount = if (isCheckedRounded) {
+            getDoubleWithTwoDecimalsReturnDouble(_montoDiario.value ?: -9999.00)
+        } else {
+            getDoubleWithOneDecimalsReturnDouble(_montoDiario.value ?: -9999.00)
+        }
+        val rounded = ceil(dailyAmount ?: -9999.00)
+
+        return if (rounded == -9999.00) {
+            0.0
+        } else {
+            rounded
+        }
+    }
+
+
 
 }
 

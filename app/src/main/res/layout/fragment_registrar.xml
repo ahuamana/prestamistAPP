@@ -364,23 +364,39 @@ tools:context=".presentation.registro.views.RegistrarFragment">
                             android:layout_gravity="center"
                             android:layout_height="wrap_content"/>
 
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"/>
+
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/montoDiario"
                             android:layout_width="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="5dp"
                             android:background="@drawable/corner_boton_outline"
                             android:backgroundTint="@color/white"
                             android:backgroundTintMode="screen"
+                            android:gravity="center_horizontal"
                             android:paddingLeft="15dp"
                             android:textSize="16dp"
                             android:paddingRight="15dp"
                             android:paddingTop="3dp"
-                            android:paddingBottom="3dp"
                             android:text="@string/tipo_moneda_defecto_cero"
                             android:layout_height="wrap_content"/>
 
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"/>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/checkBoxRoundQuota"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/googlesans_regular"
+                            android:text="@string/fragment_register_round_quota"/>
+
                     </LinearLayout>
+
+
 
 
                 </androidx.cardview.widget.CardView>
