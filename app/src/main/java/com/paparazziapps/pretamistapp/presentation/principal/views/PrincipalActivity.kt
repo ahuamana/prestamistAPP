@@ -68,6 +68,25 @@ class PrincipalActivity : AppCompatActivity(){
         lifecycleScope.launch {
             viewModelPrincipal.uiState.observe(this@PrincipalActivity, ::handleUIState)
         }
+
+        lifecycleScope.launch {
+            viewModelPrincipal.isAdmin.collect {
+                binding.navView.apply {
+                    menu.findItem(R.id.clients_menu).isVisible = it
+                    menu.findItem(R.id.navigation_registrar).isVisible = it
+                }
+
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModelPrincipal.isSuperAdmin.collect {
+                binding.navView.apply {
+                    menu.findItem(R.id.clients_menu).isVisible = it
+                    menu.findItem(R.id.navigation_registrar).isVisible = it
+                }
+            }
+        }
     }
 
     private fun handleUIState(uiStatePrincipal: ViewModelPrincipal.UIStatePrincipal) {

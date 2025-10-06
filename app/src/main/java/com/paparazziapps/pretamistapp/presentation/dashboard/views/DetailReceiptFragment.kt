@@ -30,6 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import androidx.core.graphics.createBitmap
 
 
 class DetailReceiptFragment : Fragment() {
@@ -140,11 +141,7 @@ class DetailReceiptFragment : Fragment() {
         )
 
         // Create a bitmap of the view
-        val bitmap = Bitmap.createBitmap(
-            view.width,
-            view.height,
-            Bitmap.Config.ARGB_8888
-        )
+        val bitmap = createBitmap(view.width, view.height)
 
         // Create a canvas with the bitmap
         val canvas = Canvas(bitmap)

@@ -14,6 +14,12 @@ import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.toJson
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ViewModelPrincipal(
@@ -25,6 +31,13 @@ class ViewModelPrincipal(
     private val tag = ViewModelPrincipal::class.java.simpleName
     private val _uiState = MutableLiveData<UIStatePrincipal>()
     val uiState: LiveData<UIStatePrincipal> = _uiState
+
+
+    private val _isAdmin = MutableStateFlow<Boolean>(false)
+    val isAdmin: StateFlow<Boolean> = _isAdmin.asStateFlow()
+
+    private val _isSuperAdmin = MutableStateFlow<Boolean>(false)
+    val isSuperAdmin: StateFlow<Boolean> = _isSuperAdmin.asStateFlow()
 
     init {
         getBranches()
@@ -54,6 +67,10 @@ class ViewModelPrincipal(
                 }
                 preferences.isAdmin = userForm.admin
                 preferences.isSuperAdmin = userForm.superAdmin
+
+                _isAdmin.update { userForm.admin }
+                _isSuperAdmin.update { userForm.superAdmin }
+
                 preferences.branchId = userForm.branchId?: INT_DEFAULT
                 preferences.branchName = userForm.branch?:""
                 preferences.isActiveUser = userForm.activeUser
