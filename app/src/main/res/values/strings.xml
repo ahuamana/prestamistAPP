@@ -67,6 +67,8 @@
     <string name="comments_example">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac libero ultricies aliquam. Nullam nec purus ac libero ultricies aliquam.</string>
     <string name="fragment_clients_add_title_comments">Comentarios</string>
     <string name="fragment_register_round_quota">Rendondear</string>
+    <string name="route_message_button">Rutas</string>
+    <string name="route_title">Ruta</string>
 
 
 </resources>

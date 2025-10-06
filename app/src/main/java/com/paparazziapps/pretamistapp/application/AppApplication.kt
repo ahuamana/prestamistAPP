@@ -12,6 +12,7 @@ import com.paparazziapps.pretamistapp.data.providers.FirebaseProvider
 import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import com.paparazziapps.pretamistapp.data.providers.RegisterProvider
+import com.paparazziapps.pretamistapp.data.providers.RouteProvider
 import com.paparazziapps.pretamistapp.data.providers.UserProvider
 import com.paparazziapps.pretamistapp.data.services.ServiceProviderImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSource
@@ -34,6 +35,8 @@ import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSourceImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteEmailDataSource
 import com.paparazziapps.pretamistapp.data.remote.clients.RemoteClientsDataSourceImpl
 import com.paparazziapps.pretamistapp.data.remote.clients.RemoteClientsDataSource
+import com.paparazziapps.pretamistapp.data.remote.route.RemoteRouteDataSource
+import com.paparazziapps.pretamistapp.data.remote.route.RemoteRouteDataSourceImpl
 import com.paparazziapps.pretamistapp.data.repository.PAEmailRepositoryImpl
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.data.repository.PAClientsRepository
@@ -55,6 +58,8 @@ import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileVie
 import com.paparazziapps.pretamistapp.presentation.clients.ClientsAddViewModel
 import com.paparazziapps.pretamistapp.presentation.clients.ClientsParentViewModel
 import com.paparazziapps.pretamistapp.presentation.registro.views.SelectUserViewModel
+import com.paparazziapps.pretamistapp.presentation.routes.NewRouteViewModel
+import com.paparazziapps.pretamistapp.presentation.routes.RouteParentViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -73,6 +78,7 @@ class AppApplication : MultiDexApplication() {
         single { LoanProvider(get(),get())} // Provide LoanProvider
         single { RegisterProvider(get()) } // Provide RegisterProvider
         single { UserProvider(get()) } // Provide UserProvider
+        single { RouteProvider(get()) }
         single { ClientsProvider(get())}
         //DB
         single { MyPreferences(androidContext())} // Provide MyPreferences
@@ -89,6 +95,7 @@ class AppApplication : MultiDexApplication() {
         singleOf(::RemoteLoanDataSourceImpl) { bind<RemoteLoanDataSource>() }
         singleOf(::RemoteLoginDataSourceImpl) { bind<RemoteLoginDataSource>() } // single<RemoteDataSource> { RemoteDataSourceImpl() }
         singleOf(::RemoteUserDataSourceImpl) { bind<RemoteUserDataSource>() } // single<RemoteDataSource> { RemoteDataSourceImpl() }
+        singleOf(::RemoteRouteDataSourceImpl) { bind<RemoteRouteDataSource>() }
         singleOf(::PARepositoryImpl) { bind<PARepository>() } // single<PARepository> { PARepositoryImpl() }
 
         //Data Firebase
@@ -122,6 +129,8 @@ class AppApplication : MultiDexApplication() {
         viewModelOf(::ClientsAddViewModel)
         viewModelOf(::ClientsParentViewModel)
         viewModelOf(::SelectUserViewModel)
+        viewModelOf(::RouteParentViewModel)
+        viewModelOf(::NewRouteViewModel)
     }
 
     override fun onCreate() {

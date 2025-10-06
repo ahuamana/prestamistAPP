@@ -42,6 +42,12 @@
         <action
             android:id="@+id/action_clients_menu_to_clients_add"
             app:destination="@id/clients_add" />
+        <action
+            android:id="@+id/action_clients_menu_to_navigation_routes"
+            app:destination="@id/navigation_routes" />
+
+
+
     </fragment>
 
     <fragment
@@ -98,6 +104,25 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/navigation_home"
             app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_routes"
+        android:name="com.paparazziapps.pretamistapp.presentation.routes.RouteParentFragment"
+        android:label="Rutas"
+        tools:layout="@layout/fragment_route_parent" >
+        <action
+            android:id="@+id/action_navigation_routes_to_navigation_add_route"
+            app:destination="@id/navigation_add_route" />
+    </fragment>
+
+    <!-- add new route fragment -->
+
+    <fragment
+        android:id="@+id/navigation_add_route"
+        android:name="com.paparazziapps.pretamistapp.presentation.routes.NewRouteFragment"
+        android:label="Agregar ruta"
+        tools:layout="@layout/fragment_new_route" >
     </fragment>
 
 </navigation>

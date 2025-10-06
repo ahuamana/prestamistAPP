@@ -154,6 +154,7 @@
                    android:lines="1"
                    android:maxLength="50" />
            </com.google.android.material.textfield.TextInputLayout>
+
            <com.google.android.material.textfield.TextInputLayout
                android:id="@+id/phoneLayout"
                style="@style/CustomTextField"
@@ -178,6 +179,8 @@
                    android:lines="1"
                    android:maxLength="15" />
            </com.google.android.material.textfield.TextInputLayout>
+
+
 
            <com.google.android.material.textfield.TextInputLayout
                android:id="@+id/noteLayout"

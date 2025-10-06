@@ -17,6 +17,9 @@ object PADataConstants {
     const val LOAN_COLLECTION = "Prestamos"
     const val CLIENTS_COLLECTION = "Clientes"
 
+    //V2
+    const val ROUTES_COLLECTION = "Routes"
+
     //analytics events
     const val EVENT_SHARE_RECEIPT_OTHER_APPS = "share_receipt_other_apps"
     const val EVENT_SHARE_RECEIPT_WHATSAPP = "share_receipt_whatsapp"

@@ -10,6 +10,9 @@ import com.paparazziapps.pretamistapp.data.remote.RemoteDetailLoanDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteLoanDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteLoginDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteUserDataSource
+import com.paparazziapps.pretamistapp.data.remote.route.RemoteRouteDataSource
+import com.paparazziapps.pretamistapp.data.sources.route.RouteDataSource
+import com.paparazziapps.pretamistapp.data.sources.route.RouteDomainSource
 import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
 import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import com.paparazziapps.pretamistapp.domain.LoanDomain
@@ -20,8 +23,10 @@ class PARepositoryImpl(
     private val remoteDetailLoanDataSource: RemoteDetailLoanDataSource,
     private val remoteLoanDataSource: RemoteLoanDataSource,
     private val remoteLoginDataSource: RemoteLoginDataSource,
-    private val remoteUserDataSource: RemoteUserDataSource
+    private val remoteUserDataSource: RemoteUserDataSource,
+    private val remoteRouteDataSource: RemoteRouteDataSource
 ) : PARepository {
+
     override suspend fun geBranchesRepo(): PAResult<DataSnapshot> {
         return remoteBranchDataSource.geBranchesRepo()
     }
@@ -102,6 +107,14 @@ class PARepositoryImpl(
 
     override suspend fun searchUserByEmail(email: String): PAResult<DocumentSnapshot> {
         return remoteUserDataSource.searchUserByEmail(email)
+    }
+
+    override suspend fun createRoute(routeDataSource: RouteDomainSource): PAResult<Void> {
+        return remoteRouteDataSource.createRoute(RouteDomainSource.toDataSource(routeDataSource))
+    }
+
+    override suspend fun getAllRoutes(): PAResult<List<RouteDataSource>> {
+        return remoteRouteDataSource.getAllRoutes()
     }
 
 }

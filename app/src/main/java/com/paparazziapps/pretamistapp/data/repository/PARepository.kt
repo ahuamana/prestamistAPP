@@ -5,6 +5,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.data.network.PAResult
+import com.paparazziapps.pretamistapp.data.sources.route.RouteDataSource
+import com.paparazziapps.pretamistapp.data.sources.route.RouteDomainSource
 import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
 import com.paparazziapps.pretamistapp.domain.DetailLoanForm
 import com.paparazziapps.pretamistapp.domain.LoanDomain
@@ -44,4 +46,8 @@ interface PARepository {
     //User
     suspend fun createUser(userForm: UserForm): PAResult<Void>
     suspend fun searchUserByEmail(email: String): PAResult<DocumentSnapshot>
+
+    //Routes
+    suspend fun createRoute(routeDataSource: RouteDomainSource): PAResult<Void>
+    suspend fun getAllRoutes(): PAResult<List<RouteDataSource>>
 }

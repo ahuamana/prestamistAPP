@@ -103,6 +103,10 @@ class ClientsParentFragment : Fragment(), SetOnClickListenerClient {
         binding.addClientButton.setOnClickListener {
             findNavController().navigate(R.id.action_clients_menu_to_clients_add)
         }
+
+        binding.routesBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_clients_menu_to_navigation_routes)
+        }
     }
 
     override fun onDestroyView() {

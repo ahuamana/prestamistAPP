@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "394006946375",
-    "firebase_url": "https://prestamist-main-default-rtdb.firebaseio.com",
-    "project_id": "prestamist-main",
-    "storage_bucket": "prestamist-main.firebasestorage.app"
+    "project_number": "388720077992",
+    "firebase_url": "https://prestamis-app-default-rtdb.firebaseio.com",
+    "project_id": "prestamis-app",
+    "storage_bucket": "prestamis-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:394006946375:android:2f14933f057c3c5fa78762",
+        "mobilesdk_app_id": "1:388720077992:android:d1abe82651c51c0b3e269d",
         "android_client_info": {
           "package_name": "com.paparazziapps.pretamistapp"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDJhZ44VVgIuWG8GiXXHJJ9Lan5nVU9JFw"
+          "current_key": "AIzaSyA9sOUvlIl-VC6Sl66Xwm1eNzVm3cbothY"
         }
       ],
       "services": {

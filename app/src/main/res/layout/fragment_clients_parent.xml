@@ -12,20 +12,46 @@
        android:layout_margin="16dp"
        android:layout_height="wrap_content">
 
-       <com.google.android.material.button.MaterialButton
-           android:id="@+id/addClientButton"
-           android:layout_width="wrap_content"
-           android:layout_height="50dp"
-           android:textColor="@color/white"
-           android:layout_gravity="start"
-           android:layout_marginTop="8dp"
-           android:background="@drawable/buttom_corners"
-           app:backgroundTint="@color/primary"
-           android:textAllCaps="false"
-           android:letterSpacing="0.01"
-           android:text="@string/add_client_message_button"
-           app:layout_constraintTop_toBottomOf="@+id/capitalLayout"
-           style="?android:textAppearanceSmall"/>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/addClientButton"
+               android:layout_width="wrap_content"
+               android:layout_height="50dp"
+               android:textColor="@color/white"
+               android:layout_gravity="start"
+               android:layout_marginTop="8dp"
+               android:background="@drawable/buttom_corners"
+               app:backgroundTint="@color/primary"
+               android:textAllCaps="false"
+               android:letterSpacing="0.01"
+               android:text="@string/add_client_message_button"
+               app:layout_constraintTop_toBottomOf="@+id/capitalLayout"
+               style="?android:textAppearanceSmall"/>
+
+           <Space
+               android:layout_width="10dp"
+               android:layout_height="wrap_content"/>
+
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/routesBtn"
+               android:layout_width="wrap_content"
+               android:layout_height="50dp"
+               android:textColor="@color/white"
+               android:layout_gravity="start"
+               android:layout_marginTop="8dp"
+               android:background="@drawable/buttom_corners"
+               app:backgroundTint="@color/primary"
+               android:textAllCaps="false"
+               android:letterSpacing="0.01"
+               android:text="@string/route_message_button"
+               app:layout_constraintTop_toBottomOf="@+id/capitalLayout"
+               style="?android:textAppearanceSmall"/>
+       </LinearLayout>
+
+
 
        <View
            android:layout_width="match_parent"

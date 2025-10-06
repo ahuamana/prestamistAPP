@@ -12,7 +12,9 @@ import kotlinx.coroutines.tasks.await
 
 class BranchesProvider {
 
-    private val database: DatabaseReference by lazy { Firebase.database.reference.child(PADataConstants.BRANCHES) }
+    private val database: DatabaseReference by lazy {
+        Firebase.database.reference.child(PADataConstants.BRANCHES)
+    }
 
     suspend fun geBranchesRepo(): PAResult<DataSnapshot> {
         return NetworkOperation.safeApiCall {

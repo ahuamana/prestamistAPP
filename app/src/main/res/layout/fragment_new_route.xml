@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.routes.NewRouteFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/routeNameTextInputLayout"
+        style="@style/CustomTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/routeNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/googlesans_regular"
+            android:hint="Nombre de la ruta"
+            android:inputType="textEmailAddress"
+            android:lines="1"
+            android:maxLength="50" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/createRouteButton"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/buttom_corners"
+        android:fontFamily="@font/googlesans_regular"
+        android:text="Crear"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/primary" />
+
+</FrameLayout>
