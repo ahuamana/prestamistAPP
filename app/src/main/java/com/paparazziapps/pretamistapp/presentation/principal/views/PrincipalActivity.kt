@@ -184,7 +184,14 @@ class PrincipalActivity : AppCompatActivity(){
                             .build()
                     )
                 }
+
             }
+
+            ivSearch.setOnClickListener {
+                findNavController(R.id.nav_host_fragment_activity_main).navigate(R.id.navigation_search)
+            }
+
+
         }
     }
 

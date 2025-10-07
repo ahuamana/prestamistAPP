@@ -57,6 +57,7 @@ import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewMode
 import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
 import com.paparazziapps.pretamistapp.presentation.clients.ClientsAddViewModel
 import com.paparazziapps.pretamistapp.presentation.clients.ClientsParentViewModel
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelSearch
 import com.paparazziapps.pretamistapp.presentation.registro.views.SelectUserViewModel
 import com.paparazziapps.pretamistapp.presentation.routes.NewRouteViewModel
 import com.paparazziapps.pretamistapp.presentation.routes.RouteParentViewModel
@@ -131,6 +132,7 @@ class AppApplication : MultiDexApplication() {
         viewModelOf(::SelectUserViewModel)
         viewModelOf(::RouteParentViewModel)
         viewModelOf(::NewRouteViewModel)
+        viewModelOf(::ViewModelSearch)
     }
 
     override fun onCreate() {

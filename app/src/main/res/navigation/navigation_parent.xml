@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_navigation_home_to_action_detail_receipt"
             app:destination="@id/action_detail_receipt" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_search"
+            app:destination="@id/navigation_search" />
     </fragment>
 
     <fragment
@@ -124,5 +127,11 @@
         android:label="Agregar ruta"
         tools:layout="@layout/fragment_new_route" >
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.paparazziapps.pretamistapp.presentation.dashboard.views.SearchFragment"
+        android:label="Buscar"
+        tools:layout="@layout/fragment_search" />
 
 </navigation>
