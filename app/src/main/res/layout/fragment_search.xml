@@ -69,6 +69,8 @@
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_margin="16dp"
+                app:queryHint="Buscar por nombre"
+                app:defaultQueryHint="Buscar por nombre"
                 android:layout_height="wrap_content"/>
 
 

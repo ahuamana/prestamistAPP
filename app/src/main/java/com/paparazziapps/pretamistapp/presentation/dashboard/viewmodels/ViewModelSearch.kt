@@ -27,10 +27,6 @@ import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
-import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard.DashboardDialogState
-import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard.DashboardEvent
-import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard.DashboardIntent
-import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard.DashboardState
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.LoanListHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -112,6 +108,22 @@ class ViewModelSearch(
 
             is SearchIntent.SendMessageToWhatsApp -> {
                 sendMessageToWhatsApp(intent.loanDomain, context = intent.context)
+            }
+            is SearchIntent.SearchLoanByName -> {
+                val currentLoans = _state.value.loans ?: emptyList()
+                val filteredLoans = if (intent.name.isBlank()) {
+                    currentLoans
+                } else {
+                    currentLoans.filter { loan ->
+                        val fullName = "${loan.names?.trim()} ${loan.lastnames?.trim()}".lowercase()
+                        fullName.contains(intent.name.trim().lowercase())
+                    }
+                }
+                if (filteredLoans.isEmpty()) {
+                    _state.value = _state.value.copy(state = SearchEvent.EMPTY, loans = filteredLoans)
+                } else {
+                    _state.value = _state.value.copy(state = SearchEvent.SUCCESS, loans = filteredLoans)
+                }
             }
         }
     }
@@ -447,6 +459,8 @@ class ViewModelSearch(
         data object ResetStatusDialogs : SearchIntent()
         data class SendMessageToOtherApp(val loanDomain: LoanDomain, val context: Context) : SearchIntent()
         data class SendMessageToWhatsApp(val loanDomain: LoanDomain, val context: Context) : SearchIntent()
+
+        data class SearchLoanByName(val name: String): SearchIntent()
     }
 
     sealed class SearchDialogState {
