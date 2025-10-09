@@ -46,7 +46,7 @@ class ViewModelFinance (
                         listLoanRespons.add(document.toObject<LoanDomain>())
                     }
                     _prestamos.value = listLoanRespons
-                    onComplete(isCorrect,"",result.data.size(),false)
+                    onComplete(true,"",result.data.size(),false)
                 }
             }
         }
