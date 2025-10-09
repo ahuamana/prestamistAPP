@@ -195,7 +195,6 @@ class FinanzasFragment : Fragment() {
             }
 
         }
-
     }
 
     private fun observers() {

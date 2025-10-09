@@ -28,10 +28,13 @@ import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusD
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.LoanListHandler
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.TimeZone
 
 class ViewModelSearch(
     private val repository: PARepository,
@@ -43,6 +46,8 @@ class ViewModelSearch(
     private val tag = ViewModelSearch::class.java.simpleName
     private val _state = MutableStateFlow(SearchState.idle())
     val state: StateFlow<SearchState> = _state.asStateFlow()
+
+    private val allLoans = mutableListOf<LoanDomain>()
 
     init {
         loadLoans()
@@ -67,6 +72,8 @@ class ViewModelSearch(
                 }
                 val manager = LoanListHandler(preferences)
                 val processedLoans = manager.processLoans(loans)
+                allLoans.clear()
+                allLoans.addAll(processedLoans)
 
                 _state.value = SearchState.success(processedLoans)
             }
@@ -125,7 +132,52 @@ class ViewModelSearch(
                     _state.value = _state.value.copy(state = SearchEvent.SUCCESS, loans = filteredLoans)
                 }
             }
+
+            is SearchIntent.SearchLoanByNextPayment -> {
+                handledSearchByNextPayment(intent.date)
+            }
         }
+    }
+
+    private  val DAY_MS = 86_400_000L // milliseconds in a day
+
+    private fun handledSearchByNextPayment(targetDate: Long) {
+        val currentLoans =  allLoans
+
+        val filteredLoans = if (targetDate == 0L) {
+            currentLoans // show all if no date selected
+        } else {
+            currentLoans.filter { loan ->
+                // Skip fully paid loans
+                val totalQuotes = loan.quotas ?: return@filter false
+                val quotesPaid = loan.quotasPaid ?: 0
+                if (quotesPaid >= totalQuotes) return@filter false
+
+                // Get type of loan (daily, weekly, etc.)
+                val tyLoan = PaymentScheduled.getPaymentScheduledById(loan.typeLoan ?: INT_DEFAULT)
+
+                // Calculate next payment date
+                val nextPaymentDate = loan.loanStartDateUnix?.plus(((quotesPaid + 1) * tyLoan.days * DAY_MS)) ?: return@filter false
+
+                // Compare only by calendar day (ignore hours)
+                isSameDay(nextPaymentDate, targetDate)
+            }
+        }
+
+        _state.value = _state.value.copy(
+            state = if (filteredLoans.isEmpty()) SearchEvent.EMPTY else SearchEvent.SUCCESS,
+            loans = filteredLoans
+        )
+    }
+
+    /**
+     * Returns true if both dates fall on the same calendar day (local timezone).
+     */
+    private fun isSameDay(date1: Long, date2: Long): Boolean {
+        val cal1 = Calendar.getInstance().apply { timeInMillis = date1 }
+        val cal2 = Calendar.getInstance().apply { timeInMillis = date2 }
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
     }
 
     private fun sendMessageToWhatsApp(loanDomain: LoanDomain, context: Context) {
@@ -461,6 +513,8 @@ class ViewModelSearch(
         data class SendMessageToWhatsApp(val loanDomain: LoanDomain, val context: Context) : SearchIntent()
 
         data class SearchLoanByName(val name: String): SearchIntent()
+
+        data class SearchLoanByNextPayment(val date:Long): SearchIntent()
     }
 
     sealed class SearchDialogState {

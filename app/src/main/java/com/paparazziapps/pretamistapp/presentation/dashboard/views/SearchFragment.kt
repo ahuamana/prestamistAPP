@@ -1,5 +1,6 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.databinding.FragmentDetailReceiptBinding
@@ -28,6 +30,8 @@ import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewMode
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 import kotlin.getValue
 
 
@@ -38,6 +42,7 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
     private var _binding: FragmentSearchBinding?= null
     private val binding get() = _binding!!
 
+    var fechaInicioUnixtime:Long?= null
     private val loadingDialog by lazy {
         PADialogFactory(requireContext()).createLoadingDialog()
     }
@@ -91,6 +96,17 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
         setupRecyclerLoans()
         setupSearch()
         observers()
+        otherComponents()
+    }
+
+    private fun otherComponents() {
+        binding.fechaInicio.setOnClickListener {
+            getCalendar()
+        }
+
+        binding.fechaInicioLayout.setEndIconOnClickListener {
+            getCalendar()
+        }
     }
 
     private fun setupSearch() {
@@ -131,7 +147,7 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
             ViewModelSearch.SearchEvent.LOADING -> {
                 with(binding) {
                     emptyPrestamo.isVisible = false
-                    scrollPrestamos.isVisible = false
+                    cardPrestamos.isVisible = false
                     errorContainer.errorContainer.isVisible = false
                     loadingContainer.loadingContainer.isVisible = true
                 }
@@ -141,7 +157,7 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
                     emptyPrestamo.isVisible = false
                     errorContainer.errorContainer.isVisible = false
                     loadingContainer.loadingContainer.isVisible = false
-                    scrollPrestamos.isVisible = true
+                    cardPrestamos.isVisible = true
                 }
 
                 state.loans?.let {
@@ -152,7 +168,7 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
             ViewModelSearch.SearchEvent.ERROR -> {
                 with(binding) {
                     emptyPrestamo.isVisible = false
-                    scrollPrestamos.isVisible = false
+                    cardPrestamos.isVisible = false
                     loadingContainer.loadingContainer.isVisible = false
                     errorContainer.errorContainer.isVisible = true
                 }
@@ -160,7 +176,7 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
 
             ViewModelSearch.SearchEvent.EMPTY -> {
                 with(binding){
-                    scrollPrestamos.isVisible = false
+                    cardPrestamos.isVisible = false
                     errorContainer.errorContainer.isVisible = false
                     loadingContainer.loadingContainer.isVisible = false
                     emptyPrestamo.isVisible = true
@@ -210,6 +226,29 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
             }
         }
 
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getCalendar() {
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Seleciona una fecha")
+                .build()
+
+        datePicker.show(parentFragmentManager, "Datepickerdialog");
+
+        datePicker.addOnPositiveButtonClickListener { unixtime ->
+            println("UnixTime selected -- ${unixtime}")
+            fechaInicioUnixtime = unixtime
+            SimpleDateFormat("dd/MM/yyyy").apply {
+                timeZone = TimeZone.getTimeZone("GMT")
+                format(unixtime).toString().also {
+                     binding.fechaInicio.setText(it)
+                    viewModel.processIntent(ViewModelSearch.SearchIntent.SearchLoanByNextPayment(unixtime))
+                }
+            }
+
+        }
     }
 
     private fun updateLoans(loans:MutableList<LoanDomain>){

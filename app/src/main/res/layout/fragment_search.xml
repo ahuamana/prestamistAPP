@@ -9,53 +9,7 @@
 
 
 
-    <LinearLayout
-        android:id="@+id/empty_prestamo"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.cardview.widget.CardView
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="6dp"
-            android:layout_margin="16dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/img"
-                    android:layout_width="223dp"
-                    android:layout_height="189dp"
-                    android:layout_marginTop="60dp"
-                    android:src="@drawable/empty_no_data"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="60dp"
-                    android:text="No se encontró un préstamo"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/img"
-                    app:layout_constraintStart_toStartOf="@+id/img"
-                    app:layout_constraintTop_toBottomOf="@+id/img" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
     <ScrollView
-        android:id="@+id/scroll_prestamos"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -65,16 +19,61 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_margin="16dp"
-                app:queryHint="Buscar por nombre"
-                app:defaultQueryHint="Buscar por nombre"
-                android:layout_height="wrap_content"/>
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="8dp"
+                android:layout_height="wrap_content">
 
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fechaInicioLayout"
+                        style="@style/CustomTextField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        app:endIconDrawable="@drawable/ic_calendar"
+                        app:endIconMode="custom"
+                        app:errorEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_input_layout_sucursal">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/fecha_inicio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:hint="Buscar por fecha de pago"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="50" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/searchView"
+                        android:layout_width="match_parent"
+                        app:queryHint="Buscar por nombre"
+                        app:defaultQueryHint="Buscar por nombre"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/card_prestamos"
+                tools:visibility="visible"
                 android:layout_width="match_parent"
                 app:cardCornerRadius="6dp"
                 android:elevation="6dp"
@@ -101,7 +100,50 @@
 
             </androidx.cardview.widget.CardView>
 
+            <LinearLayout
+                android:id="@+id/empty_prestamo"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <androidx.cardview.widget.CardView
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="6dp"
+                    android:layout_margin="16dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/img"
+                            android:layout_width="223dp"
+                            android:layout_height="189dp"
+                            android:layout_marginTop="60dp"
+                            android:src="@drawable/empty_no_data"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="60dp"
+                            android:text="No se encontró un préstamo"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/img"
+                            app:layout_constraintStart_toStartOf="@+id/img"
+                            app:layout_constraintTop_toBottomOf="@+id/img" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -21,7 +21,6 @@ data class PaymentScheduled(
             } as? ArrayList<String> ?: arrayListOf()
         }
 
-
     }
 }
 

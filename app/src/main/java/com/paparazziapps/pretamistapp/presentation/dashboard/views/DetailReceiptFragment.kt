@@ -31,6 +31,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import androidx.core.graphics.createBitmap
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 
 class DetailReceiptFragment : Fragment() {
@@ -80,6 +83,18 @@ class DetailReceiptFragment : Fragment() {
         }
     }
 
+    private val STORAGE_ZONE: ZoneId = ZoneOffset.UTC
+    // Business/display zone:
+    private val BUSINESS_ZONE: ZoneId = ZoneId.of("America/Lima")
+
+    private fun startOfBusinessDayFromStoredUTC(millis: Long): Long {
+        val ms = if (millis < 1_000_000_000_000L) millis * 1000L else millis
+        // 1) Read the stored instant as UTC, get its calendar date
+        val dateUtc = Instant.ofEpochMilli(ms).atZone(STORAGE_ZONE).toLocalDate()
+        // 2) Re-anchor that *date* to local midnight in your business zone
+        return dateUtc.atStartOfDay(BUSINESS_ZONE).toInstant().toEpochMilli()
+    }
+
     private fun handleState(state: ViewModelDetailReceipt.DetailReceiptState) {
         when(state) {
             is ViewModelDetailReceipt.DetailReceiptState.Loading -> {
@@ -103,7 +118,10 @@ class DetailReceiptFragment : Fragment() {
                         if(information.quotesPaidNew < information.quotes){
                             Log.d("DetailReceiptFragment", "Loan Start Date: ${information.loanStartDateUnix} Quotes Paid: ${information.quotesPaidNew} ")
                             val tyLoan = PaymentScheduled.getPaymentScheduledById(information.typeLoan)
-                            val nextPaymentDate = information.loanStartDateUnix + (information.quotesPaidNew * tyLoan.days * 86400L * 1000L)
+                            // normalize start to beginning of local day to avoid timezone drift
+                            val startMillis = startOfBusinessDayFromStoredUTC(information.loanStartDateUnix)
+
+                            val nextPaymentDate = startMillis + ((information.quotesPaidNew + 1) * tyLoan.days * 86400L * 1000L)
                             Log.d("DetailReceiptFragment", "Next Payment Date: $nextPaymentDate")
                             tvNextPaymentDate.text = convertUnixTimeToFormattedDate(nextPaymentDate)
                         }else {
@@ -130,6 +148,18 @@ class DetailReceiptFragment : Fragment() {
                 // Show error dialog
             }
         }
+    }
+
+    // Function to get the start of the local day in milliseconds in GMT
+    // Start of the SAME local day as `millis`, returned as an absolute UTC instant (epoch millis).
+    private fun startOfLocalDay(millis: Long): Long {
+        val cal = java.util.Calendar.getInstance()
+        cal.timeInMillis = if (millis < 1_000_000_000_000L) millis * 1000L else millis // seconds → ms safety
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
+        cal.set(java.util.Calendar.MINUTE, 0)
+        cal.set(java.util.Calendar.SECOND, 0)
+        cal.set(java.util.Calendar.MILLISECOND, 0)
+        return cal.timeInMillis            // ✅ no offset subtraction
     }
 
     // Function to capture screenshot of a view
