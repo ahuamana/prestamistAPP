@@ -27,6 +27,7 @@ import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard.DashboardState
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.LoanListHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,11 +48,16 @@ class ViewModelSearch(
     private val _state = MutableStateFlow(SearchState.idle())
     val state: StateFlow<SearchState> = _state.asStateFlow()
 
+    private val _state2 = MutableStateFlow(DashboardState.idle())
+    val state2: StateFlow<DashboardState> = _state2.asStateFlow()
+
     private val allLoans = mutableListOf<LoanDomain>()
 
     init {
         loadLoans()
     }
+
+
 
     private fun loadLoans() = viewModelScope.launch {
         _state.value = _state.value.copy(state = SearchEvent.LOADING)

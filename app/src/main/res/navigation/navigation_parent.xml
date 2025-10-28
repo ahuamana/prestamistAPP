@@ -132,6 +132,10 @@
         android:id="@+id/navigation_search"
         android:name="com.paparazziapps.pretamistapp.presentation.dashboard.views.SearchFragment"
         android:label="Buscar"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_navigation_search_to_action_detail_receipt"
+            app:destination="@id/action_detail_receipt" />
+    </fragment>
 
 </navigation>

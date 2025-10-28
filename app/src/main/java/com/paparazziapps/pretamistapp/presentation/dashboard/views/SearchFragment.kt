@@ -1,12 +1,15 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.views
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -17,16 +20,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.data.PADataConstants
+import com.paparazziapps.pretamistapp.databinding.DialogSalirSinGuardarBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentDetailReceiptBinding
 import com.paparazziapps.pretamistapp.databinding.FragmentSearchBinding
 import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.PADialogFactory
+import com.paparazziapps.pretamistapp.helper.fromHtml
+import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
 import com.paparazziapps.pretamistapp.presentation.dashboard.adapters.LoanAdapter
 import com.paparazziapps.pretamistapp.presentation.dashboard.interfaces.SetOnClickedLoan
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelSearch
+import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelSearch.SearchIntent
+import com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment.Companion.setOnClickedLoanHome
+import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -77,7 +86,7 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
                 Log.d("TAG", "information: $information")
                 val bundle = Bundle()
                 bundle.putSerializable(PAConstants.INFORMATION_RECEIPT, information)
-                findNavController().navigate(R.id.action_navigation_home_to_action_detail_receipt, bundle)
+                findNavController().navigate(R.id.action_navigation_search_to_action_detail_receipt, bundle)
 
             }
         )
@@ -97,6 +106,8 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
         setupSearch()
         observers()
         otherComponents()
+
+        setOnClickedLoanHome = this
     }
 
     private fun otherComponents() {
@@ -262,22 +273,87 @@ class SearchFragment : Fragment(),SetOnClickedLoan {
         adapterPosition: Int,
         daysDelayed: String
     ) {
-        //TODO("Not yet implemented")
+        context.apply {
+            (this as PrincipalActivity).showBottomSheetDetallePrestamoPrincipal(loanDomain, totalAmountToPay, daysDelayed, adapterPosition, needUpdate)
+        }
     }
 
     override fun openDialogUpdateLoan(
         loanDomain: LoanDomain,
         quotesToPay: Int
     ) {
-        //TODO("Not yet implemented")
+        binding.cntCortina.isVisible = true
+
+        val needToClose = loanDomain.quotasPending == quotesToPay //Works for daily and other
+        val amountToPay = quotesToPay.times(loanDomain.amountPerQuota ?: 0.0) // rename to quotaAmount // works for daily and other
+
+        val dialogBuilder = AlertDialog.Builder(context, R.style.CustomDialogBackground)
+        val view : View   = layoutInflater.inflate(R.layout.dialog_salir_sin_guardar, null)
+        val bindingDialogSalir = DialogSalirSinGuardarBinding.bind(view)
+
+        val title       = bindingDialogSalir.textView
+        val desc        = bindingDialogSalir.lblDescSalirNoticias
+        val btnPositive   = bindingDialogSalir.btnAceptarSalir
+        val btnNegative = bindingDialogSalir.btnCancelarSalir
+
+        if(needToClose) {
+            title.text = "¿Estas seguro de cerrar el préstamo?"
+            desc.text  = ("Se cerrára el préstamo de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.names.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.lastnames.toString())}").fromHtml()
+        }else {
+            title.text = "¿Estas seguro de actualizar la deuda?"
+            desc.text  = ("Se actualizará la deuda de: <b>${replaceFirstCharInSequenceToUppercase(loanDomain.names.toString())}, ${replaceFirstCharInSequenceToUppercase(loanDomain.lastnames.toString())} </b>" +
+                    ",con un monto total a pagar de: <br><b>${getString(R.string.tipo_moneda)}${amountToPay}<b>").fromHtml()
+        }
+
+        dialogBuilder.apply {
+            setView(view)
+        }
+
+        val dialog = dialogBuilder.create()
+        dialog.apply {
+            setCanceledOnTouchOutside(false)
+            window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            window?.setGravity(Gravity.CENTER)
+            window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            setOnDismissListener {
+                binding.cntCortina.visibility = View.GONE
+            }
+            show()
+        }
+
+        btnPositive.apply {
+            visibility = View.VISIBLE
+            setOnClickListener {
+                dialog.dismiss()
+
+
+
+                val intent = if(needToClose) SearchIntent.CloseLoan(
+                    loanId = loanDomain.id ?: "",
+                ) else SearchIntent.UpdateLoan(
+                    loanDomain = loanDomain,
+                    quotesToPay = quotesToPay
+                )
+                viewModel.processIntent(intent)
+            }
+        }
+
+        btnNegative.apply {
+            visibility = View.VISIBLE
+            isAllCaps = false
+            setOnClickListener {
+                dialog.dismiss()
+            }
+        }
     }
 
     override fun sendMessageToOtherApp(loanDomain: LoanDomain) {
-        //TODO("Not yet implemented")
+        viewModel.processIntent(SearchIntent.SendMessageToOtherApp(loanDomain, requireContext()))
+
     }
 
     override fun sendMessageToWhatsapp(loanDomain: LoanDomain) {
-        //TODO("Not yet implemented")
+        viewModel.processIntent(SearchIntent.SendMessageToWhatsApp(loanDomain, requireContext()))
     }
 
 }
