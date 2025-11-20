@@ -1,3 +1,16 @@
+> [!IMPORTANT]  
+> ## Project status / Estado del proyecto  
+> 
+> **EN:** This Android app is now in **maintenance mode**.  
+> We are currently working on the **next generation of Loan Manager**, built with **Kotlin Multiplatform (KMP)**, so it can run on **Android and iOS**.  
+> This repository will continue to receive **bug fixes and security updates**, but **no major new features** are planned here.  
+> 
+> **ES:** Esta aplicación Android ahora se encuentra en **modo mantenimiento**.  
+> Actualmente estamos trabajando en la **siguiente generación de Loan Manager**, desarrollada con **Kotlin Multiplatform (KMP)** para que funcione tanto en **Android como en iOS**.  
+> Este repositorio seguirá recibiendo **correcciones de errores y actualizaciones de seguridad**, pero **no se añadirán nuevas funcionalidades grandes** aquí.  
+> 
+> Más adelante compartiremos novedades sobre el nuevo proyecto multiplataforma.
+
 
 # Loan Manager App
 
