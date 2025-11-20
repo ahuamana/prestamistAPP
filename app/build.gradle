@@ -158,7 +158,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:$koin_version")
 
     //Animation
-    def lottieVersion = "6.6.2"
+    def lottieVersion = "6.7.1"
     implementation ("com.airbnb.android:lottie:$lottieVersion")
 
     //Retrofit
