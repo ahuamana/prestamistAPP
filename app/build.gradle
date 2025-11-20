@@ -106,7 +106,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:23.0.3'
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
-    implementation 'com.google.firebase:firebase-firestore:24.0.2'
+    implementation 'com.google.firebase:firebase-firestore:24.11.1'
     implementation 'androidx.lifecycle:lifecycle-process:2.5.1'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
