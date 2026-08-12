@@ -182,5 +182,5 @@ Cashier credentials
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](https://github.com/ahuamana/prestamistAPP/blob/main/LICENCE).
 
