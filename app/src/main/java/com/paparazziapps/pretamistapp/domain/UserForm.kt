@@ -1,5 +1,8 @@
 package com.paparazziapps.pretamistapp.domain
 
+import androidx.annotation.Keep
+
+@Keep
 data class UserForm (
     var names: String? = null,
     var lastnames: String? = null,

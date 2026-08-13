@@ -1,7 +1,9 @@
 package com.paparazziapps.pretamistapp.domain
 
+import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
+@Keep
 @Serializable
 data class InformationReceiptDomain(
     val idReceipt:String,

@@ -1,9 +1,11 @@
 package com.paparazziapps.pretamistapp.domain
 
+import androidx.annotation.Keep
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
+@Keep
 @Serializable
 data class LoanDomain (
     @SerialName("id")
@@ -66,6 +68,7 @@ data class LoanDomain (
     var quotasPaidList:List<QuotaDomain>?=null,
     )
 
+@Keep
 @Serializable
 data class QuotaDomain(
     //include the number of quota and paid and remaining

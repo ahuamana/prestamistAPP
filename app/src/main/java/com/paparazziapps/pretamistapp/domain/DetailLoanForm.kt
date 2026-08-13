@@ -1,7 +1,9 @@
 package com.paparazziapps.pretamistapp.domain
 
+import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
+@Keep
 @Serializable
 data class DetailLoanForm (
     var idDetailLoan:String,
@@ -12,6 +14,7 @@ data class DetailLoanForm (
     var codeOperation:Long
 )
 
+@Keep
 @Serializable
 data class DetailLoanResponse(
     val idDetailLoan:String? = null,

@@ -1,7 +1,10 @@
 package com.paparazziapps.pretamistapp.domain.clients
 
+import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
+
+@Keep
 @Serializable
 data class ClientsRequest(
     val id: String? = null,
@@ -16,6 +19,7 @@ data class ClientsRequest(
     val address: String?= null
 ) : java.io.Serializable
 
+@Keep
 data class ClientDomain(
     val id: String,
     val typeDocument: String,
@@ -28,6 +32,7 @@ data class ClientDomain(
     val address: String
 )
 
+@Keep
 @Serializable
 data class ClientDomainSelect(
     val id: String,
@@ -38,6 +43,7 @@ data class ClientDomainSelect(
     val phone: String,
     var isSelected: Boolean = false,
 ):java.io.Serializable
+
 
 fun ClientDomain.toClientDomainSelect(): ClientDomainSelect {
     return ClientDomainSelect(
@@ -50,10 +56,12 @@ fun ClientDomain.toClientDomainSelect(): ClientDomainSelect {
     )
 }
 
+@Keep
 fun List<ClientDomain>.toClientDomainSelect(): List<ClientDomainSelect> {
     return map { it.toClientDomainSelect() }
 }
 
+@Keep
 fun ClientsRequest.toClientDomain(): ClientDomain {
     return ClientDomain(
         id = id ?: "",
@@ -68,6 +76,7 @@ fun ClientsRequest.toClientDomain(): ClientDomain {
     )
 }
 
+@Keep
 fun ClientDomain.toClientsRequest(): ClientsRequest {
     return ClientsRequest(
         id = id,

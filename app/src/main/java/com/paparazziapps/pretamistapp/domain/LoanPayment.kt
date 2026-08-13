@@ -1,7 +1,9 @@
 package com.paparazziapps.pretamistapp.domain
 
+import androidx.annotation.Keep
 import kotlin.math.ceil
 
+@Keep
 data class LoanPayment (
     val interest: Double,
     val periodicPayment: Double,

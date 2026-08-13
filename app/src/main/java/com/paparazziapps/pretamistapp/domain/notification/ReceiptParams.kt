@@ -1,6 +1,9 @@
 package com.paparazziapps.pretamistapp.domain.notification
 
+import androidx.annotation.Keep
+
 // Data class to encapsulate template parameters for a receipt email
+@Keep
 data class ReceiptParams(
     val recipientName: String,
     val amount: Double,
