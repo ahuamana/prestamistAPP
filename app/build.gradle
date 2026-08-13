@@ -171,5 +171,12 @@ dependencies {
 
     //Supabase Login Oauth
 
+    def supabase_version = "3.7.0"
+    def ktor_version = "3.5.2"
+
+    implementation(platform("io.github.jan-tennert.supabase:bom:$supabase_version"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+
 
 }
