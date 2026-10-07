@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.databinding.FragmentDetailReceiptBinding

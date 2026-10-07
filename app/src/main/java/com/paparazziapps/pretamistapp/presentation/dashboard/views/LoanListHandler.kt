@@ -1,6 +1,6 @@
 package com.paparazziapps.pretamistapp.presentation.dashboard.views
 
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.domain.TypePrestamo

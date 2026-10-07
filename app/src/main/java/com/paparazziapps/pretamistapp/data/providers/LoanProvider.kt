@@ -1,49 +1,37 @@
 package com.paparazziapps.pretamistapp.data.providers
 
 import android.util.Log
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.QuerySnapshot
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.paparazziapps.pretamistapp.application.MyPreferences
-import com.paparazziapps.pretamistapp.data.PADataConstants
-import com.paparazziapps.pretamistapp.data.di.FirebaseService
+import com.paparazziapps.pretamistapp.app.MyPreferences
+import com.paparazziapps.pretamistapp.data.network.GlobalResponse
+import com.paparazziapps.pretamistapp.libraries.database.firebase.FDatabaseImpl
 import com.paparazziapps.pretamistapp.data.network.NetworkOperation
 import com.paparazziapps.pretamistapp.data.network.PAResult
-import kotlinx.coroutines.tasks.await
 
-class LoanProvider(
+class LoanProvider private constructor(
     private val preferences: MyPreferences,
-    private val firebaseService: FirebaseService
+    private val fDatabaseImpl: FDatabaseImpl
 ) {
 
-    private val mCollectionLoan: CollectionReference by lazy { firebaseService.firestore.collection(PADataConstants.LOAN_COLLECTION) }
     private val tag = LoginProvider::class.java.simpleName
 
     //Super admin -- implemented
-    suspend fun createLoan(loanDomain: LoanDomain, idBranch:Int): PAResult<Void> {
-        loanDomain.branchId = if(preferences.isSuperAdmin) idBranch else  preferences.branchId
-        loanDomain.id = mCollectionLoan.document().id
-
+    suspend fun createLoan(loanDomain: LoanDomain, idBranch:Int): PAResult<GlobalResponse> {
         return NetworkOperation.safeApiCall {
-            mCollectionLoan.document(loanDomain.id!!).set(loanDomain).await()
+            test
         }
     }
 
     //Super admin -- implemented
-    suspend fun getLoans(): PAResult<QuerySnapshot> {
+    suspend fun getLoans(): PAResult<GlobalResponse> {
         if(preferences.isSuperAdmin){
            return NetworkOperation.safeApiCall {
-                  mCollectionLoan
-                    .whereEqualTo("state", "ABIERTO")
-                    .get().await()
+                  test
             }
         }else{
             Log.d(tag,"Sucursal -- getPrestamos")
             return  NetworkOperation.safeApiCall {
-                mCollectionLoan
-                    .whereEqualTo("state", "ABIERTO")
-                    .whereEqualTo("branchId",preferences.branchId)
-                    .get().await()
+                test
             }
         }
     }
@@ -53,14 +41,14 @@ class LoanProvider(
         idLoan:String,
         dateLastPaymentNew:String,
         quotesPendingNew:Int,
-        quotesPaidNew:Int): PAResult<Void> {
+        quotesPaidNew:Int): PAResult<GlobalResponse> {
         val map = mutableMapOf<String,Any?>()
         map.put("lastPaymentDate",dateLastPaymentNew)
         map.put("quotasPending",quotesPendingNew)
         map.put("quotasPaid",quotesPaidNew)
 
         return NetworkOperation.safeApiCall {
-            mCollectionLoan.document(idLoan).update(map).await()
+            test
         }
     }
 
@@ -69,7 +57,7 @@ class LoanProvider(
         dateLastPaymentNew:String,
         quotesPendingNew:Int,
         quotesPaidNew:Int
-        ): PAResult<Void> {
+        ): PAResult<GlobalResponse> {
 
         val map = mutableMapOf<String,Any?>()
         map.put("lastPaymentDate",dateLastPaymentNew)
@@ -77,18 +65,25 @@ class LoanProvider(
         map.put("quotasPaid",quotesPaidNew)
 
         return NetworkOperation.safeApiCall {
-            mCollectionLoan.document(idLoan).update(map).await()
+            test
         }
     }
 
 
 
     //No need superAdmin - or Adming to update
-    suspend fun closeLoan(id: String): PAResult<Void> {
+    suspend fun closeLoan(id: String): PAResult<GlobalResponse> {
         return NetworkOperation.safeApiCall {
             val map = mutableMapOf<String,Any?>()
             map.put("state","CERRADO")
-            mCollectionLoan.document(id).update(map).await()
+            test
+        }
+    }
+
+    companion object {
+        val test = GlobalResponse(true)
+        fun createInstance(preferences: MyPreferences): LoanProvider{
+            return LoanProvider(preferences = preferences, fDatabaseImpl = FDatabaseImpl.Companion.instance())
         }
     }
 }

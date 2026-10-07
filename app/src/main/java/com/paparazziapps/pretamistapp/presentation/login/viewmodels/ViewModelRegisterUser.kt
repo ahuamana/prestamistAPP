@@ -5,8 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseUser
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.domain.UserForm
 import com.paparazziapps.pretamistapp.data.repository.PARepository
@@ -18,7 +17,6 @@ class ViewModelRegisterUser(
 ) : ViewModel() {
 
     private val _message = MutableLiveData<String>()
-    private val _user = MutableLiveData<FirebaseUser>()
     private val _isLoading = MutableLiveData<Boolean>()
     private val _isSavedFirebase = MutableLiveData<Boolean>()
 
@@ -34,9 +32,7 @@ class ViewModelRegisterUser(
         return _message
     }
 
-    fun getUser(): LiveData<FirebaseUser> {
-        return _user
-    }
+
 
     fun createUser(email: String, pass: String, userFormInfo:UserForm) = viewModelScope.launch {
         _isLoading.value = true

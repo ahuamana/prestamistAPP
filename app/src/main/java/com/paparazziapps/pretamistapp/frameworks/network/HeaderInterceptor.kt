@@ -2,7 +2,7 @@ package com.paparazziapps.pretamistapp.frameworks.network
 
 import android.content.Context
 import com.paparazziapps.pretamistapp.BuildConfig
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import okhttp3.Interceptor
 import okhttp3.Response
 

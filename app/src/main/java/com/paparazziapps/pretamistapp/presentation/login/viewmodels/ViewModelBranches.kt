@@ -49,12 +49,7 @@ class ViewModelBranches(
                 _branchesFinances.postValue(emptyList())
             }
             is PAResult.Success -> {
-                result.data.children.forEach { snapshot ->
-                    val sucursal = snapshot.getValue(Sucursales::class.java)
-                    sucursal?.let {
-                        branches.add(it)
-                    }
-                }
+
 
                 _branches.postValue(branches)
                 _branchesFinances.postValue(branches)

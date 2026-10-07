@@ -5,8 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
 import com.paparazziapps.pretamistapp.domain.UserForm
@@ -14,10 +13,8 @@ import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
 import com.paparazziapps.pretamistapp.helper.toJson
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -59,27 +56,8 @@ class ViewModelPrincipal(
                 _uiState.postValue(UIStatePrincipal.Error("Ah ocurrido un error al traer los datos del usurio"))
             }
             is PAResult.Success -> {
-                val userForm = result.data.toObject(UserForm::class.java)
-                if(userForm == null){
-                    Log.d(tag, "No se encontro el usuario")
-                    _uiState.postValue(UIStatePrincipal.Error("No se encontro el usuario"))
-                    return@launch
-                }
-                preferences.isAdmin = userForm.admin
-                preferences.isSuperAdmin = userForm.superAdmin
 
-                _isAdmin.update { userForm.admin }
-                _isSuperAdmin.update { userForm.superAdmin }
 
-                preferences.branchId = userForm.branchId?: INT_DEFAULT
-                preferences.branchName = userForm.branch?:""
-                preferences.isActiveUser = userForm.activeUser
-
-                if(userForm.activeUser){
-                    _uiState.postValue(UIStatePrincipal.SuccessActiveUser(branchesServer))
-                }else {
-                    _uiState.postValue(UIStatePrincipal.SuccessInactiveUser(branchesServer))
-                }
 
             }
         }
@@ -89,26 +67,6 @@ class ViewModelPrincipal(
 
         //Loading state
         _uiState.postValue(UIStatePrincipal.Loading)
-
-        val result: PAResult<DataSnapshot> = repository.geBranchesRepo()
-        when(result){
-            is PAResult.Error -> {
-                _uiState.postValue(UIStatePrincipal.Error("Error: ${result.exception}"))
-            }
-            is PAResult.Success -> {
-                val branchesServer = result.data.children.mapNotNull { snapshot ->
-                    snapshot.getValue(Sucursales::class.java)
-                }
-
-                //Save the branches on the preferences
-                if(branchesServer.isNotEmpty()){
-                    preferences.branches = branchesServer.toJson()
-                }
-
-                //Get Info from the user
-                searchUserByEmail(branchesServer)
-            }
-        }
 
     }
 

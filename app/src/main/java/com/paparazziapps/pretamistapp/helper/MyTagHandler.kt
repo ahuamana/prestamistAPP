@@ -15,10 +15,10 @@ class MyTagHandler : Html.TagHandler {
                            output: Editable, xmlReader: XMLReader
     ) {
 
-        Log.e(TAG, "opening: ${opening.toString()} " )
-        Log.e(TAG, "tag: ${tag.toString()} " )
-        Log.e(TAG, "output: ${output.toString()} " )
-        Log.e(TAG, "xmlReader: ${xmlReader.toString()} " )
+        Log.e(TAG, "opening: $opening " )
+        Log.e(TAG, "tag: ${tag} " )
+        Log.e(TAG, "output: $output " )
+        Log.e(TAG, "xmlReader: $xmlReader " )
 
         if (tag == "ul") {
             parent = "ul"

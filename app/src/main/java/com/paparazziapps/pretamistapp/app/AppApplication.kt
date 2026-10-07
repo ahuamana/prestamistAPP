@@ -1,19 +1,18 @@
-package com.paparazziapps.pretamistapp.application
+package com.paparazziapps.pretamistapp.app
 
 import androidx.multidex.MultiDexApplication
-import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.paparazziapps.pretamistapp.data.di.FirebaseService
-import com.paparazziapps.pretamistapp.data.di.PAFirebaseAnalytics
-import com.paparazziapps.pretamistapp.data.providers.BranchesProvider
-import com.paparazziapps.pretamistapp.data.providers.ClientsProvider
+import com.paparazziapps.pretamistapp.BuildConfig
+import com.paparazziapps.pretamistapp.libraries.database.firebase.FDatabaseImpl
+import com.paparazziapps.pretamistapp.data.di.PAAnalyticsImpl
+import com.paparazziapps.pretamistapp.data.providers.BranchesProviderImpl
+import com.paparazziapps.pretamistapp.data.providers.ClientsProviderImpl
 import com.paparazziapps.pretamistapp.data.providers.DetailLoanProvider
 import com.paparazziapps.pretamistapp.data.providers.FirebaseProvider
 import com.paparazziapps.pretamistapp.data.providers.LoanProvider
 import com.paparazziapps.pretamistapp.data.providers.LoginProvider
 import com.paparazziapps.pretamistapp.data.providers.RegisterProvider
 import com.paparazziapps.pretamistapp.data.providers.RouteProvider
-import com.paparazziapps.pretamistapp.data.providers.UserProvider
+import com.paparazziapps.pretamistapp.data.providers.UserProviderImpl
 import com.paparazziapps.pretamistapp.data.services.ServiceProviderImpl
 import com.paparazziapps.pretamistapp.data.remote.RemoteAnalyticsDataSource
 import com.paparazziapps.pretamistapp.data.remote.RemoteBranchDataSourceImpl
@@ -46,6 +45,8 @@ import com.paparazziapps.pretamistapp.data.utils.ReceiptHtmlTemplate
 import com.paparazziapps.pretamistapp.frameworks.network.NetworkModule
 import com.paparazziapps.pretamistapp.frameworks.network.NetworkModuleImpl
 import com.paparazziapps.pretamistapp.helper.turnOffDarkModeInAllApp
+import com.paparazziapps.pretamistapp.libraries.database.di.LoanDatabase
+import com.paparazziapps.pretamistapp.libraries.database.di.LoanDatabaseImpl
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelLogin
@@ -71,23 +72,32 @@ import org.koin.dsl.module
 
 class AppApplication : MultiDexApplication() {
 
-    private val dataModule = module {
-        single { FirebaseService() } // Provide FirebaseFirestore
-        single { LoanProvider(get(), get()) } // Provide LoanProvider
-        single { BranchesProvider() } // Provide BranchesProvider
-        single { DetailLoanProvider(get(), get()) } // Provide DetailLoanProvider
-        single { LoanProvider(get(),get())} // Provide LoanProvider
-        single { RegisterProvider(get()) } // Provide RegisterProvider
-        single { UserProvider(get()) } // Provide UserProvider
-        single { RouteProvider(get()) }
-        single { ClientsProvider(get())}
-        //DB
-        single { MyPreferences(androidContext())} // Provide MyPreferences
+    private val databaseLibrary = module {
+        single { LoanDatabaseImpl(BuildConfig.SUPABASE_URL, BuildConfig.SUPABASE_KEY) }
+        singleOf(::LoanDatabaseImpl) { bind<LoanDatabase>() }
+    }
 
-        single { LoginProvider(get(), get(), get(), get()) } // Provide LoginProvider
+    private val cacheLibrary = module {
+        single { MyPreferences(androidContext())}
+    }
+
+    private val dataModule = module {
+
+        single { FDatabaseImpl() } // Provide FirebaseFirestore
+        single { LoanProvider.createInstance(get()) } // Provide LoanProvider
+        single { BranchesProviderImpl() } // Provide BranchesProvider
+        single { DetailLoanProvider.instance(get()) } // Provide DetailLoanProvider
+        single { RegisterProvider.instance() } // Provide RegisterProvider
+        single { UserProviderImpl.instance() } // Provide UserProvider
+        single { RouteProvider.instance() }
+        single { ClientsProviderImpl.instance()}
+        //DB
+
+
+        single { LoginProvider.instance() } // Provide LoginProvider
 
         //Firebase Analytics
-        single { PAFirebaseAnalytics(androidContext())}
+        single { PAAnalyticsImpl(androidContext())}
         single { FirebaseProvider(get())}
 
         //Data
@@ -111,7 +121,6 @@ class AppApplication : MultiDexApplication() {
         singleOf(::PAEmailRepositoryImpl) { bind<PAEmailRepository>() }
 
         //New Clients Module
-        singleOf(::ClientsProvider) { bind<ClientsProvider>() }
         singleOf(::RemoteClientsDataSourceImpl) { bind<RemoteClientsDataSource>() }
         singleOf(::PAClientsRepositoryImpl) { bind<PAClientsRepository>() }
 
@@ -135,19 +144,21 @@ class AppApplication : MultiDexApplication() {
         viewModelOf(::ViewModelSearch)
     }
 
+
+
     override fun onCreate() {
         super.onCreate()
         turnOffDarkModeInAllApp(resources)
-        FirebaseApp.initializeApp(this)
-        FirebaseAnalytics.getInstance(this)
         initKoin()
     }
+
+
 
     private fun initKoin() {
         startKoin {
             androidLogger()
             androidContext(this@AppApplication)
-            modules(dataModule, uiModule)
+            modules(dataModule, cacheLibrary,uiModule, databaseLibrary)
         }
     }
 }

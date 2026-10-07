@@ -1,9 +1,6 @@
 package com.paparazziapps.pretamistapp.data.repository
 
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+import com.paparazziapps.pretamistapp.data.network.GlobalResponse
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.sources.route.RouteDataSource
 import com.paparazziapps.pretamistapp.data.sources.route.RouteDomainSource
@@ -14,40 +11,40 @@ import com.paparazziapps.pretamistapp.domain.UserForm
 
 interface PARepository {
     //Branches
-    suspend fun geBranchesRepo(): PAResult<DataSnapshot>
+    suspend fun geBranchesRepo(): PAResult<GlobalResponse>
 
     //DetailLoan
-    suspend fun createDetail(detailLoanDomain: DetailLoanDomain): PAResult<DetailLoanForm>
-    suspend fun getDetailLoanByDate(date:String):PAResult<QuerySnapshot>
-    suspend fun getLoanByDate(timeStart:Long, timeEnd:Long, idBranch:Int): PAResult<QuerySnapshot>
-    suspend fun createIdDetailLoan(): PAResult<String>
+    suspend fun createDetail(detailLoanDomain: DetailLoanDomain): PAResult<GlobalResponse>
+    suspend fun getDetailLoanByDate(date:String):PAResult<GlobalResponse>
+    suspend fun getLoanByDate(timeStart:Long, timeEnd:Long, idBranch:Int): PAResult<GlobalResponse>
+    suspend fun createIdDetailLoan(): PAResult<GlobalResponse>
 
     //Loan
-    suspend fun createLoan(loanDomain: LoanDomain, idBranch:Int): PAResult<Void>
-    suspend fun getLoans(): PAResult<QuerySnapshot>
+    suspend fun createLoan(loanDomain: LoanDomain, idBranch:Int): PAResult<GlobalResponse>
+    suspend fun getLoans(): PAResult<GlobalResponse>
     suspend fun setLastPayment(idLoan:String,
                                dateLastPaymentNew:String,
                                quotesPendingNew:Int,
-                               quotesPaidNew:Int): PAResult<Void>
+                               quotesPaidNew:Int): PAResult<GlobalResponse>
     suspend fun setLastPaymentForQuota(
         idLoan:String,
         dateLastPaymentNew:String,
         quotesPendingNew:Int,
-        quotesPaidNew:Int): PAResult<Void>
-    suspend fun closeLoan(id: String): PAResult<Void>
+        quotesPaidNew:Int): PAResult<GlobalResponse>
+    suspend fun closeLoan(id: String): PAResult<GlobalResponse>
 
     //Login
-    suspend fun loginEmail(email: String, pass: String): PAResult<AuthResult>
-    suspend fun loginWithEmailV2(email: String, pass: String): PAResult<UserForm>
-    suspend fun loginAnonymously(): PAResult<AuthResult>
-    suspend fun createUser(email: String, pass: String): PAResult<AuthResult>
+    suspend fun loginEmail(email: String, pass: String): PAResult<GlobalResponse>
+    suspend fun loginWithEmailV2(email: String, pass: String): PAResult<GlobalResponse>
+    suspend fun loginAnonymously(): PAResult<GlobalResponse>
+    suspend fun createUser(email: String, pass: String): PAResult<GlobalResponse>
     fun signOut()
 
     //User
-    suspend fun createUser(userForm: UserForm): PAResult<Void>
-    suspend fun searchUserByEmail(email: String): PAResult<DocumentSnapshot>
+    suspend fun createUser(userForm: UserForm): PAResult<GlobalResponse>
+    suspend fun searchUserByEmail(email: String): PAResult<GlobalResponse>
 
     //Routes
-    suspend fun createRoute(routeDataSource: RouteDomainSource): PAResult<Void>
-    suspend fun getAllRoutes(): PAResult<List<RouteDataSource>>
+    suspend fun createRoute(routeDataSource: RouteDomainSource): PAResult<GlobalResponse>
+    suspend fun getAllRoutes(): PAResult<GlobalResponse>
 }

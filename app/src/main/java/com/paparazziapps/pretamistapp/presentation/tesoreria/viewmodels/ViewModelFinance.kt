@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
@@ -38,16 +37,7 @@ class ViewModelFinance (
                 onComplete(isCorrect, "No se pudo obtener los prestamos, porfavor comuníquese con soporte!", null, false)
             }
             is PAResult.Success -> {
-                if(result.data.isEmpty) {
-                    isCorrect = true
-                    onComplete(isCorrect,"",0,false)
-                }else {
-                    result.data.forEach { document->
-                        listLoanRespons.add(document.toObject<LoanDomain>())
-                    }
-                    _prestamos.value = listLoanRespons
-                    onComplete(true,"",result.data.size(),false)
-                }
+
             }
         }
     }
@@ -62,16 +52,7 @@ class ViewModelFinance (
                 _pagosTotalesByTime.value = 0.0
             }
             is PAResult.Success -> {
-                if(result.data.isEmpty) {
-                    _pagosTotalesByTime.value = 0.0
-                }else {
-                    result.data.forEach { document->
-                        val dps = document.toObject<DetailLoanForm>()
-                        pagosTotalesXfecha += dps.totalAmountToPay?:0.0
-                    }
-                    pagosTotalesXfecha = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesXfecha)?:0.0
-                    _pagosTotalesByTime.value = pagosTotalesXfecha
-                }
+
             }
         }
     }
@@ -97,21 +78,7 @@ class ViewModelFinance (
             }
 
             is PAResult.Success -> {
-                if (result.data.isEmpty) {
-                    isCorrect = true
-                    onComplete(isCorrect, "", 0.0, false)
-                } else {
-                    isCorrect = true
-                    Log.d(tag, "getPaymentsToday data: ${result.data}")
-                    result.data.forEach { document ->
-                        val dps = document.toObject<DetailLoanResponse>().toDetailLoanDomain()
-                        Log.d(tag, "getPaymentsToday totalAmountToPay: ${dps.totalAmountToPay}")
-                        pagosTotalesHoy += dps.totalAmountToPay
-                    }
-                    Log.d(tag, "getPaymentsToday pagosTotalesHoy: $pagosTotalesHoy")
-                    pagosTotalesHoy = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesHoy)
-                    onComplete(isCorrect, "", pagosTotalesHoy, false)
-                }
+
             }
         }
     }
@@ -132,18 +99,7 @@ class ViewModelFinance (
                     null, false)
             }
             is PAResult.Success -> {
-                if (details.data.isEmpty) {
-                    isCorrect = true
-                    onComplete(isCorrect, "", 0.0, false)
-                } else {
-                    isCorrect = true
-                    details.data.forEach { document ->
-                        val dps = document.toObject<DetailLoanResponse>().toDetailLoanDomain()
-                        pagosTotalesAyer += dps.totalAmountToPay
-                    }
-                    pagosTotalesAyer = getDoubleWithTwoDecimalsReturnDouble(pagosTotalesAyer) ?: 0.0
-                    onComplete(isCorrect, "", pagosTotalesAyer, false)
-                }
+
             }
         }
     }

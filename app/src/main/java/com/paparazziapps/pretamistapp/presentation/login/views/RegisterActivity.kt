@@ -276,14 +276,6 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        _viewModelRegistro.getUser().observe(this) { user ->
-            if (userFormNew.email.equals(user.getEmail())) {
-                _saveOnFirebase(userFormNew)
-            } else {
-                _showMessageMainThread(user.email)
-            }
-        }
-
         _viewModelRegistro.getIsLoading().observe(this) { isLoading ->
             Log.e("ISLOADING", "ISLOADING:$isLoading")
             if (isLoading) {

@@ -7,18 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PARepository
-import com.paparazziapps.pretamistapp.domain.Sucursales
-import com.paparazziapps.pretamistapp.domain.UserForm
-import com.paparazziapps.pretamistapp.helper.INT_DEFAULT
-import com.paparazziapps.pretamistapp.helper.toJson
-import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal.UIStatePrincipal
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
 import kotlinx.coroutines.launch
-
 
 class ViewModelLogin (
     private val repository: PARepository,

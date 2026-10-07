@@ -26,7 +26,7 @@ import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
 import com.paparazziapps.pretamistapp.presentation.tesoreria.adapter.LoanDetailAdapter
 import com.paparazziapps.pretamistapp.presentation.tesoreria.viewmodels.ViewModelFinance
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat

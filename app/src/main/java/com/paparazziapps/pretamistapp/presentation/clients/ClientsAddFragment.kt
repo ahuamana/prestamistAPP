@@ -10,16 +10,12 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.android.gms.common.api.Api.Client
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.databinding.FragmentClientsAddBinding
 import com.paparazziapps.pretamistapp.helper.PADialogFactory
 import com.paparazziapps.pretamistapp.helper.base.BaseViewModel
 import com.paparazziapps.pretamistapp.helper.hideKeyboardActivity
 import com.paparazziapps.pretamistapp.helper.isValidEmail
-import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
-import com.paparazziapps.pretamistapp.presentation.profile.viewmodels.ProfileViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

@@ -1,18 +1,18 @@
 package com.paparazziapps.pretamistapp.data.remote
 
-import com.google.firebase.firestore.DocumentSnapshot
+import com.paparazziapps.pretamistapp.data.network.GlobalResponse
 import com.paparazziapps.pretamistapp.data.network.PAResult
-import com.paparazziapps.pretamistapp.data.providers.UserProvider
+import com.paparazziapps.pretamistapp.data.providers.UserProviderImpl
 import com.paparazziapps.pretamistapp.domain.UserForm
 
 class RemoteUserDataSourceImpl(
-    private val userProvider: UserProvider
+    private val userProviderImpl: UserProviderImpl
 ) : RemoteUserDataSource {
-    override suspend fun createUser(userForm: UserForm): PAResult<Void> {
-        return userProvider.createUser(userForm)
+    override suspend fun createUser(userForm: UserForm): PAResult<GlobalResponse> {
+        return userProviderImpl.createUser(userForm)
     }
 
-    override suspend fun searchUserByEmail(email: String): PAResult<DocumentSnapshot> {
-        return userProvider.searchUserByEmail(email)
+    override suspend fun searchUserByEmail(email: String): PAResult<GlobalResponse> {
+        return userProviderImpl.searchUserByEmail(email)
     }
 }

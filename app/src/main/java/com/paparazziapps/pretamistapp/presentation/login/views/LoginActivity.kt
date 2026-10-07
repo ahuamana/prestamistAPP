@@ -10,8 +10,6 @@ import com.paparazziapps.pretamistapp.databinding.ActivityLoginBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelLogin
 import com.paparazziapps.pretamistapp.presentation.principal.views.PrincipalActivity
-import com.paparazziapps.pretamistapp.application.MyPreferences
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {

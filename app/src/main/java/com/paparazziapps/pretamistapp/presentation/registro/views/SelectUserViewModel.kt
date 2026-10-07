@@ -38,9 +38,7 @@ class SelectUserViewModel(
                 _uiState.value = UiState.Error(clients.exception)
             }
             is PAResult.Success -> {
-                _uiState.value = UiState.Success(clients.data.toClientDomainSelect())
-                listClients = clients.data.toClientDomainSelect()
-                clientSelected= null
+
             }
         }
     }
@@ -54,9 +52,7 @@ class SelectUserViewModel(
             }
             is PAResult.Success -> {
                 Log.d("ClientsParentViewModel", "Clients: ${clients.data}")
-                _uiState.value = UiState.Success(clients.data.toClientDomainSelect())
-                listClients = clients.data.toClientDomainSelect()
-                clientSelected= null
+
             }
         }
     }

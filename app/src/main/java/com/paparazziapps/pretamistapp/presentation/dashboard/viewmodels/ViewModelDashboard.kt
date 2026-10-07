@@ -7,9 +7,8 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
@@ -22,11 +21,7 @@ import com.paparazziapps.pretamistapp.data.repository.PARepository
 import com.paparazziapps.pretamistapp.domain.DelayCalculator
 import com.paparazziapps.pretamistapp.domain.DetailLoanDomain
 import com.paparazziapps.pretamistapp.domain.InformationReceiptDomain
-import com.paparazziapps.pretamistapp.domain.PAConstants
-import com.paparazziapps.pretamistapp.domain.Sucursales
-import com.paparazziapps.pretamistapp.domain.TypePrestamo
 import com.paparazziapps.pretamistapp.domain.utils.convertUnixTimeToFormattedDate
-import com.paparazziapps.pretamistapp.helper.fromJson
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNow
 import com.paparazziapps.pretamistapp.helper.getDiasRestantesFromDateToNowMinusDiasPagados
 import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
@@ -208,19 +203,9 @@ class ViewModelDashboard (
                 _state.value = _state.value.copy(state = DashboardEvent.ERROR, message = result.exception.message)
             }
             is PAResult.Success -> {
-                Log.d(tag,"ViewModelDashboard --> : Success ${result.data.count()}")
-                if(result.data.isEmpty) {
-                    Log.d(tag," lista prestamos esta vacia")
-                    _state.value = _state.value.copy(state = DashboardEvent.EMPTY)
-                    return@launch
-                }
-                val loans = result.data.mapNotNull { document->
-                    document.toObject<LoanDomain>()
-                }
-                val manager = LoanListHandler(preferences)
-                val processedLoans = manager.processLoans(loans)
 
-                _state.value = DashboardState.success(processedLoans)
+                val manager = LoanListHandler(preferences)
+
             }
         }
     }
@@ -295,25 +280,17 @@ class ViewModelDashboard (
                 Log.d(tag, "--> : Success ${resultDetail.data}")
 
                 //Here also update the loans list with the new data changed
-                val idLoan = resultDetail.data.idLoan
-                val currentLoan = _state.value.loans?.firstOrNull { it.id == idLoan }
-                val newLoan = currentLoan?.copy(
-                    lastPaymentDate = resultDetail.data.paymentDate,
-                    quotasPaid = quotesPaidNew,
-                    quotasPending = quotesPendingNew
-                )
 
-                val newLoans = _state.value.loans?.mapNotNull { loan ->
-                    if (loan.id == idLoan) { newLoan } else { loan }
-                }
+
+
 
                 val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
                 val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
                 val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
 
                 val informationReceipt = InformationReceiptDomain(
-                    idReceipt = resultDetail.data.idDetailLoan,
-                    codeOperation = resultDetail.data.codeOperation,
+                    idReceipt = "resultDetail.data.idDetailLoan",
+                    codeOperation = 10000000,
                     fullName = fullName,
                     phoneNumber = loanDomain.cellular ?: "",
                     names = loanDomain.names ?: "",
@@ -328,7 +305,7 @@ class ViewModelDashboard (
                 )
                 sendEmailReceipt(informationReceipt)
 
-                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = newLoans, informationReceipt = informationReceipt)
+                _state.value = _state.value.copy(dialogState = DashboardDialogState.SuccessUpdateLoan, loans = null, informationReceipt = informationReceipt)
             }
         }
     }

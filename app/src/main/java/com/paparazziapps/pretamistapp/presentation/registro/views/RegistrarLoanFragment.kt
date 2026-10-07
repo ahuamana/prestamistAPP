@@ -1,16 +1,13 @@
 package com.paparazziapps.pretamistapp.presentation.registro.views
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
-import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.domain.LoanDomain
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.ViewModelRegister
@@ -28,14 +25,11 @@ import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.domain.Sucursales
 import com.paparazziapps.pretamistapp.presentation.login.viewmodels.ViewModelBranches
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.databinding.FragmentLoanRegistrarBinding
-import com.paparazziapps.pretamistapp.domain.PAConstants
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
-import com.paparazziapps.pretamistapp.presentation.clients.ClientsAddViewModel
-import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard
 import com.paparazziapps.pretamistapp.presentation.registro.viewmodels.RegisterState
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject

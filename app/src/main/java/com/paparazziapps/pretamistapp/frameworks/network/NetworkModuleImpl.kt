@@ -1,8 +1,7 @@
 package com.paparazziapps.pretamistapp.frameworks.network
 
 import android.content.Context
-import com.paparazziapps.pretamistapp.application.MyPreferences
-import com.paparazziapps.pretamistapp.data.services.EmailRetrofit
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

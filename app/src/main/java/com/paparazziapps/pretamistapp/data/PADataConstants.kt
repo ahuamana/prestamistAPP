@@ -13,9 +13,8 @@ object PADataConstants {
 
     //collections
     const val DETAIL_LOAN_COLLECTION = "DetallePrestamo"
-    const val USERS_COLLECTION = "Users"
+
     const val LOAN_COLLECTION = "Prestamos"
-    const val CLIENTS_COLLECTION = "Clientes"
 
     //V2
     const val ROUTES_COLLECTION = "Routes"

@@ -1,10 +1,9 @@
 package com.paparazziapps.pretamistapp.data.providers
 
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.paparazziapps.pretamistapp.data.di.PAFirebaseAnalytics
+import com.paparazziapps.pretamistapp.data.di.PAAnalyticsImpl
 
 class FirebaseProvider(
-    private val firebaseAnalytics: PAFirebaseAnalytics
+    private val firebaseAnalytics: PAAnalyticsImpl
 ) {
 
     fun logEvent(event: String, params: Map<String, String>) {

@@ -3,7 +3,7 @@ package com.paparazziapps.pretamistapp.presentation.profile.viewmodels
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
 import com.paparazziapps.pretamistapp.presentation.login.views.LoginActivity
 

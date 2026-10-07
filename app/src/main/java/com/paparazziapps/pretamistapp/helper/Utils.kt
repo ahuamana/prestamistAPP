@@ -30,7 +30,6 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.DataSnapshot
 import com.google.gson.Gson
 import com.paparazziapps.pretamistapp.R
 import com.paparazziapps.pretamistapp.domain.Sucursales
@@ -369,37 +368,6 @@ fun Any?.toListRealTimeDatabase(): List<*> {
     return list
 }
 
-fun DataSnapshot.toObjectsList(clazz: Class<*>): List<*> {
-    val list = ArrayList<Any>()
-    for (snapshot in this.children) {
-        list.add(snapshot.getValue(clazz) as Any)
-    }
-    return list
-}
-
-fun DataSnapshot.toObjectsSucursalList(): List<Sucursales> {
-    val list = ArrayList<Sucursales>()
-    for (snapshot in this.children) {
-        list.add(snapshot.getValue(Sucursales::class.java) as Sucursales)
-    }
-    return list
-}
-
-fun DataSnapshot.toObjectsMap(): Map<String, *> {
-    val map = HashMap<String, Any>()
-    for (snapshot in this.children) {
-        map[snapshot.key!!] = snapshot.getValue(Any::class.java) as Any
-    }
-    return map
-}
-
-fun DataSnapshot.toObjectsMapSucursal(): Map<String, Sucursales> {
-    val map = HashMap<String, Sucursales>()
-    for (snapshot in this.children) {
-        map[snapshot.key!!] = snapshot.getValue(Sucursales::class.java) as Sucursales
-    }
-    return map
-}
 
 fun mapToObjectsList(map: Map<String, *>): List<*> {
     val list = ArrayList<Any>()
@@ -445,14 +413,6 @@ fun mapSnaptshotToClass(map: Map<String, Any?>): Sucursales {
         name = map["name"] as String,
         address = map["address"] as String,
     )
-}
-
-fun dataSnapshotToHashMap(dataSnapshot: DataSnapshot): HashMap<String, Any?> {
-    val map = HashMap<String, Any?>()
-    for (snapshot in dataSnapshot.children) {
-        map[snapshot.key!!] = snapshot.value
-    }
-    return map
 }
 
 

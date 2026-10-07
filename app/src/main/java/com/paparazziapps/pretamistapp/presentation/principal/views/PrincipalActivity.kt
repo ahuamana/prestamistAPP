@@ -12,7 +12,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -25,12 +24,11 @@ import com.paparazziapps.pretamistapp.databinding.ActivityPrincipalBinding
 import com.paparazziapps.pretamistapp.databinding.BottomsheetDetallePrestamoBinding
 import com.paparazziapps.pretamistapp.helper.*
 import com.paparazziapps.pretamistapp.domain.LoanDomain
-import com.google.common.base.Strings.isNullOrEmpty
 import com.paparazziapps.pretamistapp.helper.views.beGone
 import com.paparazziapps.pretamistapp.helper.views.beVisible
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.HomeFragment.Companion.setOnClickedLoanHome
 import com.paparazziapps.pretamistapp.presentation.principal.viewmodels.ViewModelPrincipal
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.domain.PaymentScheduled
 import com.paparazziapps.pretamistapp.domain.PaymentScheduledEnum
 import com.paparazziapps.pretamistapp.presentation.principal.BackPressHandler
@@ -416,33 +414,7 @@ class PrincipalActivity : AppCompatActivity(){
                 this.standardSimpleButtonOutlineDisable()
                 isEnabled = false
             }
-            if(isNullOrEmpty(montoTotalAPagar.toString())) {
-                if(montoTotalAPagar.toString().contains("null")) {
-                    layout_detalle_prestamo.apply {
-                        this.contentPagoTotal.isVisible = true
-                        this.btnPagar.isVisible = true
-                        this.contentLineaExtra.isVisible = true
-                        this.contentDiasAPagar.isVisible = true
-                    }
 
-                }else {
-                    layout_detalle_prestamo.apply {
-                        this.contentPagoTotal.isVisible = false
-                        this.tvCapitalPrestado.text = "${getString(R.string.tipo_moneda_defecto_cero)}"
-                        this.btnPagar.isVisible = false
-                        this.contentLineaExtra.isVisible = false
-                        this.contentDiasAPagar.isVisible = false
-                    }
-                }
-
-            }else {
-                layout_detalle_prestamo.apply {
-                    this.contentPagoTotal.isVisible = true
-                    this.btnPagar.isVisible = true
-                    this.contentLineaExtra.isVisible = true
-                    this.contentDiasAPagar.isVisible = true
-                }
-            }
         }
     }
 

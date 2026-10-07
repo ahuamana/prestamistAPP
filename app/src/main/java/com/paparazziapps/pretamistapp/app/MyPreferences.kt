@@ -1,4 +1,4 @@
-package com.paparazziapps.pretamistapp.application
+package com.paparazziapps.pretamistapp.app
 
 import android.content.Context
 import android.graphics.Color

@@ -7,9 +7,8 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.ktx.toObject
 import com.paparazziapps.pretamistapp.R
-import com.paparazziapps.pretamistapp.application.MyPreferences
+import com.paparazziapps.pretamistapp.app.MyPreferences
 import com.paparazziapps.pretamistapp.data.PADataConstants
 import com.paparazziapps.pretamistapp.data.network.PAResult
 import com.paparazziapps.pretamistapp.data.repository.PAAnalyticsRepository
@@ -29,13 +28,11 @@ import com.paparazziapps.pretamistapp.helper.getFechaActualNormalCalendar
 import com.paparazziapps.pretamistapp.helper.replaceFirstCharInSequenceToUppercase
 import com.paparazziapps.pretamistapp.presentation.dashboard.viewmodels.ViewModelDashboard.DashboardState
 import com.paparazziapps.pretamistapp.presentation.dashboard.views.LoanListHandler
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.TimeZone
 
 class ViewModelSearch(
     private val repository: PARepository,
@@ -67,21 +64,9 @@ class ViewModelSearch(
                 _state.value = _state.value.copy(state = SearchEvent.ERROR, message = result.exception.message)
             }
             is PAResult.Success -> {
-                Log.d(tag,"ViewModelDashboard --> : Success ${result.data.count()}")
-                if(result.data.isEmpty) {
-                    Log.d(tag," lista prestamos esta vacia")
-                    _state.value = _state.value.copy(state = SearchEvent.EMPTY)
-                    return@launch
-                }
-                val loans = result.data.mapNotNull { document->
-                    document.toObject<LoanDomain>()
-                }
-                val manager = LoanListHandler(preferences)
-                val processedLoans = manager.processLoans(loans)
-                allLoans.clear()
-                allLoans.addAll(processedLoans)
 
-                _state.value = SearchState.success(processedLoans)
+                val manager = LoanListHandler(preferences)
+                allLoans.clear()
             }
         }
     }
@@ -439,25 +424,14 @@ class ViewModelSearch(
                 Log.d(tag, "--> : Success ${resultDetail.data}")
 
                 //Here also update the loans list with the new data changed
-                val idLoan = resultDetail.data.idLoan
-                val currentLoan = _state.value.loans?.firstOrNull { it.id == idLoan }
-                val newLoan = currentLoan?.copy(
-                    lastPaymentDate = resultDetail.data.paymentDate,
-                    quotasPaid = quotesPaidNew,
-                    quotasPending = quotesPendingNew
-                )
-
-                val newLoans = _state.value.loans?.mapNotNull { loan ->
-                    if (loan.id == idLoan) { newLoan } else { loan }
-                }
 
                 val namesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.names?.trim() ?: "")
                 val lastnamesWithUpperCase = replaceFirstCharInSequenceToUppercase(loanDomain.lastnames?.trim() ?: "")
                 val fullName = "$namesWithUpperCase, $lastnamesWithUpperCase"
 
                 val informationReceipt = InformationReceiptDomain(
-                    idReceipt = resultDetail.data.idDetailLoan,
-                    codeOperation = resultDetail.data.codeOperation,
+                    idReceipt = "22222222",
+                    codeOperation = 123123123,
                     fullName = fullName,
                     phoneNumber = loanDomain.cellular ?: "",
                     names = loanDomain.names ?: "",
@@ -472,7 +446,7 @@ class ViewModelSearch(
                 )
                 sendEmailReceipt(informationReceipt)
 
-                _state.value = _state.value.copy(dialogState = SearchDialogState.SuccessUpdateLoan, loans = newLoans, informationReceipt = informationReceipt)
+                _state.value = _state.value.copy(dialogState = SearchDialogState.SuccessUpdateLoan, loans = null, informationReceipt = informationReceipt)
             }
         }
     }

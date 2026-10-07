@@ -33,10 +33,8 @@ class RouteParentViewModel(
                 val routes = if(name.isEmpty()){
                     result.data
                 } else {
-                    result.data.filter { it.name.contains(name, ignoreCase = true) }
                 }
                 _uiState.value = UiState.Success(routes)
-                _routes.value = RouteDataSource.toList(routes)
             }
         }
 
